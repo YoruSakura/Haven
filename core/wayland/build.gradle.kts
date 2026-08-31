@@ -40,9 +40,9 @@ android {
 // recipe scandeletes the directory and only rebuilt one of the five, so their
 // APKs shipped without an XWayland wrapper or GPU renderer at all).
 //
-// arm64-v8a only: that is the entire committed set, so x64/armv7 APKs have
-// never carried these. The matrix jobs for those ABIs skip via -PtargetAbi
-// rather than spending ~20 minutes building binaries they do not package.
+// arm64-v8a only: that is the entire available set, so the 32-bit ARM APK has
+// never carried these. Its matrix job skips via -PtargetAbi rather than
+// spending ~20 minutes building binaries it cannot package.
 val waylandAbi = "arm64-v8a"
 val targetAbi = providers.gradleProperty("targetAbi").orNull
 val waylandScriptDir = rootProject.file("wayland-android")

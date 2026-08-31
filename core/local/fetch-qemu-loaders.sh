@@ -10,7 +10,6 @@
 #
 # Each APK carries only the loader(s) foreign to its own ABI:
 #   arm64-v8a  gets qemu-x86_64  (run x86_64 rootfses on ARM phones)
-#   x86_64     gets qemu-aarch64 (run aarch64 rootfses on x86 hosts/emulators)
 #   armeabi-v7a gets none (no loader shipped; foreign-arch stays unavailable)
 #
 # The debs are version-pinned with sha256s. When Debian point-releases retire
@@ -29,7 +28,6 @@ VERSION="10.0.11+ds-0+deb13u1+b1"
 # abi | deb arch | qemu target | deb sha256
 LOADERS=(
   "arm64-v8a|arm64|x86_64|6c9483063bf60f37fe181ead911251deabe40c893ea5829bc34b0b7b88913b6a"
-  "x86_64|amd64|aarch64|a52540a6b5e5af82555393d14c7c6f029c5f6c3b21c038138c0e7e64dc755e28"
 )
 
 if [ "${SKIP_QEMU_LOADERS:-0}" = "1" ]; then

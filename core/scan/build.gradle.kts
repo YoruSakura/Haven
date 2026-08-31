@@ -32,7 +32,8 @@ dependencies {
     implementation(libs.zxing.core)
 
     // Tesseract4Android wraps Tesseract 5.x + leptonica via JNI. Ships
-    // native libs for arm64 + x86_64 — matches the app's ABI flavors.
+    // native libs for both Android ARM ABIs (the app filters out its x86
+    // payloads) — matches the app's mobile-only ABI flavours.
     //
     // The published parent artifact transitively pulls both the plain and
     // -openmp child AARs, which carry the same Java classes and trigger

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Cross-compile PRoot for Android arm64-v8a and x86_64.
+# Cross-compile PRoot for Android arm64-v8a and armeabi-v7a.
 #
 # Prerequisites:
 #   - Android NDK r28+ (tested against r29 stable; r28+ is required for the
@@ -110,6 +110,12 @@ build_for_arch() {
     local PROOT_SRC="$BUILD_DIR/proot-termux"
     cp -a proot-termux "$PROOT_SRC"
 
+    # Upstream's generator uses gawk-only strtonum() and GNU word-boundary
+    # escapes. Android build hosts commonly provide mawk instead; use Haven's
+    # equivalent POSIX-awk implementation in the disposable source copy.
+    cp "$PROJECT_ROOT/build-proot/loader-info-portable.awk" \
+        "$PROOT_SRC/src/loader/loader-info.awk"
+
     # Patch missing includes for NDK
     sed -i '1i #include <string.h>' "$PROOT_SRC/src/extension/ashmem_memfd/ashmem_memfd.c" 2>/dev/null || true
 
@@ -148,9 +154,18 @@ build_for_arch() {
     echo "Installed: $PROOT_OUTPUT/$ABI/libproot.so ($(stat -c %s "$PROOT_OUTPUT/$ABI/libproot.so") bytes)"
 }
 
-build_for_arch "aarch64" "aarch64-linux-android" "arm64-v8a"
-build_for_arch "x86_64" "x86_64-linux-android" "x86_64"
-build_for_arch "armv7a" "armv7a-linux-androideabi" "armeabi-v7a"
+ABIS=("$@")
+if [ "${#ABIS[@]}" -eq 0 ]; then
+    ABIS=(arm64-v8a armeabi-v7a)
+fi
+
+for ABI in "${ABIS[@]}"; do
+    case "$ABI" in
+        arm64-v8a) build_for_arch "aarch64" "aarch64-linux-android" "$ABI" ;;
+        armeabi-v7a) build_for_arch "armv7a" "armv7a-linux-androideabi" "$ABI" ;;
+        *) echo "Unsupported Android ABI: $ABI" >&2; exit 1 ;;
+    esac
+done
 
 echo ""
 echo "Done. PRoot binaries installed to $PROOT_OUTPUT/"

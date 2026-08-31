@@ -96,7 +96,7 @@ fi
 #
 # These are built from rdp-kotlin/rust by the buildRdpNative Gradle task. The
 # task only asked cargo-ndk for arm64-v8a and x86_64 for a long time while all
-# three ABIs were checked in, so a Rust change rebuilt two of the shipped
+# three ABIs were checked in, so a Rust change rebuilt two of the then-shipped
 # libraries and left armv7 on whatever binary someone last produced by hand.
 # The target list is fixed, which stops it recurring; these assertions catch
 # the two ways a hand-copied library still goes wrong, and both are things
@@ -108,7 +108,7 @@ fi
 #     at the first call with UnsatisfiedLinkError
 #
 # Deliberately not checked here: whether the binary matches the current Rust
-# source. The Gradle task rebuilds all three from source as part of the build,
+# source. The Gradle task rebuilds both supported ARM ABIs from source,
 # so a stale one cannot ship; and a source edit that changes no codegen (a
 # comment) would leave nothing to re-commit, so a timestamp comparison would
 # fail forever with no way to satisfy it.
@@ -121,8 +121,6 @@ rdp_expected_machine() {
     case "$1" in
         arm64-v8a) echo 'AArch64' ;;
         armeabi-v7a) echo 'ARM' ;;
-        x86_64) echo 'Advanced Micro Devices X86-64' ;;
-        x86) echo 'Intel 80386' ;;
         *) echo '' ;;
     esac
 }
@@ -138,6 +136,13 @@ if [ -d "$RDP_DIR" ]; then
         abi="$(basename "$abi_dir")"
         so="$abi_dir/librdp_transport.so"
 
+        want="$(rdp_expected_machine "$abi")"
+        if [ -z "$want" ]; then
+            echo "FAIL: rdp-kotlin/jniLibs/$abi is an unsupported Android ABI; only arm64-v8a and armeabi-v7a may ship"
+            rdp_status=1
+            continue
+        fi
+
         if [ ! -f "$so" ]; then
             echo "FAIL: rdp-kotlin/jniLibs/$abi has no librdp_transport.so"
             rdp_status=1
@@ -145,9 +150,8 @@ if [ -d "$RDP_DIR" ]; then
         fi
         rdp_checked=$((rdp_checked + 1))
 
-        want="$(rdp_expected_machine "$abi")"
         got="$(readelf -h "$so" 2>/dev/null | sed -n 's/^[[:space:]]*Machine:[[:space:]]*//p')"
-        if [ -n "$want" ] && [ "$got" != "$want" ]; then
+        if [ "$got" != "$want" ]; then
             echo "FAIL: rdp-kotlin/jniLibs/$abi/librdp_transport.so is a '$got' binary, expected '$want'"
             rdp_status=1
         fi
@@ -168,9 +172,9 @@ if [ -d "$RDP_DIR" ]; then
     elif [ "$rdp_status" -ne 0 ]; then
         cat >&2 <<'MSG'
 
-Rebuild all three from source and commit the result:
+Rebuild both supported Android ARM ABIs from source:
     cd rdp-kotlin/rust && cargo ndk -o ../jniLibs \
-        -t arm64-v8a -t armeabi-v7a -t x86_64 build --release
+        -t arm64-v8a -t armeabi-v7a build --release
 MSG
         exit 1
     else
@@ -196,6 +200,13 @@ if [ -d "$PRNS_DIR" ]; then
         abi="$(basename "$abi_dir")"
         so="$abi_dir/libprns_host.so"
 
+        want="$(rdp_expected_machine "$abi")"
+        if [ -z "$want" ]; then
+            echo "FAIL: core/prns/src/main/jniLibs/$abi is an unsupported Android ABI; only arm64-v8a and armeabi-v7a may ship"
+            prns_status=1
+            continue
+        fi
+
         if [ ! -f "$so" ]; then
             echo "FAIL: core/prns/src/main/jniLibs/$abi has no libprns_host.so"
             prns_status=1
@@ -203,9 +214,8 @@ if [ -d "$PRNS_DIR" ]; then
         fi
         prns_checked=$((prns_checked + 1))
 
-        want="$(rdp_expected_machine "$abi")"
         got="$(readelf -h "$so" 2>/dev/null | sed -n 's/^[[:space:]]*Machine:[[:space:]]*//p')"
-        if [ -n "$want" ] && [ "$got" != "$want" ]; then
+        if [ "$got" != "$want" ]; then
             echo "FAIL: core/prns/src/main/jniLibs/$abi/libprns_host.so is a '$got' binary, expected '$want'"
             prns_status=1
         fi
@@ -220,9 +230,9 @@ if [ -d "$PRNS_DIR" ]; then
     if [ "$prns_status" -ne 0 ]; then
         cat >&2 <<'MSG'
 
-Rebuild all three from source:
+Rebuild both supported Android ARM ABIs from source:
     cd prns/prns-host/abi/c && cargo ndk -o ../../../../core/prns/src/main/jniLibs \
-        -t arm64-v8a -t armeabi-v7a -t x86_64 build --release
+        -t arm64-v8a -t armeabi-v7a build --release
 MSG
         exit 1
     elif [ "$prns_checked" -gt 0 ]; then

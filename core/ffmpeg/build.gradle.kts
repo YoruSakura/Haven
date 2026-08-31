@@ -42,10 +42,9 @@ dependencies {
 //
 // One ABI per invocation. Each release matrix job builds only the ABI it
 // packages, so the wall-clock cost is one build per job, in parallel — not
-// three.
+// both.
 val ffmpegAbis = mapOf(
     "arm64" to "arm64-v8a",
-    "x64" to "x86_64",
     "armv7" to "armeabi-v7a",
 )
 val ffmpegScript = rootProject.file("build-ffmpeg/build.sh")

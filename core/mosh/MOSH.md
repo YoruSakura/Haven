@@ -44,7 +44,8 @@ environment, matching upstream mosh's launch contract.
 ANDROID_SDK_ROOT=/path/to/android-sdk ./scripts/build-mosh-native.sh
 ```
 
-The build supports `arm64-v8a`, `x86_64`, and `armeabi-v7a`. Outputs go to the
+The build supports the mobile Android ABIs `arm64-v8a` and `armeabi-v7a`.
+Desktop/emulator x86 ABIs are intentionally not built. Outputs go to the
 gitignored `core/mosh/src/main/jniLibs/<abi>/libmosh_client.so` directories and
 are then picked up by the normal Android source set.
 
@@ -57,8 +58,8 @@ Pinned inputs:
   `8a6c88d9d7646d796db0a7f58571564d59b8dcdc7836b0dbf679318a23141005`;
 - Android NDK r29 (`29.0.14206865`), API 26, and 16 KiB ELF page alignment.
 
-The rjyo x86_64/armv7 ncurses archives reference but omit ncurses' optional
-compiled-in `_nc_fallback2` lookup. For only those archives, the build links a
+The rjyo armv7 ncurses archive references but omits ncurses' optional
+compiled-in `_nc_fallback2` lookup. For that archive, the build links a
 small null fallback from `scripts/native/mosh-ncurses-fallback.c`; Haven always
 supplies an external terminfo DB, so no built-in entry should be selected.
 

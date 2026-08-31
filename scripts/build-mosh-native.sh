@@ -16,7 +16,7 @@ haven_output_dir="${MOSH_NATIVE_OUTPUT:-$haven_repo_root/core/mosh/src/main/jniL
 
 haven_abis=("$@")
 if [ "${#haven_abis[@]}" -eq 0 ]; then
-    haven_abis=(arm64-v8a x86_64 armeabi-v7a)
+    haven_abis=(arm64-v8a armeabi-v7a)
 fi
 
 haven_ndk="${ANDROID_NDK_ROOT:-${ANDROID_NDK:-}}"
@@ -98,7 +98,6 @@ for haven_abi in "${haven_abis[@]}"; do
     case "$haven_abi" in
         arm64-v8a) haven_triple="aarch64-linux-android" ;;
         armeabi-v7a) haven_triple="armv7a-linux-androideabi" ;;
-        x86_64) haven_triple="x86_64-linux-android" ;;
         *) echo "Unsupported ABI: $haven_abi" >&2; exit 1 ;;
     esac
 
@@ -109,7 +108,7 @@ for haven_abi in "${haven_abis[@]}"; do
     haven_abi_output="$haven_output_dir/$haven_abi"
     mkdir -p "$haven_abi_output"
 
-    # The v1.0.0 x86_64/armv7 ncurses archives reference the optional
+    # The v1.0.0 armv7 ncurses archive references the optional
     # compiled-in terminfo fallback without containing its definition. Haven
     # always supplies an external TERMINFO database, so a null fallback is the
     # correct implementation. arm64 already contains the real symbol and does

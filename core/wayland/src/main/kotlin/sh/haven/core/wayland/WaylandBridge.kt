@@ -7,7 +7,7 @@ import android.util.Log
  * The compositor runs on a dedicated native thread.
  *
  * `liblabwc_android.so` is only built for arm64-v8a. On other ABIs
- * (x86_64, armeabi-v7a) it's absent, so [available] is false. Callers
+ * (armeabi-v7a) it's absent, so [available] is false. Callers
  * MUST gate on [available] before invoking any `native*` method — the
  * methods are bound implicitly (JNI `Java_..._native*` symbols) and calling
  * one when the library didn't load throws `UnsatisfiedLinkError` ("No

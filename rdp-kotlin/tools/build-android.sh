@@ -3,7 +3,7 @@
 #
 # Prerequisites:
 #   cargo install cargo-ndk
-#   rustup target add aarch64-linux-android x86_64-linux-android
+#   rustup target add aarch64-linux-android armv7-linux-androideabi
 #   ANDROID_NDK_HOME set (or detected from ~/Android/Sdk/ndk/*)
 
 set -euo pipefail
@@ -29,9 +29,6 @@ cd "$RUST_DIR"
 
 echo "==> Building for arm64-v8a..."
 cargo ndk -t arm64-v8a -o "$OUT_DIR" build --release
-
-echo "==> Building for x86_64..."
-cargo ndk -t x86_64 -o "$OUT_DIR" build --release
 
 echo "==> Building for armeabi-v7a..."
 cargo ndk -t armeabi-v7a -o "$OUT_DIR" build --release

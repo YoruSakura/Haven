@@ -7,7 +7,7 @@ on:
     branches: [ main ]
   # Nightly broad net: full lint, the R8 smoke, and an all-ABI build — the
   # slow/low-per-commit-signal work pulled off every main push (below) still
-  # runs within 24h, so a lint regression or an x64/armv7-specific breakage
+  # runs within 24h, so a lint regression or an armv7-specific breakage
   # the arm64-only per-push build would miss is caught daily.
   schedule:
     - cron: '0 3 * * *'  # 03:00 UTC daily
@@ -324,9 +324,8 @@ jobs:
           submodules: false
       - uses: ./.github/actions/init-submodules-with-retry
       - uses: ./.github/actions/setup-toolchain
-      # Build arm64 only in CI — the x64 flavor exists for emulator support
-      # and Play Store fat distribution, not smoke-testing main. Cuts build
-      # work roughly in half vs :app:assembleDebug (which expands to both).
+      # Build the primary mobile ABI on every push. The older 32-bit ARM split
+      # is covered by the nightly job below.
       - name: Build arm64 debug APK
         # -PtargetAbi drives core/wayland's buildWaylandNatives, which builds the
         # five arm64-only wayland binaries from the submodule instead of shipping
@@ -348,8 +347,8 @@ jobs:
           path: app/build/outputs/apk/arm64Full/debug/haven-*-arm64-debug.apk
           retention-days: 7
 
-  # Nightly-only: build the ABIs the per-push `build` job skips (x64, armv7)
-  # so an x64/armv7-specific compile or native-cross break surfaces within 24h
+  # Nightly-only: build the ABI the per-push `build` job skips (armv7)
+  # so a 32-bit-specific compile or native-cross break surfaces within 24h
   # instead of only at release. arm64 is already covered per-push by `build`
   # (which also runs on the schedule), so it's not repeated here.
   nightly-abi:
@@ -360,7 +359,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { abi: x64,   variant: X64 }
           - { abi: armv7, variant: Armv7 }
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1

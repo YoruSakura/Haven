@@ -38,7 +38,7 @@ android {
         }
 
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a")
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
     }
 
@@ -61,7 +61,6 @@ android {
 
 val moshAbiNames = mapOf(
     "arm64" to "arm64-v8a",
-    "x64" to "x86_64",
     "armv7" to "armeabi-v7a",
 )
 val moshTargetAbi = providers.gradleProperty("targetAbi").orNull

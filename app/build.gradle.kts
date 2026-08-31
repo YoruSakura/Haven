@@ -25,10 +25,6 @@ android {
             dimension = "abi"
             ndk { abiFilters += "arm64-v8a" }
         }
-        create("x64") {
-            dimension = "abi"
-            ndk { abiFilters += "x86_64" }
-        }
         create("armv7") {
             dimension = "abi"
             ndk { abiFilters += "armeabi-v7a" }
@@ -196,7 +192,9 @@ androidComponents {
     }
 
     onVariants { variant ->
-        val abiCodes = mapOf("arm64" to 1, "x64" to 2, "armv7" to 3)
+        // Offset 2 belonged to the retired x64/emulator build. Keep armv7 at
+        // 3 so existing 32-bit installs retain their upgrade ordering.
+        val abiCodes = mapOf("arm64" to 1, "armv7" to 3)
         val abi = variant.productFlavors.firstOrNull { it.first == "abi" }?.second
         val features = variant.productFlavors.firstOrNull { it.first == "features" }?.second
         val abiCode = abiCodes[abi]

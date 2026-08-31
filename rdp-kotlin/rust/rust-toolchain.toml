@@ -13,4 +13,4 @@
 #
 # Keep CI's `rustup default` (setup-toolchain) on the same version.
 channel = "1.94.1"
-targets = ["aarch64-linux-android", "x86_64-linux-android", "armv7-linux-androideabi"]
+targets = ["aarch64-linux-android", "armv7-linux-androideabi"]

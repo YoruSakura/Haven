@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build rclone Go bridge for Android via gomobile.
-# Produces jniLibs/{arm64-v8a,x86_64}/libgojni.so
+# Produces jniLibs/{arm64-v8a,armeabi-v7a}/libgojni.so
 #
 # Prerequisites:
 #   - Go 1.26+ (on PATH, or /usr/local/go/bin)
@@ -62,12 +62,12 @@ echo ">>> gomobile init"
 gomobile init
 
 # Build AAR via gomobile bind
-echo ">>> gomobile bind (arm64 + amd64)"
+echo ">>> gomobile bind (arm64 + armv7)"
 mkdir -p "$AAR_DIR"
 cd "$GO_DIR"
 
 gomobile bind \
-    -target=android/arm64,android/amd64,android/arm \
+    -target=android/arm64,android/arm \
     -javapkg=sh.haven.rclone.binding \
     -androidapi=26 \
     -o "$AAR_DIR/rcbridge.aar" \
@@ -84,7 +84,7 @@ gomobile bind \
 # callers gate on NativeFeatures.rclone rather than catching a link error.
 echo ">>> gomobile bind (terminal flavour: no rclone)"
 gomobile bind \
-    -target=android/arm64,android/amd64,android/arm \
+    -target=android/arm64,android/arm \
     -javapkg=sh.haven.rclone.binding \
     -androidapi=26 \
     -o "$AAR_DIR/rcbridge-terminal.aar" \
@@ -98,18 +98,16 @@ cd "$AAR_DIR"
 unzip -o rcbridge.aar "jni/*" -d extracted
 
 # Map Android ABI names
-mkdir -p "$JNI_DIR/arm64-v8a" "$JNI_DIR/x86_64" "$JNI_DIR/armeabi-v7a"
+mkdir -p "$JNI_DIR/arm64-v8a" "$JNI_DIR/armeabi-v7a"
 cp extracted/jni/arm64-v8a/libgojni.so "$JNI_DIR/arm64-v8a/"
-cp extracted/jni/x86_64/libgojni.so    "$JNI_DIR/x86_64/"
 cp extracted/jni/armeabi-v7a/libgojni.so "$JNI_DIR/armeabi-v7a/"
 
 # Terminal-flavour natives, kept in their own tree so the app can choose
 # between them per flavour. Same file name — gomobile always emits
 # libgojni.so — so they cannot share a directory.
 unzip -o rcbridge-terminal.aar "jni/*" -d extracted-terminal
-mkdir -p "$JNI_TERMINAL_DIR/arm64-v8a" "$JNI_TERMINAL_DIR/x86_64" "$JNI_TERMINAL_DIR/armeabi-v7a"
+mkdir -p "$JNI_TERMINAL_DIR/arm64-v8a" "$JNI_TERMINAL_DIR/armeabi-v7a"
 cp extracted-terminal/jni/arm64-v8a/libgojni.so   "$JNI_TERMINAL_DIR/arm64-v8a/"
-cp extracted-terminal/jni/x86_64/libgojni.so      "$JNI_TERMINAL_DIR/x86_64/"
 cp extracted-terminal/jni/armeabi-v7a/libgojni.so "$JNI_TERMINAL_DIR/armeabi-v7a/"
 
 # Also extract the Java/Kotlin bindings JAR from the AAR
@@ -122,6 +120,6 @@ rm -rf extracted extracted-terminal
 echo ""
 echo "=== Build complete ==="
 ls -lh "$JNI_DIR/arm64-v8a/libgojni.so"
-ls -lh "$JNI_DIR/x86_64/libgojni.so"
+ls -lh "$JNI_DIR/armeabi-v7a/libgojni.so"
 ls -lh "$JNI_TERMINAL_DIR/arm64-v8a/libgojni.so"
 ls -lh "$AAR_DIR/rcbridge-bindings.jar"

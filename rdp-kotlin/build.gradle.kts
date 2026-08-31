@@ -38,7 +38,7 @@ kotlin {
 }
 
 // Build IronRDP native library from Rust source via cargo-ndk.
-// Prerequisites: rustup, cargo-ndk, and the three Android targets below.
+// Prerequisites: rustup, cargo-ndk, and the two Android ARM targets below.
 //
 // The .so files under jniLibs/ are NOT committed — 4d096470 removed them and
 // .gitignore keeps them out. Every shipped ABI is rebuilt from source by this
@@ -67,12 +67,16 @@ val buildRdpNative by tasks.registering(Exec::class) {
         environment("ANDROID_NDK_HOME", ndkHome)
     }
 
-    commandLine("cargo", "ndk",
-        "-o", jniDir.absolutePath,
-        "-t", "arm64-v8a",
-        "-t", "armeabi-v7a",
-        "-t", "x86_64",
-        "build", "--release")
+    val abiNames = mapOf(
+        "arm64" to "arm64-v8a",
+        "armv7" to "armeabi-v7a",
+    )
+    val targetAbi = providers.gradleProperty("targetAbi").orNull
+    val buildAbis = targetAbi?.let { listOfNotNull(abiNames[it]) } ?: abiNames.values.toList()
+    inputs.property("abis", buildAbis)
+    val targetArgs = buildAbis.flatMap { listOf("-t", it) }
+
+    commandLine(listOf("cargo", "ndk", "-o", jniDir.absolutePath) + targetArgs + listOf("build", "--release"))
 }
 
 // No publishing block needed — consumed via includeBuild() in settings.gradle.kts

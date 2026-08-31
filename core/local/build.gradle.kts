@@ -17,7 +17,7 @@ android {
         }
 
         ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64", "armeabi-v7a")
+            abiFilters += listOf("arm64-v8a", "armeabi-v7a")
         }
     }
 
@@ -52,17 +52,26 @@ dependencies {
 
 val buildProot by tasks.registering(Exec::class) {
     val prootScript = rootProject.file("build-proot/build.sh")
+    val portableLoaderInfo = rootProject.file("build-proot/loader-info-portable.awk")
     val prootSrc = rootProject.file("build-proot/proot-termux/src")
     val tallocSrc = rootProject.file("build-proot/talloc")
     val jniLibsDir = file("src/main/jniLibs")
 
     inputs.file(prootScript)
+    inputs.file(portableLoaderInfo)
     inputs.dir(prootSrc)
     inputs.dir(tallocSrc)
     outputs.dir(jniLibsDir)
 
     workingDir = rootProject.file("build-proot")
-    commandLine("bash", "build.sh")
+    val abiNames = mapOf(
+        "arm64" to "arm64-v8a",
+        "armv7" to "armeabi-v7a",
+    )
+    val targetAbi = providers.gradleProperty("targetAbi").orNull
+    val buildAbis = targetAbi?.let { listOfNotNull(abiNames[it]) } ?: abiNames.values.toList()
+    inputs.property("abis", buildAbis)
+    commandLine("bash", "build.sh", *buildAbis.toTypedArray())
     // Let build.sh auto-detect the newest NDK (needs r28+ for the ARM64
     // TLS alignment fix; we ship against r29 stable in CI).
     environment("PROOT_OUTPUT", jniLibsDir.absolutePath)
@@ -126,7 +135,6 @@ val fetchQemuLoaders by tasks.registering(Exec::class) {
     inputs.file(script)
     outputs.files(
         file("src/main/jniLibs/arm64-v8a/libqemu_x86_64.so"),
-        file("src/main/jniLibs/x86_64/libqemu_aarch64.so"),
     )
     onlyIf { !project.hasProperty("skipQemuLoaders") }
 
