@@ -196,6 +196,27 @@ fun WaylandDesktopView(
             factory = { context ->
                 @SuppressLint("ClickableViewAccessibility")
                 object : TextureView(context) {
+                    private val imeKeyRouter = WaylandImeKeyRouter(WaylandBridge::nativeSendKey)
+                    private var imeEchoDrainPosted = false
+                    private val imeEchoDrainRunnable = Runnable {
+                        imeKeyRouter.drainTextEchoes()
+                        imeEchoDrainPosted = false
+                    }
+                    private val imeEchoDrainScheduler = Runnable {
+                        post(imeEchoDrainRunnable)
+                    }
+
+                    private fun sendImeChar(ch: Char) {
+                        if (!imeKeyRouter.sendTextCharacter(ch)) return
+                        // Keep the suppression queue through callbacks the IME posts
+                        // later in this same Looper turn, then expire it. A later real
+                        // keypress with the same character must not be swallowed.
+                        if (!imeEchoDrainPosted) {
+                            imeEchoDrainPosted = true
+                            post(imeEchoDrainScheduler)
+                        }
+                    }
+
                     init {
                         isFocusable = true
                         isFocusableInTouchMode = true
@@ -280,6 +301,17 @@ fun WaylandDesktopView(
                             EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
                         val view = this
                         return object : BaseInputConnection(view, false) {
+                            /*
+                             * IME key events are synthetic taps, not a physical key state.
+                             * Some Android keyboards send only ACTION_DOWN for printable or
+                             * navigation keys and expect the target text editor to consume it.
+                             * Forwarding that as an evdev key-down made labwc/Xwayland own the
+                             * repeat and type forever because no ACTION_UP ever arrived.
+                             *
+                             * Physical keyboards still use TextureView.onKeyDown/onKeyUp below,
+                             * so their genuine press-and-hold repeat remains stateful. This router
+                             * also drops the raw-key echo some IMEs emit after commitText.
+                             */
                             // Chars already forwarded as evdev for the current
                             // composing region. IMEs that ignore the
                             // no-suggestions hint (Samsung, CJK) still compose;
@@ -300,12 +332,12 @@ fun WaylandDesktopView(
                                 when {
                                     new == composing -> {}
                                     new.startsWith(composing) ->
-                                        new.substring(composing.length).forEach { sendCharAsEvdev(it) }
+                                        new.substring(composing.length).forEach { sendImeChar(it) }
                                     composing.startsWith(new) ->
                                         backspaces(composing.length - new.length)
                                     else -> {
                                         backspaces(composing.length)
-                                        new.forEach { sendCharAsEvdev(it) }
+                                        new.forEach { sendImeChar(it) }
                                     }
                                 }
                                 composing = new
@@ -320,11 +352,11 @@ fun WaylandDesktopView(
                             override fun commitText(text: CharSequence?, newCursorPosition: Int): Boolean {
                                 val committed = text?.toString() ?: ""
                                 when {
-                                    composing.isEmpty() -> committed.forEach { sendCharAsEvdev(it) }
+                                    composing.isEmpty() -> committed.forEach { sendImeChar(it) }
                                     committed == composing -> { /* already sent via composing deltas */ }
                                     else -> {
                                         backspaces(composing.length)
-                                        committed.forEach { sendCharAsEvdev(it) }
+                                        committed.forEach { sendImeChar(it) }
                                     }
                                 }
                                 composing = ""
@@ -343,11 +375,34 @@ fun WaylandDesktopView(
                             }
 
                             override fun sendKeyEvent(event: AndroidKeyEvent): Boolean {
+                                // A physical keyboard forwarded through the InputConnection
+                                // keeps its real down/up pair and hold semantics via the View.
+                                if (!isImeGeneratedKeyEvent(event.deviceId, event.flags)) {
+                                    return super.sendKeyEvent(event)
+                                }
+                                if (event.action == AndroidKeyEvent.ACTION_MULTIPLE &&
+                                    !event.characters.isNullOrEmpty()
+                                ) {
+                                    event.characters!!.forEach { sendImeChar(it) }
+                                    return true
+                                }
                                 val evdev = androidToEvdev(event.keyCode)
                                 if (evdev >= 0) {
-                                    val pressed = if (event.action == AndroidKeyEvent.ACTION_DOWN) 1 else 0
-                                    WaylandBridge.nativeSendKey(evdev, pressed)
-                                    return true
+                                    return when (event.action) {
+                                        AndroidKeyEvent.ACTION_DOWN -> {
+                                            imeKeyRouter.onImeKeyDown(evdev)
+                                            true
+                                        }
+
+                                        AndroidKeyEvent.ACTION_UP -> {
+                                            // onImeKeyDown already emitted a bounded down+up tap.
+                                            // Consume a later UP without forwarding a duplicate release.
+                                            imeKeyRouter.onImeKeyUp(evdev)
+                                            true
+                                        }
+
+                                        else -> super.sendKeyEvent(event)
+                                    }
                                 }
                                 return super.sendKeyEvent(event)
                             }
@@ -359,7 +414,13 @@ fun WaylandDesktopView(
                     override fun onKeyDown(keyCode: Int, event: AndroidKeyEvent?): Boolean {
                         val evdev = androidToEvdev(keyCode)
                         if (evdev >= 0) {
-                            WaylandBridge.nativeSendKey(evdev, 1)
+                            if (event != null && isImeGeneratedKeyEvent(event.deviceId, event.flags)) {
+                                // Some IMEs bypass InputConnection.sendKeyEvent and dispatch
+                                // a virtual key directly to the target View. It is still a tap.
+                                imeKeyRouter.onImeKeyDown(evdev)
+                            } else {
+                                WaylandBridge.nativeSendKey(evdev, 1)
+                            }
                             return true
                         }
                         return super.onKeyDown(keyCode, event)
@@ -368,7 +429,11 @@ fun WaylandDesktopView(
                     override fun onKeyUp(keyCode: Int, event: AndroidKeyEvent?): Boolean {
                         val evdev = androidToEvdev(keyCode)
                         if (evdev >= 0) {
-                            WaylandBridge.nativeSendKey(evdev, 0)
+                            if (event != null && isImeGeneratedKeyEvent(event.deviceId, event.flags)) {
+                                imeKeyRouter.onImeKeyUp(evdev)
+                            } else {
+                                WaylandBridge.nativeSendKey(evdev, 0)
+                            }
                             return true
                         }
                         return super.onKeyUp(keyCode, event)
@@ -555,6 +620,58 @@ fun WaylandDesktopView(
     }
     } // Column
 }
+
+/**
+ * Converts the soft keyboard's text/key callbacks into bounded evdev taps.
+ *
+ * An Android IME is not a physical keyboard: it is allowed to submit a key as
+ * commitText plus a synthetic KeyEvent, and several IMEs omit ACTION_UP for
+ * navigation/printable keys. Letting that DOWN escape into Wayland leaves the
+ * key held indefinitely, so Xwayland's repeat timer produces an endless stream.
+ * Physical key state deliberately bypasses this class via TextureView.onKey*.
+ */
+internal class WaylandImeKeyRouter(
+    private val sendKey: (evdev: Int, pressed: Int) -> Unit,
+) {
+    private val pendingTextEchoes = ArrayDeque<Int>()
+
+    /** Sends text immediately and remembers its evdev code for raw-key echo suppression. */
+    fun sendTextCharacter(ch: Char): Boolean {
+        val evdev = sendCharAsEvdev(ch, sendKey)
+        if (evdev < 0) return false
+        pendingTextEchoes.addLast(evdev)
+        return true
+    }
+
+    /** ACTION_DOWN from InputConnection: suppress a matching text echo or send one tap. */
+    fun onImeKeyDown(evdev: Int) {
+        if (pendingTextEchoes.firstOrNull() == evdev) {
+            pendingTextEchoes.removeFirst()
+            return
+        }
+        // A different key proves the pending text belonged to an earlier callback.
+        pendingTextEchoes.clear()
+        sendTap(evdev)
+    }
+
+    /** ACTION_UP is already represented by the bounded tap emitted on DOWN. */
+    fun onImeKeyUp(@Suppress("UNUSED_PARAMETER") evdev: Int) = Unit
+
+    /** Called after the current IME/Looper turn so a later identical key stays genuine. */
+    fun drainTextEchoes() {
+        pendingTextEchoes.clear()
+    }
+
+    private fun sendTap(evdev: Int) {
+        sendKey(evdev, 1)
+        sendKey(evdev, 0)
+    }
+}
+
+/** True for soft/virtual keyboard events; false for a real hardware device. */
+internal fun isImeGeneratedKeyEvent(deviceId: Int, flags: Int): Boolean =
+    deviceId == android.view.KeyCharacterMap.VIRTUAL_KEYBOARD ||
+        flags and AndroidKeyEvent.FLAG_SOFT_KEYBOARD != 0
 
 /* Must match DPI_SCALE in wayland-android/jni_bridge.c — the compositor
  * renders at physical_pixels / DPI_SCALE and Android upscales. Used only to
@@ -750,10 +867,16 @@ internal fun charToEvdevWithShift(ch: Char): Pair<Int, Boolean> = when (ch) {
 
 /** Send a character as evdev key event(s), wrapping with Shift when needed. */
 internal fun sendCharAsEvdev(ch: Char) {
+    sendCharAsEvdev(ch, WaylandBridge::nativeSendKey)
+}
+
+/** Testable implementation shared by IME text and toolbar/paste input. */
+private fun sendCharAsEvdev(ch: Char, sendKey: (evdev: Int, pressed: Int) -> Unit): Int {
     val (evdev, needsShift) = charToEvdevWithShift(ch)
-    if (evdev < 0) return
-    if (needsShift) WaylandBridge.nativeSendKey(KEY_LEFTSHIFT, 1)
-    WaylandBridge.nativeSendKey(evdev, 1)
-    WaylandBridge.nativeSendKey(evdev, 0)
-    if (needsShift) WaylandBridge.nativeSendKey(KEY_LEFTSHIFT, 0)
+    if (evdev < 0) return -1
+    if (needsShift) sendKey(KEY_LEFTSHIFT, 1)
+    sendKey(evdev, 1)
+    sendKey(evdev, 0)
+    if (needsShift) sendKey(KEY_LEFTSHIFT, 0)
+    return evdev
 }

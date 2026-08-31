@@ -175,6 +175,8 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:toolbar"))
     implementation(project(":core:data"))
+
+    testImplementation(libs.junit)
 }
 
 kotlin {

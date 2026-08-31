@@ -13,7 +13,7 @@ before rebasing, changing release configuration, or producing APKs.
   upstream `sh.haven.app` package to remain installed.
 - Display name: `Haven修改版`.
 - Version name: `<upstream-version>-fork-<revision>`, currently
-  `5.87.70-fork-1`.
+  `5.87.70-fork-2`.
 - Version code: `(upstreamVersionCode * 100 + forkRevision) * 10 + abiOffset`.
   ARM64 uses offset 1 and ARM32 uses offset 3. For another fork update on the
   same upstream version, increment `forkRevision` in `app/build.gradle.kts`.
@@ -31,6 +31,10 @@ before rebasing, changing release configuration, or producing APKs.
 3. `89afc790` (`app: give fork an independent Android identity`) separates the
    application ID, DocumentsProvider/FileProvider/Shizuku/Startup authorities,
    debug broadcast actions, APK identity, and app data from upstream Haven.
+4. Fork update 2 fixes Native X11 soft-keyboard events being left in the
+   pressed state. IME-originated keys are bounded evdev taps, printable
+   commit/raw-key echoes are suppressed within the same Looper turn, and the
+   physical-keyboard down/up path remains unchanged for deliberate key holds.
 
 ## Packaging constraints
 
@@ -48,6 +52,6 @@ before rebasing, changing release configuration, or producing APKs.
 
 - Application ID: `sh.haven.app.fork`
 - Display name: `Haven修改版`
-- Version: `5.87.70-fork-1`
-- ARM64 version code: `833011`
-- ARM32 version code: `833013`
+- Version: `5.87.70-fork-2`
+- ARM64 version code: `833021`
+- ARM32 version code: `833023`
