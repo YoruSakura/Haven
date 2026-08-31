@@ -10,7 +10,7 @@ plugins {
 // upstream release, increment forkRevision only (1 -> 2 -> 3 ...).
 val upstreamVersionCode = 833
 val upstreamVersionName = "5.87.70"
-val forkRevision = 2
+val forkRevision = 3
 val forkVersionCodeBase = upstreamVersionCode * 100 + forkRevision
 
 android {
@@ -24,7 +24,7 @@ android {
         minSdk = 26
         targetSdk = 35
         // Reserve two decimal digits for fork updates. The ABI digit is added
-        // by androidComponents below, yielding 833021/833023 for fork-2.
+        // by androidComponents below, yielding 833031/833033 for fork-3.
         versionCode = forkVersionCodeBase
         versionName = "$upstreamVersionName-fork-$forkRevision"
 

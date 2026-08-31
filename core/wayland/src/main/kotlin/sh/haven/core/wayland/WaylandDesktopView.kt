@@ -197,6 +197,7 @@ fun WaylandDesktopView(
                 @SuppressLint("ClickableViewAccessibility")
                 object : TextureView(context) {
                     private val imeKeyRouter = WaylandImeKeyRouter(WaylandBridge::nativeSendKey)
+                    private val hardwareKeyRouter = WaylandHardwareKeyRouter(WaylandBridge::nativeSendKey)
                     private var imeEchoDrainPosted = false
                     private val imeEchoDrainRunnable = Runnable {
                         imeKeyRouter.drainTextEchoes()
@@ -308,9 +309,11 @@ fun WaylandDesktopView(
                              * Forwarding that as an evdev key-down made labwc/Xwayland own the
                              * repeat and type forever because no ACTION_UP ever arrived.
                              *
-                             * Physical keyboards still use TextureView.onKeyDown/onKeyUp below,
-                             * so their genuine press-and-hold repeat remains stateful. This router
-                             * also drops the raw-key echo some IMEs emit after commitText.
+                             * Physical keyboards use TextureView.onKeyDown/onKeyUp below. Normal
+                             * keys are bounded taps there too, while modifiers remain stateful for
+                             * Ctrl/Alt/Shift chords. Android repeat DOWN events preserve long-press
+                             * input without leaving a key held inside Wayland. This router also
+                             * drops the raw-key echo some IMEs emit after commitText.
                              */
                             // Chars already forwarded as evdev for the current
                             // composing region. IMEs that ignore the
@@ -376,7 +379,7 @@ fun WaylandDesktopView(
 
                             override fun sendKeyEvent(event: AndroidKeyEvent): Boolean {
                                 // A physical keyboard forwarded through the InputConnection
-                                // keeps its real down/up pair and hold semantics via the View.
+                                // uses the hardware router in the View dispatch path below.
                                 if (!isImeGeneratedKeyEvent(event.deviceId, event.flags)) {
                                     return super.sendKeyEvent(event)
                                 }
@@ -419,7 +422,7 @@ fun WaylandDesktopView(
                                 // a virtual key directly to the target View. It is still a tap.
                                 imeKeyRouter.onImeKeyDown(evdev)
                             } else {
-                                WaylandBridge.nativeSendKey(evdev, 1)
+                                hardwareKeyRouter.onKeyDown(evdev)
                             }
                             return true
                         }
@@ -432,11 +435,25 @@ fun WaylandDesktopView(
                             if (event != null && isImeGeneratedKeyEvent(event.deviceId, event.flags)) {
                                 imeKeyRouter.onImeKeyUp(evdev)
                             } else {
-                                WaylandBridge.nativeSendKey(evdev, 0)
+                                hardwareKeyRouter.onKeyUp(evdev)
                             }
                             return true
                         }
                         return super.onKeyUp(keyCode, event)
+                    }
+
+                    override fun onFocusChanged(
+                        gainFocus: Boolean,
+                        direction: Int,
+                        previouslyFocusedRect: android.graphics.Rect?,
+                    ) {
+                        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
+                        if (!gainFocus) hardwareKeyRouter.releaseAllModifiers()
+                    }
+
+                    override fun onDetachedFromWindow() {
+                        hardwareKeyRouter.releaseAllModifiers()
+                        super.onDetachedFromWindow()
                     }
 
                     override fun onKeyMultiple(keyCode: Int, repeatCount: Int, event: AndroidKeyEvent?): Boolean {
@@ -668,6 +685,50 @@ internal class WaylandImeKeyRouter(
     }
 }
 
+/**
+ * Routes a physical Android keyboard without allowing ordinary keys to remain
+ * pressed in Wayland when a device or View hierarchy drops ACTION_UP.
+ *
+ * Every non-modifier DOWN is one complete evdev tap. Android emits additional
+ * DOWN events while a physical key is deliberately held, so normal key repeat
+ * still works without relying on the compositor's indefinitely held state.
+ * Ctrl, Alt, and Shift remain stateful so keyboard shortcuts keep working.
+ */
+internal class WaylandHardwareKeyRouter(
+    private val sendKey: (evdev: Int, pressed: Int) -> Unit,
+) {
+    private val heldModifiers = linkedSetOf<Int>()
+
+    fun onKeyDown(evdev: Int) {
+        if (isStatefulModifier(evdev)) {
+            if (heldModifiers.add(evdev)) sendKey(evdev, 1)
+            return
+        }
+        sendKey(evdev, 1)
+        sendKey(evdev, 0)
+    }
+
+    fun onKeyUp(evdev: Int) {
+        if (isStatefulModifier(evdev) && heldModifiers.remove(evdev)) {
+            sendKey(evdev, 0)
+        }
+    }
+
+    /** Prevent a modifier from sticking when focus/window teardown loses UP. */
+    fun releaseAllModifiers() {
+        heldModifiers.forEach { sendKey(it, 0) }
+        heldModifiers.clear()
+    }
+}
+
+/** Modifiers must stay pressed across the following bounded normal-key tap. */
+internal fun isStatefulModifier(evdev: Int): Boolean = when (evdev) {
+    KEY_LEFTSHIFT, KEY_RIGHTSHIFT,
+    KEY_LEFTCTRL, KEY_RIGHTCTRL,
+    KEY_LEFTALT, KEY_RIGHTALT -> true
+    else -> false
+}
+
 /** True for soft/virtual keyboard events; false for a real hardware device. */
 internal fun isImeGeneratedKeyEvent(deviceId: Int, flags: Int): Boolean =
     deviceId == android.view.KeyCharacterMap.VIRTUAL_KEYBOARD ||
@@ -782,12 +843,12 @@ private fun androidToEvdev(keyCode: Int): Int = when (keyCode) {
     AndroidKeyEvent.KEYCODE_DPAD_DOWN -> 108
     AndroidKeyEvent.KEYCODE_DPAD_LEFT -> 105
     AndroidKeyEvent.KEYCODE_DPAD_RIGHT -> 106
-    AndroidKeyEvent.KEYCODE_SHIFT_LEFT -> 42
-    AndroidKeyEvent.KEYCODE_SHIFT_RIGHT -> 54
-    AndroidKeyEvent.KEYCODE_CTRL_LEFT -> 29
-    AndroidKeyEvent.KEYCODE_CTRL_RIGHT -> 97
-    AndroidKeyEvent.KEYCODE_ALT_LEFT -> 56
-    AndroidKeyEvent.KEYCODE_ALT_RIGHT -> 100
+    AndroidKeyEvent.KEYCODE_SHIFT_LEFT -> KEY_LEFTSHIFT
+    AndroidKeyEvent.KEYCODE_SHIFT_RIGHT -> KEY_RIGHTSHIFT
+    AndroidKeyEvent.KEYCODE_CTRL_LEFT -> KEY_LEFTCTRL
+    AndroidKeyEvent.KEYCODE_CTRL_RIGHT -> KEY_RIGHTCTRL
+    AndroidKeyEvent.KEYCODE_ALT_LEFT -> KEY_LEFTALT
+    AndroidKeyEvent.KEYCODE_ALT_RIGHT -> KEY_RIGHTALT
     AndroidKeyEvent.KEYCODE_MINUS -> 12
     AndroidKeyEvent.KEYCODE_EQUALS -> 13
     AndroidKeyEvent.KEYCODE_LEFT_BRACKET -> 26
@@ -821,7 +882,12 @@ private fun androidToEvdev(keyCode: Int): Int = when (keyCode) {
     else -> -1
 }
 
+private const val KEY_LEFTCTRL = 29
 private const val KEY_LEFTSHIFT = 42
+private const val KEY_RIGHTSHIFT = 54
+private const val KEY_LEFTALT = 56
+private const val KEY_RIGHTCTRL = 97
+private const val KEY_RIGHTALT = 100
 
 /**
  * Map a typed character to (evdev keycode, needsShift).

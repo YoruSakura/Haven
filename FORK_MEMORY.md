@@ -13,7 +13,7 @@ before rebasing, changing release configuration, or producing APKs.
   upstream `sh.haven.app` package to remain installed.
 - Display name: `Haven修改版`.
 - Version name: `<upstream-version>-fork-<revision>`, currently
-  `5.87.70-fork-2`.
+  `5.87.70-fork-3`.
 - Version code: `(upstreamVersionCode * 100 + forkRevision) * 10 + abiOffset`.
   ARM64 uses offset 1 and ARM32 uses offset 3. For another fork update on the
   same upstream version, increment `forkRevision` in `app/build.gradle.kts`.
@@ -34,7 +34,12 @@ before rebasing, changing release configuration, or producing APKs.
 4. Fork update 2 fixes Native X11 soft-keyboard events being left in the
    pressed state. IME-originated keys are bounded evdev taps, printable
    commit/raw-key echoes are suppressed within the same Looper turn, and the
-   physical-keyboard down/up path remains unchanged for deliberate key holds.
+   physical-keyboard path is handled separately.
+5. Fork update 3 fixes tablet physical keyboards whose Android/View path drops
+   `ACTION_UP` for Space or horizontal arrow keys. Normal hardware-key DOWN
+   events are bounded evdev taps (Android repeat DOWN events preserve deliberate
+   long-press repeat); Ctrl/Alt/Shift remain stateful for shortcuts and are
+   released defensively when the Wayland view loses focus or detaches.
 
 ## Packaging constraints
 
@@ -52,6 +57,6 @@ before rebasing, changing release configuration, or producing APKs.
 
 - Application ID: `sh.haven.app.fork`
 - Display name: `Haven修改版`
-- Version: `5.87.70-fork-2`
-- ARM64 version code: `833021`
-- ARM32 version code: `833023`
+- Version: `5.87.70-fork-3`
+- ARM64 version code: `833031`
+- ARM32 version code: `833033`

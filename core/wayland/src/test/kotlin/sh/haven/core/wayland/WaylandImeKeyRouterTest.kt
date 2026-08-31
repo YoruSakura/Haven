@@ -128,7 +128,7 @@ class WaylandImeKeyRouterTest {
     }
 
     @Test
-    fun `physical keyboard keeps stateful down up routing`() {
+    fun `physical keyboard is distinguished from IME input`() {
         assertEquals(false, isImeGeneratedKeyEvent(deviceId = 4, flags = 0))
     }
 }
