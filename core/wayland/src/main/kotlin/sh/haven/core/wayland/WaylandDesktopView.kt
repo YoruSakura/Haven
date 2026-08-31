@@ -309,11 +309,12 @@ fun WaylandDesktopView(
                              * Forwarding that as an evdev key-down made labwc/Xwayland own the
                              * repeat and type forever because no ACTION_UP ever arrived.
                              *
-                             * Physical keyboards use TextureView.onKeyDown/onKeyUp below. Normal
-                             * keys are bounded taps there too, while modifiers remain stateful for
-                             * Ctrl/Alt/Shift chords. Android repeat DOWN events preserve long-press
-                             * input without leaving a key held inside Wayland. This router also
-                             * drops the raw-key echo some IMEs emit after commitText.
+                             * Physical keyboards use TextureView.onKeyDown below. Each normal key
+                             * is sent as one self-contained chord derived from KeyEvent.metaState,
+                             * so Ctrl/Alt/Shift shortcuts work without any modifier remaining held
+                             * between Android events. Android repeat DOWN events preserve long-press
+                             * input. This router also drops the raw-key echo some IMEs emit after
+                             * commitText.
                              */
                             // Chars already forwarded as evdev for the current
                             // composing region. IMEs that ignore the
@@ -422,7 +423,7 @@ fun WaylandDesktopView(
                                 // a virtual key directly to the target View. It is still a tap.
                                 imeKeyRouter.onImeKeyDown(evdev)
                             } else {
-                                hardwareKeyRouter.onKeyDown(evdev)
+                                hardwareKeyRouter.onKeyDown(evdev, event?.metaState ?: 0)
                             }
                             return true
                         }
@@ -440,20 +441,6 @@ fun WaylandDesktopView(
                             return true
                         }
                         return super.onKeyUp(keyCode, event)
-                    }
-
-                    override fun onFocusChanged(
-                        gainFocus: Boolean,
-                        direction: Int,
-                        previouslyFocusedRect: android.graphics.Rect?,
-                    ) {
-                        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect)
-                        if (!gainFocus) hardwareKeyRouter.releaseAllModifiers()
-                    }
-
-                    override fun onDetachedFromWindow() {
-                        hardwareKeyRouter.releaseAllModifiers()
-                        super.onDetachedFromWindow()
                     }
 
                     override fun onKeyMultiple(keyCode: Int, repeatCount: Int, event: AndroidKeyEvent?): Boolean {
@@ -689,44 +676,78 @@ internal class WaylandImeKeyRouter(
  * Routes a physical Android keyboard without allowing ordinary keys to remain
  * pressed in Wayland when a device or View hierarchy drops ACTION_UP.
  *
- * Every non-modifier DOWN is one complete evdev tap. Android emits additional
- * DOWN events while a physical key is deliberately held, so normal key repeat
- * still works without relying on the compositor's indefinitely held state.
- * Ctrl, Alt, and Shift remain stateful so keyboard shortcuts keep working.
+ * Every non-modifier DOWN is one complete evdev chord. Ctrl, Alt, and Shift
+ * come from that event's Android metaState and are released before the method
+ * returns. Standalone modifier DOWN/UP events are consumed without forwarding,
+ * so a missing modifier UP cannot corrupt later terminal input. Android emits
+ * additional DOWN events while a physical key is deliberately held, preserving
+ * normal key repeat without relying on compositor-held state.
  */
 internal class WaylandHardwareKeyRouter(
     private val sendKey: (evdev: Int, pressed: Int) -> Unit,
 ) {
-    private val heldModifiers = linkedSetOf<Int>()
-
-    fun onKeyDown(evdev: Int) {
-        if (isStatefulModifier(evdev)) {
-            if (heldModifiers.add(evdev)) sendKey(evdev, 1)
-            return
-        }
+    fun onKeyDown(evdev: Int, metaState: Int = 0) {
+        if (isModifierKey(evdev)) return
+        val modifiers = modifierEvdevKeys(metaState)
+        modifiers.forEach { sendKey(it, 1) }
         sendKey(evdev, 1)
         sendKey(evdev, 0)
+        modifiers.asReversed().forEach { sendKey(it, 0) }
     }
 
-    fun onKeyUp(evdev: Int) {
-        if (isStatefulModifier(evdev) && heldModifiers.remove(evdev)) {
-            sendKey(evdev, 0)
-        }
-    }
-
-    /** Prevent a modifier from sticking when focus/window teardown loses UP. */
-    fun releaseAllModifiers() {
-        heldModifiers.forEach { sendKey(it, 0) }
-        heldModifiers.clear()
-    }
+    /** Every forwarded chord was already released during ACTION_DOWN. */
+    fun onKeyUp(@Suppress("UNUSED_PARAMETER") evdev: Int) = Unit
 }
 
-/** Modifiers must stay pressed across the following bounded normal-key tap. */
-internal fun isStatefulModifier(evdev: Int): Boolean = when (evdev) {
+/** Standalone modifiers are represented only through a normal key's metaState. */
+internal fun isModifierKey(evdev: Int): Boolean = when (evdev) {
     KEY_LEFTSHIFT, KEY_RIGHTSHIFT,
     KEY_LEFTCTRL, KEY_RIGHTCTRL,
     KEY_LEFTALT, KEY_RIGHTALT -> true
     else -> false
+}
+
+/** Resolve Android's generic/side-specific modifier flags to evdev keys once. */
+internal fun modifierEvdevKeys(metaState: Int): List<Int> = buildList {
+    addModifierKeys(
+        metaState,
+        AndroidKeyEvent.META_CTRL_ON,
+        AndroidKeyEvent.META_CTRL_LEFT_ON,
+        AndroidKeyEvent.META_CTRL_RIGHT_ON,
+        KEY_LEFTCTRL,
+        KEY_RIGHTCTRL,
+    )
+    addModifierKeys(
+        metaState,
+        AndroidKeyEvent.META_ALT_ON,
+        AndroidKeyEvent.META_ALT_LEFT_ON,
+        AndroidKeyEvent.META_ALT_RIGHT_ON,
+        KEY_LEFTALT,
+        KEY_RIGHTALT,
+    )
+    addModifierKeys(
+        metaState,
+        AndroidKeyEvent.META_SHIFT_ON,
+        AndroidKeyEvent.META_SHIFT_LEFT_ON,
+        AndroidKeyEvent.META_SHIFT_RIGHT_ON,
+        KEY_LEFTSHIFT,
+        KEY_RIGHTSHIFT,
+    )
+}
+
+private fun MutableList<Int>.addModifierKeys(
+    metaState: Int,
+    genericFlag: Int,
+    leftFlag: Int,
+    rightFlag: Int,
+    leftEvdev: Int,
+    rightEvdev: Int,
+) {
+    val hasLeft = metaState and leftFlag != 0
+    val hasRight = metaState and rightFlag != 0
+    if (hasLeft) add(leftEvdev)
+    if (hasRight) add(rightEvdev)
+    if (!hasLeft && !hasRight && metaState and genericFlag != 0) add(leftEvdev)
 }
 
 /** True for soft/virtual keyboard events; false for a real hardware device. */
