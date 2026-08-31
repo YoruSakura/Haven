@@ -23,8 +23,8 @@ private const val TAG = "MoshSessionManager"
  * any length (it keeps re-syncing against the same key/port and rebinds
  * its socket for IP roaming), so a DISCONNECTED status here always means
  * the session is genuinely over (shell exited or fatal transport error).
- *
- * Uses pure Kotlin MoshTransport — no native binary or PTY needed.
+ * Direct sessions prefer upstream mosh-client in a PTY; tunneled/no-artifact
+ * sessions retain the Kotlin MoshTransport backend.
  */
 @Singleton
 class MoshSessionManager @Inject constructor(
@@ -116,9 +116,8 @@ class MoshSessionManager @Inject constructor(
     }
 
     /**
-     * Connect a registered session using the pure Kotlin mosh transport.
-     * Stores connection parameters; the actual transport starts when
-     * [createTerminalSession] is called.
+     * Store the Mosh bootstrap result. The selected data-plane backend starts
+     * when [createTerminalSession] is called.
      */
     fun connectSession(
         sessionId: String,
@@ -180,6 +179,7 @@ class MoshSessionManager @Inject constructor(
         if (session.serverIp.isEmpty()) return null
 
         val moshSession = MoshSession(
+            context = context,
             sessionId = sessionId,
             profileId = session.profileId,
             label = session.label,
@@ -204,8 +204,10 @@ class MoshSessionManager @Inject constructor(
                 if (!cleanExit) onSessionDied?.invoke(session.profileId, sessionId)
             },
             verboseBuffer = session.verboseBuffer,
-            socketProvider = session.socketProvider
-                ?: UdpSocketProvider { sh.haven.mosh.network.AndroidUdpAdapter() },
+            // Preserve null for direct UDP: MoshSession uses it to select the
+            // packaged upstream client. Only a genuinely injected provider
+            // forces the Kotlin SSP backend.
+            socketProvider = session.socketProvider,
             networkAvailable = ::hasNetwork,
         )
 

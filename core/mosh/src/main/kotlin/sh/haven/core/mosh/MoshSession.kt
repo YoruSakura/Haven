@@ -1,5 +1,6 @@
 package sh.haven.core.mosh
 
+import android.content.Context
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,12 +21,13 @@ private const val TAG = "MoshSession"
 /**
  * Bridges a mosh transport session to the terminal emulator.
  *
- * Parallel to ReticulumSession: manages a transport instance and
- * shuttles terminal data between the mosh server and termlib.
- * No PTY or native code — the pure Kotlin MoshTransport handles
- * UDP, encryption, and protocol framing in-process.
+ * Direct profiles prefer upstream mosh-client in a child PTY, giving Haven
+ * upstream's prediction and terminal state model. Profiles that inject a
+ * tunnel UDP socket, plus builds without the native artifact, retain the
+ * in-process Kotlin SSP transport.
  */
 class MoshSession(
+    private val context: Context? = null,
     val sessionId: String,
     val profileId: String,
     val label: String,
@@ -38,14 +40,13 @@ class MoshSession(
     private val initialRows: Int = 24,
     private val verboseBuffer: ConcurrentLinkedQueue<String>? = null,
     /**
-     * UDP socket factory. Defaults to a plain
-     * [java.net.DatagramSocket] via [AndroidUdpAdapter]. When the
-     * profile selects a tunnel, [MoshSessionManager.connectSession]
-     * supplies a provider that routes UDP through the tunnel
+     * Optional injected UDP socket factory. null marks a direct profile and
+     * permits the native backend. When the profile selects a tunnel,
+     * [MoshSessionManager.connectSession] supplies a provider that routes UDP
+     * through the tunnel
      * ([sh.haven.core.tunnel.TunneledDatagramSocket]) — fix for #164.
      */
-    private val socketProvider: UdpSocketProvider =
-        UdpSocketProvider { AndroidUdpAdapter() },
+    private val socketProvider: UdpSocketProvider? = null,
     /**
      * Reports whether the device has a usable network, so the transport can
      * tell a roaming session apart from one the server no longer has (#421).
@@ -72,20 +73,20 @@ class MoshSession(
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var transport: MoshTransport? = null
+    private var nativeClient: NativeMoshClient? = null
 
     /**
-     * Forwarded from [MoshTransport.stallSeconds]: seconds since the last
-     * server packet once the connection has stalled, null while healthy.
-     * The transport retries indefinitely — this is an indicator, not a
-     * countdown to disconnect.
+     * Forwarded from [MoshTransport.stallSeconds] on the Kotlin backend:
+     * seconds since the last server packet once the connection has stalled.
+     * Native upstream sessions leave this null and manage roaming internally.
      */
     private val _stallSeconds = MutableStateFlow<Int?>(null)
     val stallSeconds: StateFlow<Int?> = _stallSeconds.asStateFlow()
 
     /**
-     * Start the mosh transport: opens UDP socket, begins send/receive loops.
+     * Start the selected Mosh backend.
      *
-     * Before wiring up the transport we also push one synthetic byte
+     * Before wiring up the Kotlin fallback we also push one synthetic byte
      * sequence — [DECCKM_ON] — into the client-side emulator. See the
      * companion comment on that constant for why. This is the fix for
      * GlassOnTin/Haven#73.
@@ -93,6 +94,48 @@ class MoshSession(
     fun start() {
         if (closed) return
         Log.d(TAG, "Starting mosh transport for $sessionId: $serverIp:$moshPort")
+
+        val backend = selectMoshBackend(
+            nativeAvailable = context?.let { NativeMoshClient.isAvailable(it) } == true,
+            tunneled = socketProvider != null,
+        )
+        if (backend == MoshBackendKind.UPSTREAM_NATIVE) {
+            try {
+                val client = NativeMoshClient(
+                    context = checkNotNull(context),
+                    sessionId = sessionId,
+                    serverIp = serverIp,
+                    port = moshPort,
+                    key = moshKey,
+                    onDataReceived = onDataReceived,
+                    onExited = { exitCode ->
+                        if (!closed) {
+                            Log.d(TAG, "Native mosh-client exited for $sessionId: code=$exitCode")
+                            onDisconnected?.invoke(exitCode == 0)
+                        }
+                    },
+                )
+                nativeClient = client
+                client.start(rows = initialRows, cols = initialCols)
+                verboseBuffer?.add("+${System.currentTimeMillis() - startTime}ms [$TAG] backend=upstream-native-1.4.0")
+                return
+            } catch (e: Throwable) {
+                if (e is VirtualMachineError || e is ThreadDeath) throw e
+                nativeClient?.close()
+                nativeClient = null
+                Log.w(TAG, "Native mosh-client unavailable; falling back to Kotlin SSP: ${e.message}")
+                verboseBuffer?.add(
+                    "+${System.currentTimeMillis() - startTime}ms [$TAG] " +
+                        "native backend failed (${e.message}); backend=kotlin-ssp",
+                )
+            }
+        } else {
+            val reason = if (socketProvider != null) "tunneled-profile" else "native-artifact-missing"
+            Log.d(TAG, "Using Kotlin SSP backend for $sessionId: $reason")
+            verboseBuffer?.add(
+                "+${System.currentTimeMillis() - startTime}ms [$TAG] backend=kotlin-ssp reason=$reason",
+            )
+        }
 
         // Put the client-side terminal into application cursor key mode
         // (DECCKM = on) BEFORE any server diff bytes arrive. Without this,
@@ -124,7 +167,7 @@ class MoshSession(
             logger = logger,
             initialCols = initialCols,
             initialRows = initialRows,
-            socketProvider = socketProvider,
+            socketProvider = socketProvider ?: UdpSocketProvider { AndroidUdpAdapter() },
             networkAvailable = networkAvailable,
         )
         transport = t
@@ -140,7 +183,7 @@ class MoshSession(
      */
     fun sendInput(data: ByteArray) {
         if (closed) return
-        transport?.sendInput(data)
+        nativeClient?.sendInput(data) ?: transport?.sendInput(data)
     }
 
     /**
@@ -148,7 +191,7 @@ class MoshSession(
      */
     fun resize(cols: Int, rows: Int) {
         if (closed) return
-        transport?.resize(cols, rows)
+        nativeClient?.resize(cols, rows) ?: transport?.resize(cols, rows)
     }
 
     /**
@@ -158,6 +201,8 @@ class MoshSession(
     fun detach() {
         if (closed) return
         closed = true
+        nativeClient?.close()
+        nativeClient = null
         transport?.close()
         transport = null
     }
@@ -177,6 +222,8 @@ class MoshSession(
     override fun close() {
         if (closed) return
         closed = true
+        nativeClient?.close()
+        nativeClient = null
         transport?.close()
         transport = null
     }

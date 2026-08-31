@@ -1,142 +1,93 @@
-# Mosh Protocol Implementation
+# Mosh Backends
 
-Pure Kotlin implementation of the mosh (mobile shell) client protocol,
-replacing the prebuilt C++ `libmoshclient.so` binary.
+Haven uses two Mosh data-plane implementations behind the same SSH bootstrap
+and terminal UI.
 
-## Architecture
+## Backend selection
 
-```
-SSH bootstrap (ConnectionsViewModel)
-  └─ exec "mosh-server new" → parse MOSH CONNECT <port> <key>
+| Profile/runtime | Backend | Why |
+|---|---|---|
+| Direct UDP and `libmosh_client.so` packaged for the device ABI | upstream `mosh-client` 1.4.0 | Full terminal state model, adaptive speculative local echo, rollback, RTT handling, retransmission and roaming |
+| WireGuard/Tailscale injected UDP socket | Kotlin SSP | Native mosh cannot consume Haven's `UdpSocketProvider` abstraction |
+| Source/test build with no native executable | Kotlin SSP | Keeps Mosh available and makes partial/offline builds degrade safely |
 
-MoshTransport (pure Kotlin, in-process)
-  ├─ MoshCrypto      AES-128-OCB via Bouncy Castle
-  ├─ MoshConnection   UDP socket, timestamps, zlib, fragments
-  ├─ WireFormat       Hand-coded protobuf (mosh wire format)
-  ├─ UserStream       Client→server state (keystrokes + resizes)
-  └─ SSP engine       State Synchronization Protocol
-        │
-        ▼
-  TerminalViewModel.onDataReceived → termlib emulator renders
-```
+The selection is made once in `MoshSession.start()`. A native startup failure
+before the child PTY is established also falls back to Kotlin rather than
+removing Mosh from the app.
 
-No PTY, no JNI, no native code. The mosh server sends VT100 escape
-sequences (via `Display::new_frame()`) which are fed directly to
-connectbot's termlib.
+## Native direct path
 
-## Wire Format
-
-### Packet structure
-```
-[8-byte nonce][AES-128-OCB(plaintext) + 16-byte auth tag]
+```text
+ConnectionsViewModel
+  └─ SSH exec: mosh-server new
+       └─ MOSH CONNECT <port> <key>
+            └─ MoshSession
+                 └─ forkpty + execve(libmosh_client.so)
+                      ├─ upstream mosh UDP/state/prediction engine
+                      └─ PTY bytes ↔ Haven termlib
 ```
 
-### Plaintext structure
-```
-[2-byte timestamp][2-byte timestamp_reply][10-byte fragment header][payload]
-```
+`libmosh_client.so` is an Android PIE executable with a `.so` suffix solely so
+the package installer extracts it into `applicationInfo.nativeLibraryDir`. It
+is a standalone GPLv3 process, not a JNI library and not linked into Haven.
+Only PTY bytes and terminal-size ioctls cross the process boundary.
 
-### Fragment header
-```
-[8-byte fragment_id (uint64 BE)][2-byte combined (bit15=final, bits0-14=frag_num)]
-```
+Android does not provide a terminfo database. `compileMoshTerminfo` compiles
+the pinned, self-contained `xterm-256color.src` into the AAR; the runtime copies
+that single entry to the app-private files directory and sets `TERMINFO` for
+the child. The AES session key is passed only in the child's `MOSH_KEY`
+environment, matching upstream mosh's launch contract.
 
-After fragment reassembly, the payload is **zlib decompressed**, then
-parsed as a `TransportBuffers.Instruction` protobuf.
+### Reproducible native build
 
-### Nonce
-- 12-byte OCB nonce = `[4 zero bytes][8-byte nonce value]`
-- Nonce value: bit 63 = direction (0=client→server, 1=server→client),
-  bits 0-62 = monotonic sequence number
-- The 8-byte nonce value is sent in the packet header
-
-### Key
-- 128-bit AES key, base64-encoded (22 chars without padding) as `MOSH_KEY`
-
-## Protobuf Definitions
-
-Hand-coded encoder/decoder in `WireFormat.kt`. No protobuf plugin needed.
-Field numbers match upstream mosh `src/protobufs/`:
-
-### `TransportBuffers.Instruction`
-| Field | Type   | Number | Notes |
-|-------|--------|--------|-------|
-| protocol_version | uint32 | 1 | Always 2 |
-| old_num | uint64 | 2 | Base state for diff |
-| new_num | uint64 | 3 | Target state |
-| ack_num | uint64 | 4 | Latest received remote state |
-| throwaway_num | uint64 | 5 | Oldest state sender still has |
-| diff | bytes | 6 | Serialized UserMessage or HostMessage |
-| chaff | bytes | 7 | Random padding (ignored) |
-
-**Critical**: All fields must be written explicitly, even when 0.
-Proto2 `has_xxx()` returns false for absent fields, and the mosh server
-uses `has_old_num()` to decide whether to apply the diff.
-
-### `ClientBuffers` (client→server diff)
-```
-UserMessage { repeated Instruction instruction = 1; }
-Instruction { extensions 2 to max; }
-  ext 2: Keystroke { optional bytes keys = 4; }
-  ext 3: ResizeMessage { optional int32 width = 5; optional int32 height = 6; }
+```bash
+ANDROID_SDK_ROOT=/path/to/android-sdk ./scripts/build-mosh-native.sh
 ```
 
-### `ServerBuffers` (server→client diff)
+The build supports `arm64-v8a`, `x86_64`, and `armeabi-v7a`. Outputs go to the
+gitignored `core/mosh/src/main/jniLibs/<abi>/libmosh_client.so` directories and
+are then picked up by the normal Android source set.
+
+Pinned inputs:
+
+- upstream `mobile-shell/mosh` 1.4.0 commit
+  `bc73a26316ede2a79259d859f8ee309b32412420`;
+- `rjyo/mosh-android` v1.0.0 static-library bundle, verified before extraction
+  with SHA-256
+  `8a6c88d9d7646d796db0a7f58571564d59b8dcdc7836b0dbf679318a23141005`;
+- Android NDK r29 (`29.0.14206865`), API 26, and 16 KiB ELF page alignment.
+
+The rjyo x86_64/armv7 ncurses archives reference but omit ncurses' optional
+compiled-in `_nc_fallback2` lookup. For only those archives, the build links a
+small null fallback from `scripts/native/mosh-ncurses-fallback.c`; Haven always
+supplies an external terminfo DB, so no built-in entry should be selected.
+
+## Kotlin tunnel/fallback path
+
+The existing `ssp-transport` implementation remains in process:
+
+```text
+MoshTransport
+  ├─ MoshCrypto       AES-128-OCB via Bouncy Castle
+  ├─ MoshConnection   UDP, timestamps, zlib and fragments
+  ├─ WireFormat       protobuf-compatible SSP messages
+  ├─ UserStream       keystrokes and resizes
+  └─ UdpSocketProvider (raw Android UDP or Haven tunnel adapter)
 ```
-HostMessage { repeated Instruction instruction = 1; }
-Instruction { extensions 2 to max; }
-  ext 2: HostBytes { optional bytes hoststring = 4; }
-  ext 3: ResizeMessage { optional int32 width = 5; optional int32 height = 6; }
-  ext 7: EchoAck { optional uint64 echo_ack_num = 8; }
-```
 
-## SSP State Machine
+It preserves Haven's tunnel support, automatic reconnect escalation and
+verbose transport diagnostics. It does not implement upstream Mosh's terminal
+prediction model, so tunneled and no-native builds retain the previous
+round-trip-bound input feel. Replacing that fallback requires a native socket
+adapter or a complete prediction/state model; a simple local echo is not a
+correct substitute.
 
-Two state spaces are synchronized independently:
+### Kotlin SSP invariants
 
-1. **Client→Server (UserStream)**: keystrokes and resizes
-   - Each byte is a separate action/state increment
-   - `diffFrom(oldNum)` returns serialized `UserMessage` with actions since `oldNum`
-
-2. **Server→Client (Complete terminal)**: VT100 escape sequences
-   - `HostBytes.hoststring` contains output from `Display::new_frame()`
-   - Fed directly to termlib — no local framebuffer needed
-
-### Send timing
-- New keystrokes: send within 20ms
-- New ack to convey: send within 20ms
-- Retransmit unacked data: exponential backoff 100ms→200ms→400ms→800ms
-- Keepalive: every 3 seconds
-- Poll interval: 100ms max sleep between iterations
-
-### Key invariants
-- `throwawayNum` must be from the **UserStream** state space (= `serverAckedOurNum`),
-  NOT the terminal state space. Mixing these causes the server to discard
-  UserStream states the client still references in `oldNum`.
-- Unconnected UDP socket on Android — connected sockets propagate ICMP errors
-  from stale sessions as `PortUnreachableException`.
-
-## Bugs Found During Implementation
-
-1. **Missing `old_num` field**: Proto2 omits fields with default value (0).
-   Mosh server checks `has_old_num()` and silently ignores diffs without it.
-   Fix: always write all TransportInstruction fields.
-
-2. **Wrong `throwaway_num` state space**: Was set to `remoteStateNum`
-   (terminal states) instead of `serverAckedOurNum` (UserStream states).
-   Server discarded UserStream states the client needed as diff bases.
-
-3. **Connected UDP socket on Android**: `DatagramSocket.connect()` causes
-   Android to deliver ICMP "port unreachable" as exceptions, killing the
-   session when stale mosh-server processes exist on the same port.
-
-4. **Main thread network**: `DatagramSocket` creation with DNS resolution
-   triggers Android StrictMode. Socket creation deferred to IO coroutine.
-
-## Not Implemented
-
-- **Speculative local echo / prediction**: typed characters are not shown
-  until the server echoes them back. Adds ~100ms perceived latency on LAN.
-- **Roaming detection**: UDP source address changes are handled by the
-  mosh server automatically, but reconnection UI is not shown.
-- **RTT estimation**: timestamps are sent but not used for adaptive timing.
+- Every proto2 transport field, including zero-valued `old_num`, must be sent.
+- `throwawayNum` belongs to the `UserStream` state space, not the remote
+  terminal-state space.
+- Android UDP sockets remain unconnected so stale-session ICMP errors do not
+  terminate roaming sessions.
+- Direct keystrokes/acks target 20 ms sends; retransmits back off from 100 ms;
+  keepalives run every three seconds.

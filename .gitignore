@@ -57,6 +57,9 @@ DEV.local.md
 # Gradle task wired into the build that regenerates it.
 # build-proot/build.sh via :core:local:buildProot
 core/local/src/main/jniLibs/
+# scripts/build-mosh-native.sh via :core:mosh:buildMoshNative
+core/mosh/src/main/jniLibs/
+core/mosh/src/main/assets/mosh/terminfo/
 # cargo-ndk via rdp-kotlin:buildRdpNative
 rdp-kotlin/jniLibs/
 # cargo-ndk via :core:prns:buildPrnsNative (source: prns submodule)
