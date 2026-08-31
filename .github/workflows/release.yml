@@ -288,10 +288,13 @@ jobs:
 
           ### Which APK?
 
-          **`haven-fork-<version>-<abi>-release.apk`** — the full app, and what F-Droid
+          Versions use `<upstream-version>-fork-<revision>`, for example
+          `5.87.70-fork-1`.
+
+          **`haven-<version>-<abi>-release.apk`** — the full app, and what F-Droid
           carries. If in doubt, take this one.
 
-          **`haven-fork-<version>-<abi>-terminal-release.apk`** — the same app with the
+          **`haven-<version>-<abi>-terminal-release.apk`** — the same app with the
           desktop and media parts left out, for people who only use Haven for SSH,
           terminals, files and storage. Less than half the size on arm64. It drops
           RDP and SPICE remote desktop, the native Wayland desktop, and ffmpeg — so

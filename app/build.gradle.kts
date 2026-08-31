@@ -5,6 +5,14 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+// Fork release identity. When following a new upstream release, update both
+// upstream values and reset forkRevision to 1. For changes on the same
+// upstream release, increment forkRevision only (1 -> 2 -> 3 ...).
+val upstreamVersionCode = 833
+val upstreamVersionName = "5.87.70"
+val forkRevision = 1
+val forkVersionCodeBase = upstreamVersionCode * 100 + forkRevision
+
 android {
     namespace = "sh.haven.app"
     compileSdk = 37
@@ -15,8 +23,10 @@ android {
         applicationId = "sh.haven.app.fork"
         minSdk = 26
         targetSdk = 35
-        versionCode = 833
-        versionName = "5.87.70"
+        // Reserve two decimal digits for fork updates. The ABI digit is added
+        // by androidComponents below, yielding 833011/833013 for fork-1.
+        versionCode = forkVersionCodeBase
+        versionName = "$upstreamVersionName-fork-$forkRevision"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -141,8 +151,9 @@ android {
     }
 }
 
-// Version code scheme: base * 10 + abiOffset; APK named
-// haven-fork-<version>-<abi>-<buildtype>.apk, with "-terminal" inserted for the
+// Version code scheme: (upstream * 100 + forkRevision) * 10 + abiOffset.
+// APK name: haven-<upstream-version>-fork-<revision>-<abi>-<buildtype>.apk,
+// with "-terminal" inserted for the
 // stripped flavour. Rewritten from the removed applicationVariants API for
 // AGP 9's Variant API; outputFileName still needs the impl cast — there is
 // no public rename hook yet.
@@ -208,7 +219,7 @@ androidComponents {
                 output.versionCode.set(base * 10 + abiCode)
             }
             (output as? com.android.build.api.variant.impl.VariantOutputImpl)
-                ?.outputFileName?.set("haven-fork-$versionName-$abi$suffix-${variant.buildType}.apk")
+                ?.outputFileName?.set("haven-$versionName-$abi$suffix-${variant.buildType}.apk")
         }
     }
 }
