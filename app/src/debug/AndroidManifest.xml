@@ -8,10 +8,10 @@
             android:exported="true"
             tools:ignore="ExportedReceiver">
             <intent-filter>
-                <action android:name="sh.haven.app.DEBUG_CREATE_PROFILE" />
-                <action android:name="sh.haven.app.DEBUG_LIST_PROFILES" />
-                <action android:name="sh.haven.app.DEBUG_NAVIGATE" />
-                <action android:name="sh.haven.app.DEBUG_SCAN_RETICULUM" />
+                <action android:name="${applicationId}.DEBUG_CREATE_PROFILE" />
+                <action android:name="${applicationId}.DEBUG_LIST_PROFILES" />
+                <action android:name="${applicationId}.DEBUG_NAVIGATE" />
+                <action android:name="${applicationId}.DEBUG_SCAN_RETICULUM" />
             </intent-filter>
         </receiver>
     </application>

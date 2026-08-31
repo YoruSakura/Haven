@@ -8,6 +8,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import sh.haven.app.BuildConfig
 import sh.haven.app.navigation.DebugNavEvents
 import sh.haven.core.data.db.entities.ConnectionProfile
 import sh.haven.core.data.repository.ConnectionRepository
@@ -25,7 +26,7 @@ import javax.inject.Inject
  * Usage examples:
  *
  *   # Create an SSH profile
- *   adb shell am broadcast -a sh.haven.app.DEBUG_CREATE_PROFILE \
+ *   adb shell am broadcast -a sh.haven.app.fork.DEBUG_CREATE_PROFILE \
  *     --es label "my server" \
  *     --es connectionType SSH \
  *     --es host 192.168.1.100 \
@@ -33,7 +34,7 @@ import javax.inject.Inject
  *     --es username root
  *
  *   # Create a Reticulum profile
- *   adb shell am broadcast -a sh.haven.app.DEBUG_CREATE_PROFILE \
+ *   adb shell am broadcast -a sh.haven.app.fork.DEBUG_CREATE_PROFILE \
  *     --es label "test node" \
  *     --es connectionType RETICULUM \
  *     --es destinationHash 84e56ebd5da98bb7a6b28552c34b4e5f \
@@ -41,15 +42,15 @@ import javax.inject.Inject
  *     --ei reticulumPort 4242
  *
  *   # Create a local terminal profile
- *   adb shell am broadcast -a sh.haven.app.DEBUG_CREATE_PROFILE \
+ *   adb shell am broadcast -a sh.haven.app.fork.DEBUG_CREATE_PROFILE \
  *     --es label "local shell" \
  *     --es connectionType LOCAL
  *
  *   # List all profiles
- *   adb shell am broadcast -a sh.haven.app.DEBUG_LIST_PROFILES
+ *   adb shell am broadcast -a sh.haven.app.fork.DEBUG_LIST_PROFILES
  *
  *   # Navigate to a screen (connections, terminal, desktop, keys, sftp, settings)
- *   adb shell am broadcast -a sh.haven.app.DEBUG_NAVIGATE --es screen connections
+ *   adb shell am broadcast -a sh.haven.app.fork.DEBUG_NAVIGATE --es screen connections
  */
 @AndroidEntryPoint
 class DebugReceiver : BroadcastReceiver() {
@@ -211,9 +212,9 @@ class DebugReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "DebugReceiver"
-        private const val ACTION_CREATE_PROFILE = "sh.haven.app.DEBUG_CREATE_PROFILE"
-        private const val ACTION_LIST_PROFILES = "sh.haven.app.DEBUG_LIST_PROFILES"
-        private const val ACTION_NAVIGATE = "sh.haven.app.DEBUG_NAVIGATE"
-        private const val ACTION_SCAN_RETICULUM = "sh.haven.app.DEBUG_SCAN_RETICULUM"
+        private const val ACTION_CREATE_PROFILE = BuildConfig.APPLICATION_ID + ".DEBUG_CREATE_PROFILE"
+        private const val ACTION_LIST_PROFILES = BuildConfig.APPLICATION_ID + ".DEBUG_LIST_PROFILES"
+        private const val ACTION_NAVIGATE = BuildConfig.APPLICATION_ID + ".DEBUG_NAVIGATE"
+        private const val ACTION_SCAN_RETICULUM = BuildConfig.APPLICATION_ID + ".DEBUG_SCAN_RETICULUM"
     }
 }

@@ -10,7 +10,9 @@ android {
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "sh.haven.app"
+        // Fork identity: installs alongside upstream Haven instead of
+        // colliding with its signing certificate and private app data.
+        applicationId = "sh.haven.app.fork"
         minSdk = 26
         targetSdk = 35
         versionCode = 833
@@ -140,7 +142,7 @@ android {
 }
 
 // Version code scheme: base * 10 + abiOffset; APK named
-// haven-<version>-<abi>-<buildtype>.apk, with "-terminal" inserted for the
+// haven-fork-<version>-<abi>-<buildtype>.apk, with "-terminal" inserted for the
 // stripped flavour. Rewritten from the removed applicationVariants API for
 // AGP 9's Variant API; outputFileName still needs the impl cast — there is
 // no public rename hook yet.
@@ -206,7 +208,7 @@ androidComponents {
                 output.versionCode.set(base * 10 + abiCode)
             }
             (output as? com.android.build.api.variant.impl.VariantOutputImpl)
-                ?.outputFileName?.set("haven-$versionName-$abi$suffix-${variant.buildType}.apk")
+                ?.outputFileName?.set("haven-fork-$versionName-$abi$suffix-${variant.buildType}.apk")
         }
     }
 }

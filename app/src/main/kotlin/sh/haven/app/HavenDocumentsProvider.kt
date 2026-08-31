@@ -38,6 +38,9 @@ private const val TAG = "HavenDocProvider"
  */
 class HavenDocumentsProvider : DocumentsProvider() {
 
+    private val authority: String
+        get() = "${requireNotNull(context).packageName}.provider"
+
     @EntryPoint
     @InstallIn(SingletonComponent::class)
     interface ProviderEntryPoint {
@@ -56,8 +59,6 @@ class HavenDocumentsProvider : DocumentsProvider() {
     }
 
     companion object {
-        private const val AUTHORITY = "sh.haven.provider"
-
         private val ROOT_PROJECTION = arrayOf(
             Root.COLUMN_ROOT_ID,
             Root.COLUMN_DOCUMENT_ID,
@@ -493,7 +494,7 @@ class HavenDocumentsProvider : DocumentsProvider() {
     }
 
     private fun notifyChange(docId: String) {
-        val uri = DocumentsContract.buildDocumentUri(AUTHORITY, docId)
+        val uri = DocumentsContract.buildDocumentUri(authority, docId)
         context?.contentResolver?.notifyChange(uri, null)
     }
 }
