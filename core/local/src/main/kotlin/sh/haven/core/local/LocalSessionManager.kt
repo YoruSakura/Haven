@@ -162,17 +162,23 @@ class LocalSessionManager @Inject constructor(
         prootDistroId: String? = null,
         desktopEnv: Map<String, String>? = null,
     ): String {
-        // Reap any superseded dead shells for this profile before minting a
-        // fresh one. A local shell never reconnects, so a DISCONNECTED entry is
-        // dead forever — its only value is letting the agent read the final
-        // output, which is moot once a new shell opens on the same profile.
-        // Without this, every disconnect→reconnect (or a proot stream drop that
-        // exits the PTY via LocalSession.onExited) leaves the old DISCONNECTED
-        // session and its ring behind, piling up in list_sessions.
-        reapDeadSessionsForProfile(profileId)
         val sessionId = UUID.randomUUID().toString()
+        val reapedIds = mutableSetOf<String>()
+        // Replace superseded dead shells and add the new CONNECTING shell in
+        // ONE StateFlow update. Publishing an intermediate empty map made the
+        // terminal reconciler dispose the old native emulator while a second
+        // update was already rebuilding the next PRoot tab — the exit→reopen
+        // race behind the process crash. A local shell never reconnects, so a
+        // DISCONNECTED entry for this profile is dead forever once replaced.
         _sessions.update { map ->
-            map + (sessionId to SessionState(
+            val deadIds = map.values
+                .filter {
+                    it.profileId == profileId &&
+                        it.status == SessionState.Status.DISCONNECTED
+                }
+                .mapTo(mutableSetOf()) { it.sessionId }
+            reapedIds += deadIds
+            (map - deadIds) + (sessionId to SessionState(
                 sessionId = sessionId,
                 profileId = profileId,
                 label = label,
@@ -182,22 +188,11 @@ class LocalSessionManager @Inject constructor(
                 desktopEnv = desktopEnv,
             ))
         }
+        reapedIds.forEach {
+            agentScrollback.remove(it)
+            agentTee.remove(it)
+        }
         return sessionId
-    }
-
-    /**
-     * Remove DISCONNECTED (process-exited) local sessions for [profileId] and
-     * free their agent-scrollback rings. Live (CONNECTING / CONNECTED) sessions
-     * are untouched. Called from [registerSession] so dead shells for the
-     * profile being (re)opened don't accumulate in the session list.
-     */
-    private fun reapDeadSessionsForProfile(profileId: String) {
-        val deadIds = _sessions.value.values
-            .filter { it.profileId == profileId && it.status == SessionState.Status.DISCONNECTED }
-            .map { it.sessionId }
-        if (deadIds.isEmpty()) return
-        _sessions.update { map -> map - deadIds.toSet() }
-        deadIds.forEach { agentScrollback.remove(it) }
     }
 
     /**
@@ -453,19 +448,7 @@ class LocalSessionManager @Inject constructor(
             onDataReceived = mirroredOnData,
             onExited = { exitCode ->
                 Log.d(TAG, "Session $sessionId process exited: $exitCode")
-                // Mark DISCONNECTED and drop the dead LocalSession in one
-                // update so sendInput / getActiveSession stop routing to a
-                // closed fd (which would swallow writes and report a false
-                // success). The agentScrollback ring is left intact so the
-                // final output stays readable after the process exits.
-                _sessions.update { map ->
-                    val existing = map[sessionId] ?: return@update map
-                    existing.localSession?.close()
-                    map + (sessionId to existing.copy(
-                        status = SessionState.Status.DISCONNECTED,
-                        localSession = null,
-                    ))
-                }
+                markProcessExited(sessionId)
                 // Surface the exit in the connection log so an immediately
                 // exiting local shell — e.g. a session manager that won't
                 // start (#294) — is diagnosable via Settings → View connection
@@ -495,6 +478,26 @@ class LocalSessionManager @Inject constructor(
         }
 
         return localSession
+    }
+
+    /**
+     * Publish a natural PTY exit without closing/signalling it again.
+     * [LocalSession] has already waited for and reaped the child, and has
+     * released its descriptors before invoking the callback.
+     */
+    private fun markProcessExited(sessionId: String) {
+        _sessions.update { map ->
+            val existing = map[sessionId] ?: return@update map
+            map + (sessionId to existing.copy(
+                status = SessionState.Status.DISCONNECTED,
+                localSession = null,
+            ))
+        }
+    }
+
+    @androidx.annotation.VisibleForTesting
+    internal fun markProcessExitedForTest(sessionId: String) {
+        markProcessExited(sessionId)
     }
 
     fun isReadyForTerminal(sessionId: String): Boolean {

@@ -53,6 +53,16 @@ class LocalSession(
     @Volatile
     private var closed = false
 
+    /**
+     * Coordinates explicit teardown with the PTY reader's natural-EOF path.
+     * A normal `exit` has already reaped the child with waitpid, so it must
+     * release descriptors without signalling that (now reusable) PID again.
+     */
+    private val lifecycleLock = Any()
+    private var resourcesReleased = false
+    @Volatile
+    private var waitingForExit = false
+
     private var masterFd: Int = -1
     private var childPid: Int = -1
     private var masterPfd: ParcelFileDescriptor? = null
@@ -90,6 +100,10 @@ class LocalSession(
         outputStream = FileOutputStream(pfd.fileDescriptor)
 
         // Start reader thread
+        // Keep the launched PID local to this reader. close() clears childPid;
+        // reading the mutable field after an EOF/close race could otherwise
+        // call waitpid(-1), which may reap a newly opened shell instead.
+        val launchedPid = childPid
         readerThread = Thread({
             val buf = ByteArray(READ_BUFFER_SIZE)
             var readCount = 0
@@ -115,12 +129,24 @@ class LocalSession(
             }
             // Process exited — wait for exit code
             if (!closed) {
+                synchronized(lifecycleLock) {
+                    if (closed) return@Thread
+                    // PTY EOF means the child is already on its way out. An
+                    // explicit close racing waitpid must release resources but
+                    // must not signal this PID after waitpid may have reaped it.
+                    waitingForExit = true
+                }
                 val exitCode = try {
-                    PtyBridge.nativeWaitPid(childPid)
+                    PtyBridge.nativeWaitPid(launchedPid)
                 } catch (_: Exception) {
                     -1
                 }
-                Log.d(TAG, "Process $childPid exited: $exitCode")
+                Log.d(TAG, "Process $launchedPid exited: $exitCode")
+                // This is a natural exit: waitpid above has already reaped the
+                // child. Release the PTY without running close()'s kill path;
+                // the numeric PID may be reused by the time the UI opens the
+                // next PRoot shell.
+                finishAfterProcessExit()
                 onExited?.invoke(exitCode)
             }
         }, "local-pty-read-$sessionId").apply {
@@ -168,32 +194,64 @@ class LocalSession(
     }
 
     override fun close() {
-        if (closed) return
-        closed = true
+        val pidToKill = synchronized(lifecycleLock) {
+            if (closed) return
+            closed = true
+            childPid.takeUnless { waitingForExit } ?: -1
+        }
 
-        // Close streams — this will cause the read loop to exit
-        try { outputStream?.close() } catch (_: Exception) {}
-        try { inputStream?.close() } catch (_: Exception) {}
-        try { masterPfd?.close() } catch (_: Exception) {}
+        // Snapshot while the launcher still owns its tracees. Closing the PTY
+        // can make PRoot exit and reparent them before /proc is scanned.
+        val tracees = if (pidToKill > 0) {
+            runCatching { descendantPidsOf(pidToKill) }.getOrDefault(emptyList())
+        } else {
+            emptyList()
+        }
+        releaseResources()
 
-        // Kill the child process AND its proot tracees. proot's --kill-on-exit
+        // Kill the child process AND its proot tracees. PRoot's --kill-on-exit
         // doesn't reap the ptrace tracees when the launcher is signalled, so
         // snapshot the descendants while the tree is intact, then kill the
         // launcher + every tracee. Killing only childPid (the old behaviour)
         // left the whole guest (libproot + bash + …) running — the "proot is
         // hard to kill" orphan (#409/#411).
-        if (childPid > 0) {
-            val tracees = runCatching { descendantPidsOf(childPid) }.getOrDefault(emptyList())
-            runCatching { android.os.Process.killProcess(childPid) }
+        if (pidToKill > 0) {
+            runCatching { android.os.Process.killProcess(pidToKill) }
             tracees.forEach { runCatching { android.os.Process.killProcess(it) } }
         }
+    }
 
-        writeExecutor.shutdown()
-        readerThread = null
-        inputStream = null
-        outputStream = null
-        masterPfd = null
-        masterFd = -1
-        childPid = -1
+    /** Release a naturally exited process without signalling its reaped PID. */
+    private fun finishAfterProcessExit() {
+        synchronized(lifecycleLock) {
+            if (closed) return
+            closed = true
+        }
+        releaseResources()
+    }
+
+    /**
+     * Idempotently release Java/Android PTY resources. Kept separate from the
+     * process signal path so natural exit and explicit close cannot double-use
+     * a child PID while still sharing exactly one descriptor cleanup routine.
+     */
+    private fun releaseResources() {
+        synchronized(lifecycleLock) {
+            if (resourcesReleased) return
+            resourcesReleased = true
+
+            // Closing the streams/PFD wakes a reader blocked in read().
+            try { outputStream?.close() } catch (_: Exception) {}
+            try { inputStream?.close() } catch (_: Exception) {}
+            try { masterPfd?.close() } catch (_: Exception) {}
+
+            writeExecutor.shutdown()
+            readerThread = null
+            inputStream = null
+            outputStream = null
+            masterPfd = null
+            masterFd = -1
+            childPid = -1
+        }
     }
 }

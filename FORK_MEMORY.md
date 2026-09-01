@@ -1,6 +1,6 @@
 # Haven fork project memory
 
-Last updated: 2026-08-31
+Last updated: 2026-09-01
 
 This file is the durable project memory for the modified Haven build. Read it
 before rebasing, changing release configuration, or producing APKs.
@@ -13,7 +13,7 @@ before rebasing, changing release configuration, or producing APKs.
   upstream `sh.haven.app` package to remain installed.
 - Display name: `Haven修改版`.
 - Version name: `<upstream-version>-fork-<revision>`, currently
-  `5.87.70-fork-6`.
+  `5.87.70-fork-7`.
 - Version code: `(upstreamVersionCode * 100 + forkRevision) * 10 + abiOffset`.
   ARM64 uses offset 1 and ARM32 uses offset 3. For another fork update on the
   same upstream version, increment `forkRevision` in `app/build.gradle.kts`.
@@ -63,6 +63,14 @@ before rebasing, changing release configuration, or producing APKs.
    Immediately after `Ctrl+Shift+C`, an unchanged Android clipboard instead
    leaves V on xterm's X11 clipboard so the conventional internal round-trip
    still works.
+9. Fork update 7 fixes the PRoot `exit` → reopen process crash. A naturally
+   exited PTY is reaped and released without signalling its now-reusable PID;
+   disconnected sessions are atomically replaced instead of publishing an
+   intermediate empty registry; terminal reconciliation is serialized across
+   session-flow and explicit-open callers; stale singleton terminal handles
+   are unregistered before their native emulator is closed; and a failed
+   `forkpty` reopen rolls back the half-created tab instead of escaping an
+   uncaught collector exception that terminates Haven.
 
 ## Packaging constraints
 
@@ -80,6 +88,6 @@ before rebasing, changing release configuration, or producing APKs.
 
 - Application ID: `sh.haven.app.fork`
 - Display name: `Haven修改版`
-- Version: `5.87.70-fork-6`
-- ARM64 version code: `833061`
-- ARM32 version code: `833063`
+- Version: `5.87.70-fork-7`
+- ARM64 version code: `833071`
+- ARM32 version code: `833073`

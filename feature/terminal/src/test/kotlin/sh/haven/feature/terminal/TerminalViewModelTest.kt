@@ -1,9 +1,13 @@
 package sh.haven.feature.terminal
 
 import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
@@ -11,6 +15,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import sh.haven.core.et.EtSessionManager
@@ -34,12 +39,15 @@ class TerminalViewModelTest {
     private lateinit var moshSessionManager: MoshSessionManager
     private lateinit var etSessionManager: EtSessionManager
     private lateinit var localSessionManager: LocalSessionManager
+    private lateinit var localSessions:
+        MutableStateFlow<Map<String, LocalSessionManager.SessionState>>
     private lateinit var btSerialSessionManager: sh.haven.core.btserial.BtSerialSessionManager
     private lateinit var bleSerialSessionManager: sh.haven.core.bleserial.BleSerialSessionManager
     private lateinit var bleSerialSessions:
         MutableStateFlow<Map<String, sh.haven.core.bleserial.BleSerialSessionManager.SessionState>>
     private lateinit var usbSerialSessionManager: sh.haven.core.usbserial.UsbSerialSessionManager
     private lateinit var sshEmulatorOwner: SshTerminalEmulatorOwner
+    private lateinit var connectionRepository: sh.haven.core.data.repository.ConnectionRepository
     private lateinit var viewModel: TerminalViewModel
 
     @Before
@@ -55,8 +63,9 @@ class TerminalViewModelTest {
         etSessionManager = mockk<EtSessionManager>(relaxed = true) {
             every { sessions } returns MutableStateFlow(emptyMap())
         }
+        localSessions = MutableStateFlow(emptyMap())
         localSessionManager = mockk<LocalSessionManager>(relaxed = true) {
-            every { sessions } returns MutableStateFlow(emptyMap())
+            every { sessions } returns localSessions
         }
         btSerialSessionManager = mockk(relaxed = true) {
             every { sessions } returns MutableStateFlow(emptyMap())
@@ -79,6 +88,7 @@ class TerminalViewModelTest {
         sshEmulatorOwner = mockk(relaxed = true) {
             every { bundleFor(any()) } returns null
         }
+        connectionRepository = mockk(relaxed = true)
         viewModel = TerminalViewModel(
             mockk(relaxed = true),
             sessionManager,
@@ -94,7 +104,7 @@ class TerminalViewModelTest {
             mockk(relaxed = true), // HostKeyVerifier
             mockk(relaxed = true), // FidoAuthenticator
             mockk(relaxed = true), // UserPreferencesRepository
-            mockk(relaxed = true), // ConnectionRepository
+            connectionRepository,
             mockk(relaxed = true), // TunnelResolver
             sh.haven.core.data.agent.AgentUiCommandBus(),
             sh.haven.core.data.message.UserMessageBus(),
@@ -121,6 +131,44 @@ class TerminalViewModelTest {
     fun `syncSessions with no sessions produces no tabs`() {
         runBlocking { viewModel.syncSessions() }
         assertEquals(0, viewModel.tabs.value.size)
+    }
+
+    @Test
+    fun `syncSessions serializes an older exit reconcile against a reopen reconcile`() = runBlocking {
+        // A profile lookup is the suspension point that let an old
+        // DISCONNECTED snapshot resume after a newer PRoot open. Hold the first
+        // reconcile there and prove the second one cannot enter concurrently.
+        localSessions.value = mapOf(
+            "ended" to LocalSessionManager.SessionState(
+                sessionId = "ended",
+                profileId = "profile",
+                label = "Ubuntu",
+                status = LocalSessionManager.SessionState.Status.DISCONNECTED,
+            ),
+        )
+        val firstLookupEntered = CompletableDeferred<Unit>()
+        val releaseFirstLookup = CompletableDeferred<Unit>()
+        val lookupCount = java.util.concurrent.atomic.AtomicInteger(0)
+        coEvery { connectionRepository.getById("profile") } coAnswers {
+            if (lookupCount.incrementAndGet() == 1) {
+                firstLookupEntered.complete(Unit)
+                releaseFirstLookup.await()
+            }
+            null
+        }
+
+        val oldExitReconcile = async(Dispatchers.Default) { viewModel.syncSessions() }
+        firstLookupEntered.await()
+        val reopenReconcile = async(Dispatchers.Default) { viewModel.syncSessions() }
+
+        delay(100)
+        assertEquals("the reopen must wait behind the exit reconcile", 1, lookupCount.get())
+
+        releaseFirstLookup.complete(Unit)
+        oldExitReconcile.await()
+        reopenReconcile.await()
+        assertEquals(2, lookupCount.get())
+        assertTrue(viewModel.tabs.value.isEmpty())
     }
 
     @Test

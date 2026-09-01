@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import org.connectbot.terminal.TerminalEmulator
@@ -271,6 +273,23 @@ data class TerminalTab(
      *  changing the global slider repaints tabs without an explicit override. */
     val backgroundOpacity: Float? = null,
 )
+
+/**
+ * Remove every singleton handle while the emulator still owns a valid native
+ * terminal, then release it. Keeping a DISCONNECTED local entry registered
+ * until the next PRoot open left stale controllers/emulator state crossing the
+ * exit→reopen boundary.
+ */
+internal fun unregisterAndCloseTerminal(
+    sessionId: String,
+    profileId: String,
+    label: String,
+    emulator: TerminalEmulator,
+    registry: sh.haven.feature.terminal.agent.TerminalSessionRegistry,
+) {
+    registry.unregister(sessionId, profileId = profileId, label = label)
+    emulator.close()
+}
 
 /** VNC connection info for the active terminal's host. */
 data class VncInfo(
@@ -1007,6 +1026,11 @@ class TerminalViewModel @Inject constructor(
     }
 
     private val trackedSessionIds = mutableSetOf<String>()
+    // Eight session flows plus explicit connect/close calls can all request a
+    // reconciliation. The body suspends for profile lookups, so without a gate
+    // an older DISCONNECTED snapshot could resume after a newer PRoot open and
+    // dispose the just-created emulator/session.
+    private val syncSessionsMutex = Mutex()
 
     init {
         // React to session state changes (e.g., "Disconnect All" from notification)
@@ -1041,7 +1065,7 @@ class TerminalViewModel @Inject constructor(
      * Sync tabs with session manager state.
      * Creates emulator + terminal session for new CONNECTED sessions.
      */
-    suspend fun syncSessions() {
+    suspend fun syncSessions() = syncSessionsMutex.withLock {
         val sshSessions = sessionManager.sessions.value
         val rnsSessions = reticulumSessionManager.sessions.value
         val moshSessions = moshSessionManager.sessions.value
@@ -1974,7 +1998,23 @@ class TerminalViewModel @Inject constructor(
                 maxScrollbackLines = terminalScrollbackRows.value,
             )
 
-            localSession.start()
+            try {
+                localSession.start()
+            } catch (e: Exception) {
+                // forkpty can fail while Android is still unwinding the old
+                // PRoot process. A sessions collector has no user-facing
+                // exception boundary, so letting this escape terminates the
+                // app. Roll the half-attached manager/emulator state back and
+                // report the failed open instead; the next tap starts cleanly.
+                Log.e(TAG, "Starting local terminal $sessionId failed", e)
+                localSessionManager.removeSession(sessionId)
+                runCatching { emulator.close() }
+                _newTabMessage.value = appContext.getString(
+                    R.string.terminal_new_tab_connection_failed,
+                    e.message ?: e.javaClass.simpleName,
+                )
+                continue
+            }
 
             currentTabs.add(
                 TerminalTab(
@@ -2033,8 +2073,16 @@ class TerminalViewModel @Inject constructor(
         if (currentTabs.isEmpty()) resetModifiers()
 
         droppedTabs.forEach { tab ->
-            runCatching { tab.emulator.close() }
-                .onFailure { Log.w(TAG, "Closing emulator for ${tab.sessionId} failed", it) }
+            runCatching {
+                unregisterAndCloseTerminal(
+                    sessionId = tab.sessionId,
+                    profileId = tab.profileId,
+                    label = tab.label,
+                    emulator = tab.emulator,
+                    registry = terminalSessionRegistry,
+                )
+            }
+                .onFailure { Log.w(TAG, "Unregistering/closing emulator for ${tab.sessionId} failed", it) }
         }
 
         // Mirror tab → registry so the MCP agent can find each tab's
@@ -2101,8 +2149,21 @@ class TerminalViewModel @Inject constructor(
         // localSessions but never appear in currentTabs; sweeping by
         // tab presence alone tore those out immediately and broke
         // every snapshot-style MCP tool against agent-owned shells.
+        // Local DISCONNECTED/ERROR entries deliberately do not count as live:
+        // their PTY has ended and retaining the singleton entry until the next
+        // open is exactly the stale-handle lifecycle this reconciliation must
+        // close. CONNECTING is kept defensively even though it has no emulator
+        // yet. Other transports retain their historical manager-key semantics.
+        val knownLocalSessionIds = localSessions.values
+            .filter {
+                it.status == sh.haven.core.local.LocalSessionManager.SessionState.Status.CONNECTED ||
+                    it.status == sh.haven.core.local.LocalSessionManager.SessionState.Status.CONNECTING
+            }
+            .map { it.sessionId }
+            .toSet()
         val knownSessionIds = sshSessions.keys + rnsSessions.keys +
-            moshSessions.keys + etSessions.keys + btSerialSessions.keys + bleSerialSessions.keys + usbSerialSessions.keys + localSessions.keys
+            moshSessions.keys + etSessions.keys + btSerialSessions.keys + bleSerialSessions.keys +
+            usbSerialSessions.keys + knownLocalSessionIds
         for (id in terminalSessionRegistry.sessions.value.keys.toList()) {
             if (id !in knownSessionIds) terminalSessionRegistry.unregister(id)
         }
