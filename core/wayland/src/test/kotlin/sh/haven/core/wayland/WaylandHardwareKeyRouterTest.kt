@@ -2,6 +2,7 @@ package sh.haven.core.wayland
 
 import android.view.KeyEvent
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class WaylandHardwareKeyRouterTest {
@@ -192,5 +193,38 @@ class WaylandHardwareKeyRouterTest {
         }
 
         assertEquals(emptyList<EvdevEvent>(), events)
+    }
+
+    @Test
+    fun clipboardShortcutRecognisesSideModifiersAndRejectsLookalikes() {
+        assertEquals(
+            WaylandClipboardShortcut.COPY,
+            waylandClipboardShortcut(
+                KeyEvent.KEYCODE_C,
+                KeyEvent.META_CTRL_RIGHT_ON or KeyEvent.META_SHIFT_LEFT_ON,
+            ),
+        )
+        assertEquals(
+            WaylandClipboardShortcut.PASTE,
+            waylandClipboardShortcut(
+                KeyEvent.KEYCODE_V,
+                KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
+            ),
+        )
+        assertNull(waylandClipboardShortcut(KeyEvent.KEYCODE_V, KeyEvent.META_CTRL_ON))
+        assertNull(
+            waylandClipboardShortcut(
+                KeyEvent.KEYCODE_V,
+                KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON or KeyEvent.META_ALT_ON,
+            ),
+        )
+    }
+
+    @Test
+    fun AndroidPasteIsPreferredUnlessAnUnchangedX11CopyIsNewer() {
+        assertEquals(true, shouldReadAndroidClipboard(false, null, 100L))
+        assertEquals(true, shouldReadAndroidClipboard(false, null, null))
+        assertEquals(false, shouldReadAndroidClipboard(true, 100L, 100L))
+        assertEquals(true, shouldReadAndroidClipboard(true, 100L, 200L))
     }
 }

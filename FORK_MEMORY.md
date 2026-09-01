@@ -58,7 +58,11 @@ before rebasing, changing release configuration, or producing APKs.
    `copy-selection(CLIPBOARD)` and `Ctrl+Shift+V` as
    `insert-selection(CLIPBOARD)`, and enables xterm's CLIPBOARD selection mode.
    Launch-time resources apply to existing root filesystems without reinstalling
-   the desktop packages or requiring `xrdb`.
+   the desktop packages or requiring `xrdb`. Physical `Ctrl+Shift+V` also uses
+   Android's clipboard through the same paced paste path as the toolbar button.
+   Immediately after `Ctrl+Shift+C`, an unchanged Android clipboard instead
+   leaves V on xterm's X11 clipboard so the conventional internal round-trip
+   still works.
 
 ## Packaging constraints
 

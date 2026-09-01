@@ -1,6 +1,7 @@
 package sh.haven.core.wayland
 
 import android.annotation.SuppressLint
+import android.content.ClipboardManager
 import android.view.KeyEvent as AndroidKeyEvent
 import android.view.MotionEvent
 import android.graphics.SurfaceTexture
@@ -87,6 +88,7 @@ fun WaylandDesktopView(
     onFullscreenChanged: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
+    val pasteToWayland = rememberWaylandPasteHandler()
     var zoom by remember { mutableFloatStateOf(1f) }
     var panX by remember { mutableFloatStateOf(0f) }
     var panY by remember { mutableFloatStateOf(0f) }
@@ -198,6 +200,9 @@ fun WaylandDesktopView(
                 object : TextureView(context) {
                     private val imeKeyRouter = WaylandImeKeyRouter(WaylandBridge::nativeSendKey)
                     private val hardwareKeyRouter = WaylandHardwareKeyRouter(WaylandBridge::nativeSendKey)
+                    private val clipboardManager = context.getSystemService(ClipboardManager::class.java)
+                    private var hasX11ClipboardCopy = false
+                    private var androidClipboardTimestampAtX11Copy: Long? = null
                     private var imeEchoDrainPosted = false
                     private val imeEchoDrainRunnable = Runnable {
                         imeKeyRouter.drainTextEchoes()
@@ -217,6 +222,16 @@ fun WaylandDesktopView(
                             post(imeEchoDrainScheduler)
                         }
                     }
+
+                    private fun androidClipboardText(): String? =
+                        clipboardManager?.primaryClip
+                            ?.takeIf { it.itemCount > 0 }
+                            ?.getItemAt(0)
+                            ?.text
+                            ?.toString()
+
+                    private fun androidClipboardTimestamp(): Long? =
+                        clipboardManager?.primaryClipDescription?.timestamp
 
                     init {
                         isFocusable = true
@@ -422,8 +437,40 @@ fun WaylandDesktopView(
                                 // Some IMEs bypass InputConnection.sendKeyEvent and dispatch
                                 // a virtual key directly to the target View. It is still a tap.
                                 imeKeyRouter.onImeKeyDown(evdev)
+                            } else if (event != null) {
+                                when (waylandClipboardShortcut(keyCode, event.metaState)) {
+                                    WaylandClipboardShortcut.COPY -> {
+                                        // Repeated shortcut DOWNs must not execute copy again.
+                                        if (event.repeatCount == 0) {
+                                            hardwareKeyRouter.onKeyDown(evdev, event.metaState)
+                                            androidClipboardTimestampAtX11Copy =
+                                                androidClipboardTimestamp()
+                                            hasX11ClipboardCopy = true
+                                        }
+                                    }
+                                    WaylandClipboardShortcut.PASTE -> {
+                                        if (event.repeatCount == 0) {
+                                            val readAndroid = shouldReadAndroidClipboard(
+                                                hasX11ClipboardCopy,
+                                                androidClipboardTimestampAtX11Copy,
+                                                androidClipboardTimestamp(),
+                                            )
+                                            val androidText =
+                                                if (readAndroid) androidClipboardText() else null
+                                            if (androidText != null) {
+                                                hasX11ClipboardCopy = false
+                                                pasteToWayland(androidText)
+                                            } else {
+                                                // Ctrl+Shift+C followed by V keeps the normal
+                                                // xterm/X11 clipboard round-trip.
+                                                hardwareKeyRouter.onKeyDown(evdev, event.metaState)
+                                            }
+                                        }
+                                    }
+                                    null -> hardwareKeyRouter.onKeyDown(evdev, event.metaState)
+                                }
                             } else {
-                                hardwareKeyRouter.onKeyDown(evdev, event?.metaState ?: 0)
+                                hardwareKeyRouter.onKeyDown(evdev)
                             }
                             return true
                         }
@@ -559,6 +606,7 @@ fun WaylandDesktopView(
                 layout = toolbarLayout,
                 navBlockMode = navBlockMode,
                 uniformGrid = uniformGrid,
+                pasteText = pasteToWayland,
                 modifier = Modifier.weight(1f),
             )
             Column {
@@ -698,6 +746,56 @@ internal class WaylandHardwareKeyRouter(
     /** Every forwarded chord was already released during ACTION_DOWN. */
     fun onKeyUp(@Suppress("UNUSED_PARAMETER") evdev: Int) = Unit
 }
+
+internal enum class WaylandClipboardShortcut { COPY, PASTE }
+
+/**
+ * Recognise only the conventional physical-keyboard chords. Alt/Meta variants
+ * remain ordinary X11 input, and standalone modifier events stay isolated by
+ * [WaylandHardwareKeyRouter].
+ */
+internal fun waylandClipboardShortcut(
+    keyCode: Int,
+    metaState: Int,
+): WaylandClipboardShortcut? {
+    val hasCtrl = metaState and (
+        AndroidKeyEvent.META_CTRL_ON or
+            AndroidKeyEvent.META_CTRL_LEFT_ON or
+            AndroidKeyEvent.META_CTRL_RIGHT_ON
+        ) != 0
+    val hasShift = metaState and (
+        AndroidKeyEvent.META_SHIFT_ON or
+            AndroidKeyEvent.META_SHIFT_LEFT_ON or
+            AndroidKeyEvent.META_SHIFT_RIGHT_ON
+        ) != 0
+    val hasConflictingModifier = metaState and (
+        AndroidKeyEvent.META_ALT_ON or
+            AndroidKeyEvent.META_ALT_LEFT_ON or
+            AndroidKeyEvent.META_ALT_RIGHT_ON or
+            AndroidKeyEvent.META_META_ON or
+            AndroidKeyEvent.META_META_LEFT_ON or
+            AndroidKeyEvent.META_META_RIGHT_ON
+        ) != 0
+    if (!hasCtrl || !hasShift || hasConflictingModifier) return null
+    return when (keyCode) {
+        AndroidKeyEvent.KEYCODE_C -> WaylandClipboardShortcut.COPY
+        AndroidKeyEvent.KEYCODE_V -> WaylandClipboardShortcut.PASTE
+        else -> null
+    }
+}
+
+/**
+ * Prefer Android text unless the user just copied in xterm and Android's
+ * clipboard has not changed since. This supports both cross-app paste and the
+ * expected Ctrl+Shift+C then Ctrl+Shift+V round-trip inside Native X11.
+ */
+internal fun shouldReadAndroidClipboard(
+    hasX11ClipboardCopy: Boolean,
+    androidClipboardTimestampAtX11Copy: Long?,
+    currentAndroidClipboardTimestamp: Long?,
+): Boolean =
+    !hasX11ClipboardCopy ||
+        currentAndroidClipboardTimestamp != androidClipboardTimestampAtX11Copy
 
 /** Standalone modifiers are represented only through a normal key's metaState. */
 internal fun isModifierKey(evdev: Int): Boolean = when (evdev) {

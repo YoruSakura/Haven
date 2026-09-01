@@ -59,19 +59,12 @@ fun WaylandToolbar(
     layout: ToolbarLayout = ToolbarLayout.DEFAULT,
     navBlockMode: NavBlockMode = NavBlockMode.ALIGNED,
     uniformGrid: Boolean = false,
+    pasteText: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var ctrlActive by remember { mutableStateOf(false) }
     var altActive by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
-    val pasteScope = rememberCoroutineScope()
-    val pasteMutex = remember { Mutex() }
-    val pasteSender = remember {
-        WaylandPasteSender(
-            sendKey = WaylandBridge::nativeSendKey,
-            pauseForDrain = { delay(PASTE_DRAIN_DELAY_MS) },
-        )
-    }
 
     KeyboardToolbar(
         onSendBytes = { bytes ->
@@ -104,7 +97,28 @@ fun WaylandToolbar(
             altActive = !altActive
             WaylandBridge.nativeSendKey(56, if (altActive) 1 else 0)
         },
-        onPaste = { text ->
+        onPaste = pasteText,
+        modifier = modifier,
+    )
+}
+
+/**
+ * One shared, serialized paste path for both the toolbar button and hardware
+ * Ctrl+Shift+V. Sharing the mutex prevents simultaneous entry points from
+ * filling the native queue independently.
+ */
+@Composable
+internal fun rememberWaylandPasteHandler(): (String) -> Unit {
+    val pasteScope = rememberCoroutineScope()
+    val pasteMutex = remember { Mutex() }
+    val pasteSender = remember {
+        WaylandPasteSender(
+            sendKey = WaylandBridge::nativeSendKey,
+            pauseForDrain = { delay(PASTE_DRAIN_DELAY_MS) },
+        )
+    }
+    return remember(pasteScope, pasteMutex, pasteSender) {
+        { text ->
             // The native JNI queue holds only 255 pending events and silently
             // drops overflow. A synchronous paste can therefore lose the tail
             // and, worse, retain a final DOWN after its UP was dropped. Pace
@@ -114,9 +128,8 @@ fun WaylandToolbar(
                     pasteSender.send(text)
                 }
             }
-        },
-        modifier = modifier,
-    )
+        }
+    }
 }
 
 /**
