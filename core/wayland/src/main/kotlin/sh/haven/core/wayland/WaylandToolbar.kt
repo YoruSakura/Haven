@@ -4,9 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import sh.haven.core.data.preferences.NavBlockMode
 import sh.haven.core.data.preferences.ToolbarLayout
 import sh.haven.core.toolbar.KeyboardToolbar
@@ -23,6 +28,8 @@ private const val VTERM_KEY_PAGEDOWN = 14
 private const val VTERM_KEY_INS = 9
 private const val VTERM_KEY_DEL = 10
 private const val VTERM_KEY_FUNCTION_0 = 256
+private const val PASTE_MAX_EVENTS_PER_BURST = 32
+private const val PASTE_DRAIN_DELAY_MS = 16L
 
 private fun vtermKeyToEvdev(key: Int): Int = when (key) {
     VTERM_KEY_UP -> 103
@@ -57,6 +64,14 @@ fun WaylandToolbar(
     var ctrlActive by remember { mutableStateOf(false) }
     var altActive by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+    val pasteScope = rememberCoroutineScope()
+    val pasteMutex = remember { Mutex() }
+    val pasteSender = remember {
+        WaylandPasteSender(
+            sendKey = WaylandBridge::nativeSendKey,
+            pauseForDrain = { delay(PASTE_DRAIN_DELAY_MS) },
+        )
+    }
 
     KeyboardToolbar(
         onSendBytes = { bytes ->
@@ -90,12 +105,66 @@ fun WaylandToolbar(
             WaylandBridge.nativeSendKey(56, if (altActive) 1 else 0)
         },
         onPaste = { text ->
-            // Type each character as evdev key events into the compositor
-            text.forEach { ch -> sendCharAsEvdev(ch) }
+            // The native JNI queue holds only 255 pending events and silently
+            // drops overflow. A synchronous paste can therefore lose the tail
+            // and, worse, retain a final DOWN after its UP was dropped. Pace
+            // bounded bursts off the UI thread and serialize repeated pastes.
+            pasteScope.launch {
+                pasteMutex.withLock {
+                    pasteSender.send(text)
+                }
+            }
         },
         modifier = modifier,
     )
 }
+
+/**
+ * Types clipboard text without overflowing the compositor's fixed JNI queue.
+ *
+ * Each mapped character costs two events, or four when Shift is required.
+ * Keeping a burst far below the queue's 255 usable slots leaves headroom for
+ * touch/hardware input and prevents a key DOWN from being separated from UP.
+ */
+internal class WaylandPasteSender(
+    private val sendKey: (evdev: Int, pressed: Int) -> Unit,
+    private val pauseForDrain: suspend () -> Unit,
+    private val maxEventsPerBurst: Int = PASTE_MAX_EVENTS_PER_BURST,
+) {
+    init {
+        require(maxEventsPerBurst >= 4) { "paste event budget must fit a shifted key tap" }
+    }
+
+    /** Returns the number of mapped characters accepted for delivery. */
+    suspend fun send(text: String): Int {
+        if (text.isEmpty()) return 0
+
+        var burstEvents = 0
+        var sentCharacters = 0
+        // Let any key/touch events immediately preceding Paste leave the queue.
+        pauseForDrain()
+        for (ch in text) {
+            val (evdev, needsShift) = charToEvdevWithShift(ch)
+            if (evdev < 0) continue
+            val eventCount = if (needsShift) 4 else 2
+            if (burstEvents + eventCount > maxEventsPerBurst) {
+                pauseForDrain()
+                burstEvents = 0
+            }
+            if (needsShift) sendKey(PASTE_LEFT_SHIFT, 1)
+            sendKey(evdev, 1)
+            sendKey(evdev, 0)
+            if (needsShift) sendKey(PASTE_LEFT_SHIFT, 0)
+            burstEvents += eventCount
+            sentCharacters++
+        }
+        // Keep the mutex until the final burst has had a chance to drain.
+        if (burstEvents > 0) pauseForDrain()
+        return sentCharacters
+    }
+}
+
+private const val PASTE_LEFT_SHIFT = 42
 
 private fun sendEvdevPress(evdev: Int) {
     WaylandBridge.nativeSendKey(evdev, 1)

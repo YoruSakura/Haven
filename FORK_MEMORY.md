@@ -13,7 +13,7 @@ before rebasing, changing release configuration, or producing APKs.
   upstream `sh.haven.app` package to remain installed.
 - Display name: `Haven修改版`.
 - Version name: `<upstream-version>-fork-<revision>`, currently
-  `5.87.70-fork-4`.
+  `5.87.70-fork-5`.
 - Version code: `(upstreamVersionCode * 100 + forkRevision) * 10 + abiOffset`.
   ARM64 uses offset 1 and ARM32 uses offset 3. For another fork update on the
   same upstream version, increment `forkRevision` in `app/build.gradle.kts`.
@@ -47,6 +47,12 @@ before rebasing, changing release configuration, or producing APKs.
    modifier released before returning. This preserves shortcuts such as Ctrl+C
    while preventing Ctrl+J/newline, Ctrl+I/Tab completion, and Ctrl+arrow jumps
    from appearing after the modifier was physically released.
+7. Fork update 5 fixes Native X11 clipboard truncation and a repeating final
+   character. The native JNI input ring has 255 usable slots and silently drops
+   overflow, while the old Paste callback synchronously queued 2–4 events per
+   character. Wayland paste now runs off the UI callback, serializes concurrent
+   pastes, sends at most 32 evdev events per burst, and pauses between bursts so
+   a key DOWN/UP pair cannot be split at the queue boundary.
 
 ## Packaging constraints
 
@@ -64,6 +70,6 @@ before rebasing, changing release configuration, or producing APKs.
 
 - Application ID: `sh.haven.app.fork`
 - Display name: `Haven修改版`
-- Version: `5.87.70-fork-4`
-- ARM64 version code: `833041`
-- ARM32 version code: `833043`
+- Version: `5.87.70-fork-5`
+- ARM64 version code: `833051`
+- ARM32 version code: `833053`

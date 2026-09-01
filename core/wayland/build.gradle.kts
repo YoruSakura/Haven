@@ -175,8 +175,10 @@ dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:toolbar"))
     implementation(project(":core:data"))
+    implementation(libs.coroutines.android)
 
     testImplementation(libs.junit)
+    testImplementation(libs.coroutines.test)
 }
 
 kotlin {
