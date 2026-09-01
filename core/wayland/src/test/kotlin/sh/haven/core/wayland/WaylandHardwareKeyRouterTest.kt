@@ -162,6 +162,27 @@ class WaylandHardwareKeyRouterTest {
     }
 
     @Test
+    fun `Ctrl Shift C and V reach X11 as self contained chords`() {
+        val (router, events) = fixture()
+        val ctrlShift = KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON
+
+        router.onKeyDown(46, ctrlShift) // C
+        router.onKeyDown(47, ctrlShift) // V
+
+        assertEquals(
+            listOf(
+                EvdevEvent(29, 1), EvdevEvent(42, 1),
+                EvdevEvent(46, 1), EvdevEvent(46, 0),
+                EvdevEvent(42, 0), EvdevEvent(29, 0),
+                EvdevEvent(29, 1), EvdevEvent(42, 1),
+                EvdevEvent(47, 1), EvdevEvent(47, 0),
+                EvdevEvent(42, 0), EvdevEvent(29, 0),
+            ),
+            events,
+        )
+    }
+
+    @Test
     fun `standalone modifier events never enter Wayland state`() {
         val (router, events) = fixture()
 

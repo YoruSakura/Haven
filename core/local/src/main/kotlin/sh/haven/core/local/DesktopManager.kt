@@ -1730,8 +1730,7 @@ class DesktopManager @Inject constructor(
             // is needed. The Wayland native desktop autostarts its
             // waybar/thunar/foot set instead.
             val nativeAutostart = if (de.id == "x11-native") {
-                "if command -v xterm >/dev/null 2>&1; then xterm -e $shellCommand 2>&1; " +
-                    "else $shellCommand 2>&1; fi; "
+                nativeX11AutostartCommand(shellCommand)
             } else {
                 "if [ -x /usr/bin/waybar ]; then " +
                     "dbus-run-session waybar >/tmp/waybar.log 2>&1 & sleep 2; " +
@@ -2012,6 +2011,24 @@ internal fun parseWxH(token: String): Pair<Int, Int>? {
 internal fun formatCageScale(scale: Float): String {
     val c = scale.coerceIn(0.5f, 3f)
     return if (c == c.toInt().toFloat()) c.toInt().toString() else c.toString()
+}
+
+/**
+ * Native X11 opens xterm directly, without a desktop session loading X
+ * resources. Inject the conventional clipboard shortcuts on every launch so
+ * this also fixes already-installed root filesystems without an xrdb package
+ * or a reinstall. The literal `\n` separates entries in Xt's translation
+ * table; the surrounding single quotes keep `<Key>` away from the guest shell.
+ */
+internal fun nativeX11AutostartCommand(shellCommand: String): String {
+    val translations =
+        "XTerm*VT100.translations: #override " +
+            "Ctrl Shift <Key>C: copy-selection(CLIPBOARD) \\n " +
+            "Ctrl Shift <Key>V: insert-selection(CLIPBOARD)"
+    return "if command -v xterm >/dev/null 2>&1; then " +
+        "xterm -xrm 'XTerm*selectToClipboard: true' " +
+        "-xrm '$translations' -e $shellCommand 2>&1; " +
+        "else $shellCommand 2>&1; fi; "
 }
 
 /**

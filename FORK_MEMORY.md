@@ -13,7 +13,7 @@ before rebasing, changing release configuration, or producing APKs.
   upstream `sh.haven.app` package to remain installed.
 - Display name: `Haven修改版`.
 - Version name: `<upstream-version>-fork-<revision>`, currently
-  `5.87.70-fork-5`.
+  `5.87.70-fork-6`.
 - Version code: `(upstreamVersionCode * 100 + forkRevision) * 10 + abiOffset`.
   ARM64 uses offset 1 and ARM32 uses offset 3. For another fork update on the
   same upstream version, increment `forkRevision` in `app/build.gradle.kts`.
@@ -53,6 +53,12 @@ before rebasing, changing release configuration, or producing APKs.
    character. Wayland paste now runs off the UI callback, serializes concurrent
    pastes, sends at most 32 evdev events per burst, and pauses between bursts so
    a key DOWN/UP pair cannot be split at the queue boundary.
+8. Fork update 6 gives the Native X11 xterm conventional physical-keyboard
+   clipboard bindings. Every launch injects `Ctrl+Shift+C` as
+   `copy-selection(CLIPBOARD)` and `Ctrl+Shift+V` as
+   `insert-selection(CLIPBOARD)`, and enables xterm's CLIPBOARD selection mode.
+   Launch-time resources apply to existing root filesystems without reinstalling
+   the desktop packages or requiring `xrdb`.
 
 ## Packaging constraints
 
@@ -70,6 +76,6 @@ before rebasing, changing release configuration, or producing APKs.
 
 - Application ID: `sh.haven.app.fork`
 - Display name: `Haven修改版`
-- Version: `5.87.70-fork-5`
-- ARM64 version code: `833051`
-- ARM32 version code: `833053`
+- Version: `5.87.70-fork-6`
+- ARM64 version code: `833061`
+- ARM32 version code: `833063`

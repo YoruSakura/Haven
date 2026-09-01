@@ -43,6 +43,17 @@ class GeneratedShellSyntaxTest {
         assertTrue(parses(CMDLINE_SCAN_SCRIPT))
     }
 
+    @Test
+    fun `native X11 xterm has conventional clipboard shortcuts`() {
+        val script = nativeX11AutostartCommand("/bin/sh -l")
+
+        assertTrue(parses(script))
+        assertTrue(script.contains("XTerm*selectToClipboard: true"))
+        assertTrue(script.contains("Ctrl Shift <Key>C: copy-selection(CLIPBOARD)"))
+        assertTrue(script.contains("Ctrl Shift <Key>V: insert-selection(CLIPBOARD)"))
+        assertTrue(script.contains("-e /bin/sh -l 2>&1"))
+    }
+
     /**
      * Guards the test itself: `sh -n` has to actually reject something, or
      * every assertion above passes for the wrong reason.
