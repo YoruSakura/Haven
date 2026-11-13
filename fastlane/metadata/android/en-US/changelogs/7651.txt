@@ -1,0 +1,3 @@
+- Toolbar arrows and other repeating keys no longer stop working after you hold one.
+- The keyboard comes back when you switch back to Haven, instead of always hiding.
+- Three new terminal colour schemes: Campbell, Modern Dark and Modern Light.

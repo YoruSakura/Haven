@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">إلغاء</string>
+    <string name="common_save">حفظ</string>
+    <string name="common_done">تم</string>
+    <string name="common_close">إغلاق</string>
+    <string name="common_ok">موافق</string>
+    <string name="common_delete">حذف</string>
+    <string name="common_edit">تعديل</string>
+    <string name="common_rename">إعادة تسمية</string>
+    <string name="common_create">إنشاء</string>
+    <string name="common_connect">اتصال</string>
+    <string name="common_disconnect">قطع الاتصال</string>
+    <string name="common_copy">نسخ</string>
+    <string name="common_paste">لصق</string>
+    <string name="common_label">التسمية</string>
+    <string name="common_password">كلمة المرور</string>
+    <string name="common_port">المنفذ</string>
+    <string name="common_host">المضيف</string>
+    <string name="common_username">اسم المستخدم</string>
+    <string name="common_install">تثبيت</string>
+    <string name="common_reset">إعادة تعيين</string>
+    <string name="common_allow">سماح</string>
+    <string name="common_not_now">ليس الآن</string>
+    <string name="common_import">استيراد</string>
+    <string name="common_add">إضافة</string>
+    <string name="common_download">تنزيل</string>
+    <string name="common_unlock">فتح القفل</string>
+
+    <!-- Top-level screen -->
+    <string name="settings_title">الإعدادات</string>
+
+    <!-- Security section -->
+    <string name="settings_biometric_title">قفل الشاشة</string>
+    <string name="settings_biometric_subtitle">طلب المصادقة لفتح Haven</string>
+    <string name="settings_lock_timeout_title">مهلة القفل</string>
+    <string name="settings_prevent_screenshots_title">منع لقطات الشاشة</string>
+    <string name="settings_prevent_screenshots_subtitle">حظر التقاط الشاشة ومعاينة مبدّل التطبيقات</string>
+
+    <!-- Logging section -->
+    <string name="settings_exclude_recents_title">الإخفاء من التطبيقات الأخيرة</string>
+    <string name="settings_exclude_recents_subtitle">يخفي بطاقة Haven من شاشة التطبيقات الأخيرة؛ تستمر الجلسات في العمل. أعد الفتح من أيقونة التطبيق.</string>
+    <string name="settings_connection_logging_title">تسجيل الاتصالات</string>
+    <string name="settings_connection_logging_subtitle">تسجيل أحداث الاتصال (اتصال، قطع، أخطاء). يُخزّن محلياً ومحمي بتشفير الجهاز</string>
+    <string name="settings_view_connection_log_title">عرض سجل الاتصالات</string>
+    <string name="settings_view_connection_log_subtitle">سجل الاتصالات والأحداث</string>
+    <string name="settings_verbose_logging_title">تسجيل تفصيلي للاتصالات</string>
+    <string name="settings_verbose_logging_subtitle">التقاط تفاصيل البروتوكول لاتصالات SSH و Mosh و ET و RDP و SPICE — بما في ذلك توقيتات إطارات RDP وأحداث إدخال SPICE، وهي ما يحتاجه سطح المكتب البعيد البطيء أو غير المستجيب. فعّله قبل الاتصال. قد يتضمن أسماء المضيفين والمستخدمين</string>
+
+    <!-- Terminal section -->
+    <string name="settings_session_persistence_title">استمرار الجلسة</string>
+    <string name="settings_session_persistence_none">بلا</string>
+    <string name="settings_font_size_title">حجم خط الطرفية</string>
+    <string name="settings_font_size_subtitle">%1$dsp</string>
+    <string name="settings_horizontal_padding_title">تباعد أفقي</string>
+    <string name="settings_horizontal_padding_subtitle">%1$d dp</string>
+    <string name="settings_color_scheme_title">نظام ألوان الطرفية</string>
+    <string name="settings_toolbar_title">شريط أدوات لوحة المفاتيح</string>
+    <string name="settings_toolbar_subtitle">تكوين مفاتيح وتخطيط شريط الأدوات</string>
+    <string name="settings_search_button_title">زر البحث</string>
+    <string name="settings_search_button_subtitle">إظهار أيقونة البحث في شريط التبويبات — يرسل مفاتيح البحث الأصلية لمدير الجلسات (tmux/zellij/screen) أو Ctrl+R للـ Shell</string>
+    <string name="settings_copy_output_title">نسخ آخر مخرجات</string>
+    <string name="settings_copy_output_subtitle">إظهار أيقونة النسخ في شريط التبويبات — ينسخ مخرجات آخر أمر. يتطلب تكامل Shell (اضغط للإعداد)</string>
+    <string name="settings_mouse_input_title">إدخال الماوس في تطبيقات TUI</string>
+    <string name="settings_mouse_input_subtitle">تمرير اللمسات كنقرات والضغط المطوّل كنقرة يمين عندما تفعّل تطبيقات مثل htop و mc و vim تتبع الماوس</string>
+    <string name="settings_right_click_title">الضغط المطوّل يرسل نقرة يمين</string>
+    <string name="settings_right_click_subtitle">إرسال نقرة يمين للطرفية بدلاً من بدء تحديد النص. مفيد لقوائم tmux السياقية</string>
+    <string name="settings_standard_keyboard_title">الإدخال الصوتي والإكمال التلقائي</string>
+    <string name="settings_standard_keyboard_subtitle">يعطّل أعلام لوحة المفاتيح الآمنة (وضع كلمة المرور، بدون اقتراحات). يتيح الإدخال الصوتي والكتابة بالسحب والتنبؤ بالكلمات — لكن لوحة المفاتيح قد تتعلم كلمات المرور المكتوبة</string>
+
+    <!-- Appearance section -->
+    <string name="settings_theme_title">المظهر</string>
+    <string name="settings_navigation_tabs_title">عناصر التنقل</string>
+    <string name="settings_navigation_tabs_subtitle">أعدّ ترتيب عناصر التنقّل واختر ما يُعرض منها</string>
+
+    <!-- Wayland section -->
+    <string name="settings_wayland_shell_title">Shell سطح مكتب Wayland</string>
+    <string name="settings_proot_idle_title">إيقاف ضيف Linux الخامل تلقائيًا</string>
+    <string name="settings_proot_idle_off">مُعطّل — يظل ضيف Linux قيد التشغيل حتى توقفه</string>
+    <string name="settings_proot_idle_on">يوقف الضيف بعد %1$d دقيقة من مغادرتك Haven (خدمة ضيف قيد التشغيل تُبقيه نشطًا)</string>
+    <string name="settings_proot_idle_dialog_title">إيقاف ضيف Linux الخامل تلقائيًا</string>
+    <string name="settings_proot_idle_dialog_body">بعد بقاء Haven في الخلفية هذه المدة، أوقِف طرفيات وأسطح مكتب ضيف Linux لتحرير الذاكرة. خدمة ضيف قيد التشغيل تُبقيه نشطًا. المهمة الطويلة في طرفية بالخلفية ستتوقف أيضًا — اترك هذا مُعطّلًا إلا إذا كنت تريد استعادة الموارد عند الخمول.</string>
+    <string name="settings_proot_idle_off_label">مُعطّل</string>
+    <string name="settings_shizuku_title">تكامل Shizuku</string>
+    <string name="settings_shizuku_enabled">مفعّل — إعفاء تلقائي من البطارية، مشاركة مقبس Wayland</string>
+    <string name="settings_shizuku_available">Shizuku مثبّت — اضغط لمنح الإذن</string>
+    <string name="settings_shizuku_not_running">Shizuku مثبت لكن غير مُشغّل — انقر لفتحه وبدء التشغيل عبر التصحيح اللاسلكي</string>
+    <string name="settings_shizuku_not_installed">تثبيت Shizuku للإعفاء من البطارية ومشاركة Wayland</string>
+
+    <!-- Backup section -->
+    <string name="settings_backup_sync_title">المزامنة مع جهاز بعيد</string>
+    <string name="settings_backup_sync_subtitle_set">%1$s : %2$s</string>
+    <string name="settings_backup_sync_subtitle_unset">دفع/سحب النسخة المشفّرة إلى اتصال SFTP/SMB/rclone</string>
+    <string name="settings_backup_sync_description">يدفع أو يسحب النسخة الاحتياطية المشفّرة إلى اتصال لديك بالفعل. يُشفَّر الملف بـ AES-256-GCM بعبارة مرورك قبل مغادرة الجهاز — لا يرى الطرف البعيد إعداداتك بنص واضح أبدًا.</string>
+    <string name="settings_backup_sync_no_remotes">لا توجد اتصالات SFTP أو SMB أو rclone بعد. أضِف واحدًا أولًا ليحتفظ بنسختك.</string>
+    <string name="settings_backup_sync_choose_remote">اختر اتصالًا…</string>
+    <string name="settings_backup_sync_remote_label">اتصال الوجهة</string>
+    <string name="settings_backup_sync_path_label">مسار الملف على الجهاز البعيد</string>
+    <string name="settings_backup_sync_connect_hint">اتصل بالوجهة أولًا (افتحها في تبويب الملفات)، ثم ادفع أو اسحب.</string>
+    <string name="settings_backup_sync_push_button">دفع</string>
+    <string name="settings_backup_sync_pull_button">سحب</string>
+    <string name="settings_backup_auto_sync_label">الدفع تلقائيًا</string>
+    <string name="settings_backup_auto_sync_hint">يعيد رفع النسخة الاحتياطية المشفّرة بعد دقيقتين من تغيير الإعدادات، مع تحديث يومي. يتطلب تخزين عبارة المرور (مشفّرة) على هذا الجهاز لتشغيل الرفع في الخلفية. السحب التلقائي خيار منفصل أدناه.</string>
+    <string name="settings_backup_auto_sync_dialog_title">تفعيل الدفع التلقائي</string>
+    <string name="settings_backup_auto_sync_dialog_description">عيّن كلمة المرور التي ستُشفَّر بها كل نسخة احتياطية تلقائية. تُحفظ مشفّرة على هذا الجهاز — ويؤدي إيقاف الدفع التلقائي إلى حذفها.</string>
+    <string name="settings_export_backup_title">تصدير نسخة احتياطية</string>
+    <string name="settings_export_backup_subtitle">المفاتيح والاتصالات والإعدادات</string>
+    <string name="settings_restore_backup_title">استعادة نسخة احتياطية</string>
+    <string name="settings_restore_backup_subtitle">الاستيراد من ملف نسخة احتياطية</string>
+    <string name="settings_backup_working">جارٍ المعالجة…</string>
+
+    <!-- About section -->
+    <string name="settings_about_title">حول Haven</string>
+    <string name="settings_support_title">ادعم Haven</string>
+    <string name="settings_support_subtitle">اشترِ فنجان قهوة للمطوّر</string>
+    <string name="settings_version_unknown">غير معروف</string>
+
+    <!-- Wayland shell dialog -->
+    <string name="settings_wayland_dialog_title">Shell سطح مكتب Wayland</string>
+    <string name="settings_wayland_dialog_description">أمر Shell للتشغيل داخل طرفية foot في سطح مكتب Wayland. ثبّت أصداف إضافية بـ apk (مثل apk add bash).</string>
+    <string name="settings_wayland_shell_command_label">أمر Shell</string>
+
+    <!-- Lock timeout dialog -->
+    <string name="settings_lock_timeout_dialog_title">مهلة القفل</string>
+
+    <!-- OSC 133 shell integration dialog -->
+    <string name="settings_osc133_dialog_title">إعداد تكامل Shell</string>
+    <string name="settings_osc133_description">نسخ آخر مخرجات يتطلب من Shell إصدار علامات OSC 133. أضف أحد هذه المقاطع إلى إعدادات Shell:</string>
+    <string name="settings_osc133_bash">Bash</string>
+    <string name="settings_osc133_zsh">Zsh</string>
+    <string name="settings_osc133_copied_bash">تم نسخ مقطع Bash</string>
+    <string name="settings_osc133_copied_zsh">تم نسخ مقطع Zsh</string>
+    <string name="settings_osc133_footer">اضغط على مقطع لنسخه. العديد من الأدوات (iTerm2, VS Code, WezTerm) تتضمن هذه العلامات افتراضياً.</string>
+    <string name="settings_osc133_learn_more">معرفة المزيد</string>
+
+    <!-- Backup password dialog -->
+    <string name="settings_backup_export_dialog_title">تصدير نسخة احتياطية</string>
+    <string name="settings_backup_restore_dialog_title">استعادة نسخة احتياطية</string>
+    <string name="settings_backup_password_min_length">6 أحرف على الأقل</string>
+    <string name="settings_backup_passwords_mismatch">كلمتا المرور غير متطابقتين</string>
+    <string name="settings_backup_export_description">شفّر نسختك الاحتياطية بكلمة مرور. هذا يحمي مفاتيح SSH وبيانات الاتصال.</string>
+    <string name="settings_backup_restore_description">أدخل كلمة المرور المستخدمة عند إنشاء النسخة الاحتياطية.</string>
+    <string name="settings_backup_password_label">كلمة المرور</string>
+    <string name="settings_backup_confirm_password_label">تأكيد كلمة المرور</string>
+    <string name="settings_backup_export_button">تصدير</string>
+    <string name="settings_backup_restore_button">استعادة</string>
+
+    <!-- About dialog -->
+    <string name="settings_about_dialog_title">حول Haven</string>
+    <string name="settings_about_app_name">Haven</string>
+    <string name="settings_about_description">عميل مفتوح المصدر لـ SSH و VNC و RDP والتخزين السحابي لـ Android</string>
+    <string name="settings_about_version">الإصدار %1$s (بناء %2$d)</string>
+    <string name="settings_about_android">Android %1$s (API %2$d)</string>
+    <string name="settings_about_libraries_title">مكتبات مفتوحة المصدر</string>
+
+    <!-- Theme dialog -->
+    <string name="settings_theme_dialog_title">المظهر</string>
+
+    <!-- Color scheme dialog -->
+    <string name="settings_color_scheme_dialog_title">نظام ألوان الطرفية</string>
+
+    <!-- Session manager dialog -->
+    <string name="settings_session_dialog_title">استمرار الجلسة</string>
+    <string name="settings_session_no_scrollback">بدون تمرير باللمس</string>
+    <string name="settings_session_custom_command_label">أمر مخصص</string>
+    <string name="settings_session_custom_command_hint">استخدم {name} لاسم الجلسة. اتركه فارغاً للافتراضي.</string>
+    <string name="settings_session_save_command">حفظ الأمر</string>
+
+    <!-- Font size dialog -->
+    <string name="settings_font_size_dialog_title">حجم خط الطرفية</string>
+    <string name="settings_font_size_sample">نص تجريبي</string>
+    <string name="settings_font_size_value">%1$dsp</string>
+    <string name="settings_horizontal_padding_dialog_title">تباعد أفقي للطرفية</string>
+    <string name="settings_horizontal_padding_sample">نص تجريبي</string>
+    <string name="settings_horizontal_padding_value">%1$d dp</string>
+
+    <!-- Toolbar config dialog -->
+    <string name="settings_toolbar_dialog_title">شريط أدوات لوحة المفاتيح</string>
+    <string name="settings_toolbar_assign_hint">عيّن كل مفتاح إلى الصف 1 أو الصف 2 أو إيقاف</string>
+    <string name="settings_toolbar_arrow_keys">تخطيط مفاتيح الأسهم</string>
+    <string name="settings_toolbar_edit_controls">عناصر وضع التحرير</string>
+    <string name="settings_edit_controls_split">تقسيم</string>
+    <string name="settings_edit_controls_left">يسار</string>
+    <string name="settings_edit_controls_right">يمين</string>
+    <string name="settings_toolbar_function_keys">مفاتيح الوظائف</string>
+    <string name="settings_toolbar_symbols">الرموز</string>
+    <string name="settings_toolbar_custom_keys">مفاتيح مخصصة</string>
+    <string name="settings_toolbar_add_custom_key">إضافة مفتاح مخصص</string>
+    <string name="settings_toolbar_edit_json">تعديل JSON</string>
+    <string name="settings_toolbar_row1">ص1</string>
+    <string name="settings_toolbar_row2">ص2</string>
+    <string name="settings_toolbar_off">إيقاف</string>
+    <string name="settings_toolbar_paste_clipboard">لصق الحافظة</string>
+
+    <!-- Custom key dialog -->
+    <string name="settings_custom_key_edit_title">تعديل مفتاح مخصص</string>
+    <string name="settings_custom_key_add_title">إضافة مفتاح مخصص</string>
+    <string name="settings_custom_key_presets">إعدادات مسبقة</string>
+    <string name="settings_custom_key_label">التسمية</string>
+    <string name="settings_custom_key_label_placeholder">مثال: ^C, Paste</string>
+    <string name="settings_custom_key_sequence_label">التسلسل</string>
+    <string name="settings_custom_key_sequence_placeholder">مثال: \\u0003</string>
+    <string name="settings_custom_key_escape_hint">استخدم \\u001b لـ Escape، \\u0003 لـ Ctrl+C، \\n لـ Enter</string>
+
+    <!-- JSON editor dialog -->
+    <string name="settings_json_editor_title">تعديل JSON شريط الأدوات</string>
+    <string name="settings_json_editor_format_hint">نص = معرّف مفتاح مدمج، كائن = مفتاح مخصص {\"label\": \"…\", \"send\": \"…\"}</string>
+    <string name="settings_json_editor_builtin_ids">المعرّفات المدمجة: keyboard, esc, tab, shift, ctrl, alt, arrow_left, arrow_up, arrow_down, arrow_right, home, end, pgup, pgdn, sym_pipe, sym_tilde, sym_slash, sym_dash, sym_underscore, sym_equals, sym_plus, sym_backslash, sym_squote, sym_dquote, sym_semicolon, sym_colon, sym_bang, sym_question, sym_at, sym_hash, sym_dollar, sym_percent, sym_caret, sym_amp, sym_star, sym_lparen, sym_rparen, sym_lbracket, sym_rbracket, sym_lbrace, sym_rbrace, sym_lt, sym_gt, sym_backtick</string>
+
+    <!-- Common strings -->
+    <string name="common_support">الدعم</string>
+    <string name="common_github">GitHub</string>
+    <string name="common_simple">بسيط</string>
+    <string name="settings_language_title">اللغة</string>
+    <string name="settings_media_extensions_title">امتدادات ملفات الوسائط</string>
+    <string name="settings_media_extensions_description">امتدادات ملفات مفصولة بمسافات تُعامَل كوسائط قابلة للبث في متصفح الملفات.</string>
+    <string name="settings_media_extensions_label">الامتدادات</string>
+    <string name="settings_show_desktops_title">إظهار بطاقة أسطح المكتب</string>
+    <string name="settings_show_desktops_subtitle">إظهار مدير بيئات سطح المكتب في شاشة الاتصالات</string>
+    <string name="settings_show_linux_vm_title">إظهار بطاقة Linux VM</string>
+    <string name="settings_show_linux_vm_subtitle">إظهار إعداد جهاز Linux الافتراضي في شاشة الاتصالات</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="settings_keep_screen_on_title">إبقاء الشاشة مضاءة في الطرفية</string>
+    <string name="settings_keep_screen_on_subtitle">تبقى الشاشة مضاءة طالما توجد علامة تبويب طرفية مفتوحة. يستهلك ذلك البطارية؛ يستحق التفعيل فقط إذا كنت تراقب مخرجات طويلة.</string>
+
+    <!-- #135 -->
+    <string name="settings_keyboard_mode_title">وضع لوحة المفاتيح</string>
+    <string name="settings_dev_install_title">تثبيت تطويري</string>
+    <string name="settings_dev_install_apk_url">رابط APK</string>
+    <string name="settings_font_install_title">تثبيت خط من رابط</string>
+    <string name="settings_ime_flags_title">أعلام IME</string>
+    <!-- #133 phase 2b: SSH host CA pubkey field (en fallback) -->
+    <string name="settings_scrollback_rows_title">صفوف السجل</string>
+    <string name="settings_scrollback_rows_subtitle">%1$,d سطر محفوظ لكل علامة تبويب — يُطبَّق على العلامات الجديدة</string>
+    <string name="settings_scrollback_rows_dialog_title">عدد صفوف السجل لكل علامة تبويب</string>
+    <string name="settings_scrollback_rows_dialog_body">السجل الأكبر يستهلك ذاكرة أكثر. حوالي 2 كيلوبايت لكل سطر بعرض أعمدة نموذجي، مضروبًا في عدد علامات التبويب المفتوحة.</string>
+    <string name="settings_scrollback_rows_value">%1$,d سطر</string>
+    <string name="settings_tap_to_position_title">اضغط لتحريك المؤشر في الأوامر المدعومة</string>
+    <string name="settings_tap_to_position_subtitle">اضغط داخل أمر shell لنقل المؤشر إلى ذلك العمود. يتطلب علامات OSC 133 (starship وfish 3.6+ وإعدادات bash/zsh حديثة). لا يؤثر على الأصداف التي لا تُصدرها</string>
+    <string name="settings_swipe_arrows_title">السحب يرسل الأسهم</string>
+    <string name="settings_swipe_arrows_subtitle">السحب الأفقي في الطرفية يرسل ← → (اضغط مطولاً للتكرار) بدل تبديل التبويبات. زر السحب في شريط الأدوات يبدّل النمط نفسه</string>
+    <string name="settings_swipe_arrows_exit_hint">عند إخفاء شريط تبويبات التطبيق وتوفر جلسة مفتوحة، تستمر التمريرات في إرسال الأسهم حتى يُضغط زر السحب في شريط الأدوات. أضف زر السحب إلى الشريط ليكون متاحًا دائمًا</string>
+    <string name="settings_swipe_arrows_add_key">إضافة زر السحب</string>
+
+    <string name="settings_bandwidth_suggest_subtitle">يكتشف معدل نقل أقل من ~1 ميجابت/ثانية بعد بضع ثوانٍ ويعرض إعادة الاتصال بـ 256 لونًا بنقرة واحدة. إيقاف التشغيل يلغي الإشعار.</string>
+    <string name="settings_bandwidth_suggest_title">اقتراح 256 لونًا على اتصالات VNC البطيئة</string>
+    <string name="settings_section_about">حول التطبيق</string>
+    <string name="settings_section_advanced">متقدم</string>
+    <string name="settings_section_appearance">المظهر</string>
+    <string name="settings_section_backup">النسخ الاحتياطي</string>
+    <string name="settings_section_connections_screen">شاشة الاتصالات</string>
+    <string name="settings_section_desktop">سطح المكتب (VNC &amp; RDP)</string>
+    <string name="settings_section_diagnostics">التشخيص</string>
+    <string name="settings_section_keyboard_input">لوحة المفاتيح والإدخال</string>
+    <string name="settings_section_security_privacy">الأمان والخصوصية</string>
+    <string name="settings_section_terminal">الطرفية</string>
+    <string name="settings_show_terminal_tab_bar_subtitle">إظهار علامات تبويب الجلسات أعلى الطرفية</string>
+    <string name="settings_show_terminal_tab_bar_title">إظهار شريط علامات تبويب الطرفية</string>
+    <string name="settings_touchpad_input_direct_subtitle">لمس مباشر — موضع الإصبع هو المؤشر. فعّله للإدخال على نمط لوحة اللمس.</string>
+    <string name="settings_touchpad_input_title">إدخال لوحة اللمس</string>
+    <string name="settings_touchpad_input_touchpad_subtitle">السحب يحرّك المؤشر البعيد؛ النقر ينقر عند المؤشر. تتبع منطقة العرض المؤشر عند التكبير.</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="settings_color_scheme_auto_switch_title">التبديل التلقائي مع سمة النظام</string>
+    <string name="settings_color_scheme_auto_switch_subtitle">استخدام نظامَي ألوان مختلفَين للوضع الفاتح والداكن</string>
+    <string name="settings_color_scheme_light_title">نظام ألوان الطرفية (فاتح)</string>
+    <string name="settings_color_scheme_dark_title">نظام ألوان الطرفية (داكن)</string>
+    <string name="settings_color_scheme_light_dialog_title">نظام ألوان الطرفية — فاتح</string>
+    <string name="settings_color_scheme_dark_dialog_title">نظام ألوان الطرفية — داكن</string>
+    <string name="settings_color_scheme_apply_palette_title">تطبيق لوحة ANSI للنمط</string>
+    <string name="settings_color_scheme_apply_palette_subtitle">أعد تلوين ألوان ANSI الـ16 لتطابق النمط. عند الإيقاف تبقى الألوان القياسية، فتظهر تطبيقات ملء الشاشة مثل mutt كما هو متوقع.</string>
+    <string name="settings_toolbar_min_key_width">الحد الأدنى لعرض المفتاح: %1$d dp</string>
+    <string name="settings_toolbar_key_scale">مقياس حجم المفتاح: %1$d%%</string>
+    <string name="settings_toolbar_uniform_grid">شبكة مفاتيح موحّدة</string>
+    <string name="settings_toolbar_uniform_grid_desc">كل مفتاح يشغل خلية متساوية العرض على طريقة Termux؛ التسميات الطويلة تلتف. بدون تمرير جانبي.</string>
+    <string name="settings_terminal_font_title">خط الطرفية</string>
+    <string name="settings_terminal_font_default_label">Hack Nerd Font Mono (الافتراضي)</string>
+    <string name="settings_terminal_font_custom_fmt">مخصص: %1$s</string>
+    <string name="settings_terminal_font_subtitle_fmt">%1$s — اضغط لاختيار TTF/OTF (تعمل Nerd Fonts)</string>
+    <string name="settings_recommended_fonts_title">الخطوط الموصى بها</string>
+    <string name="settings_recommended_fonts_subtitle">تثبيت بنقرة واحدة: Source Code Pro، JetBrains Mono، Hack، Inconsolata</string>
+    <string name="settings_font_from_url_title">تثبيت خط من رابط…</string>
+    <string name="settings_font_from_url_subtitle">جلب ملف .ttf/.otf أو ملف .zip منهما (يعكس أداة set_terminal_font_from_url للوكيل)</string>
+    <string name="settings_reset_font_title">إعادة تعيين خط الطرفية</string>
+    <string name="settings_reset_font_subtitle">العودة إلى Hack Nerd Font Mono المضمّن</string>
+    <string name="settings_terminal_font_reset_toast">تمت إعادة تعيين خط الطرفية</string>
+    <string name="settings_terminal_font_set_toast">تم ضبط خط الطرفية على %1$s</string>
+    <string name="settings_terminal_font_decode_failed_toast">تعذّر تحميل الخط — تعذّر على Android فك ترميزه كخط</string>
+    <string name="settings_font_installed_toast">تم التثبيت (%1$d KiB)</string>
+    <string name="settings_font_installing_toast">جارٍ تثبيت %1$s…</string>
+    <string name="settings_font_named_installed_toast">تم تثبيت %1$s (%2$d KiB)</string>
+    <string name="settings_language_system_default">افتراضي النظام</string>
+    <string name="settings_keyboard_mode_subtitle_raw">خام — لوحة المفاتيح الفيزيائية فقط</string>
+    <string name="settings_keyboard_mode_subtitle_standard">قياسي — ميزات Gboard الكاملة</string>
+    <string name="settings_keyboard_mode_subtitle_custom">مخصص — أعلام EditorInfo التي يختارها المستخدم</string>
+    <string name="settings_keyboard_mode_subtitle_secure">آمن — الافتراضي، يكبت التصحيح التلقائي</string>
+    <string name="settings_keyboard_mode_secure_label">آمن (الافتراضي)</string>
+    <string name="settings_keyboard_mode_secure_desc">لوحة مفاتيح برمجية حقيقية مع تفعيل أعلام الخصوصية: يُكبت ميكروفون Gboard والتصحيح التلقائي والكتابة بالسحب ومساعدة الكتابة. الأفضل لكتابة كلمات المرور؛ يعمل مع لوحات Bluetooth أيضًا.</string>
+    <string name="settings_keyboard_mode_standard_label">قياسي</string>
+    <string name="settings_keyboard_mode_standard_desc">ميزات Gboard الكاملة — الإدخال الصوتي والكتابة بالسحب والتصحيح التلقائي وتنبؤات الكلمات. اختره إذا لم تعمل لوحة المفاتيح البرمجية في الوضع الآمن، أو إذا أردت التصحيح التلقائي.</string>
+    <string name="settings_keyboard_mode_raw_label">خام — Bluetooth/USB فقط</string>
+    <string name="settings_keyboard_mode_raw_desc">لا لوحة مفاتيح برمجية إطلاقًا. تصل إلى الطرفية المفاتيحُ الفيزيائية فقط (Bluetooth أو USB). أقوى خصوصية؛ لن تظهر لوحة المفاتيح على الشاشة عند الضغط على الطرفية.</string>
+    <string name="settings_keyboard_mode_custom_label">مخصص — اختر أعلامك الخاصة</string>
+    <string name="settings_keyboard_mode_custom_desc">متقدم. اختر بتات EditorInfo التي تضبطها الطرفية لتمزج حسب رغبتك وفق خصائص IME الخاص بك (مثل الإدخال الصوتي على Gboard بدون تصحيح تلقائي). اضبط من الإعدادات ← «أعلام IME» بعد التحديد.</string>
+    <string name="settings_ime_flags_subtitle">اختر بتات EditorInfo التي تضبطها الطرفية</string>
+    <string name="settings_ctrl_shift_v_title">Ctrl+Shift+V للصق</string>
+    <string name="settings_ctrl_shift_v_subtitle">Ctrl+Shift+V على لوحة المفاتيح الفيزيائية يلصق من حافظة Android. إيقافه يرسل المفاتيح إلى الصدفة البعيدة.</string>
+    <string name="settings_auto_show_keyboard_title">إظهار لوحة المفاتيح عند فتح الطرفية</string>
+    <string name="settings_auto_show_keyboard_subtitle">تظهر لوحة مفاتيح النظام تلقائيًا عند فتح جلسة طرفية أو التبديل إليها. أوقفها لإبقائها مخفية في جلسات القراءة فقط؛ لا يزال مفتاح لوحة المفاتيح في شريط الأدوات والنقر المزدوج يظهرانها</string>
+
+    <!-- Navigation Tabs dialog -->
+
+    <string name="settings_nav_tab_visibility_auto_title">تلقائي</string>
+    <string name="settings_nav_tab_visibility_show_title">إظهار</string>
+    <string name="settings_nav_tab_visibility_hide_title">إخفاء</string>
+    <string name="settings_nav_tab_visibility_always_hint">ظاهر دائماً</string>
+
+    <string name="settings_usb_guest_title">إتاحة أجهزة USB لضيف Linux</string>
+    <string name="settings_usb_guest_subtitle">السماح لأجهزة USB المتصلة بالوصول إلى تطبيقات الضيف عبر الوصلة haven-usb. كل إرفاق يطلب الموافقة.</string>
+    <string name="settings_gps_guest_title">إتاحة GPS لضيف Linux</string>
+    <string name="settings_gps_guest_subtitle">بث موقع GPS للهاتف إلى الضيف كجهاز NMEA (haven-gps). بعد التشغيل يمكن لأي عملية في الضيف قراءة الموقع. كل إرفاق يطلب الموافقة.</string>
+    <string name="settings_proot_install_log_title">عرض سجل تثبيت PRoot</string>
+    <string name="settings_proot_install_log_subtitle">أحداث كل مرحلة من تثبيتات توزيعات Linux (المشكلة #162)</string>
+    <string name="settings_logcat_capture_title">التقاط Logcat</string>
+    <string name="settings_logcat_capture_subtitle_on">جارٍ التسجيل في /sdcard/Download/haven-logcat.txt</string>
+    <string name="settings_logcat_capture_subtitle_off">التقاط logcat لتصحيح الأخطاء عن بُعد</string>
+    <string name="settings_logcat_saved_toast">تم حفظ Logcat</string>
+    <string name="settings_logcat_started_toast">بدأ التقاط Logcat</string>
+    <string name="settings_logcat_start_failed_toast">فشل بدء الالتقاط</string>
+    <string name="settings_agent_endpoint_title">نقطة نهاية الوكيل (MCP)</string>
+    <string name="settings_agent_endpoint_subtitle_on">مفعّل — خادم MCP محلي على loopback. أدوات الكتابة تطلب الموافقة.</string>
+    <string name="settings_agent_endpoint_subtitle_off">معطّل — فعّله للسماح لوكلاء الذكاء الاصطناعي المحليين بقراءة الحالة والتصرف بها (بموافقة)</string>
+    <string name="settings_agent_file_read_title">السماح للوكلاء بقراءة محتويات الملفات</string>
+    <string name="settings_agent_file_read_subtitle_on">مفعّل — `serve_file` يعيد رابط تنزيل لمرة واحدة بعد الموافقة على كل استدعاء</string>
+    <string name="settings_agent_file_read_subtitle_off">معطّل — طلبات `serve_file` تفشل فورًا بدون أي موجه</string>
+    <string name="settings_agent_terminal_input_title">السماح للوكلاء بإدخال نص في الطرفية</string>
+    <string name="settings_agent_terminal_input_subtitle_on">مفعّل — `queue_terminal_input` يراقب مخرجات جلسة SSH ويكتب النص المُجدوَل عند المطالبة التالية (موافقة لكل استدعاء)</string>
+    <string name="settings_agent_terminal_input_subtitle_off">معطّل — طلبات `queue_terminal_input` تفشل فورًا بدون أي موجه</string>
+    <string name="settings_reverse_tunnel_title">اتصال MCP دائم التشغيل</string>
+    <string name="settings_reverse_tunnel_subtitle_set">نفق إلى \"%1$s\" — يبقى عبر تغييرات WiFi وإعادة تشغيل التطبيق</string>
+    <string name="settings_reverse_tunnel_subtitle_unset">غير مضبوط — نقطة النهاية قابلة للوصول على الجهاز فقط</string>
+    <string name="settings_reverse_tunnel_none">بلا (على الجهاز فقط)</string>
+    <string name="settings_mcp_wireguard_title">الإتاحة عبر نفق WireGuard</string>
+    <string name="settings_mcp_wireguard_subtitle_on">مفعّل — قابل للوصول أيضًا عبر &lt;wg-ip&gt;:8730 على نفق WireGuard النشط</string>
+    <string name="settings_mcp_wireguard_subtitle_off">معطّل — فعّله للوصول إلى نقطة النهاية عبر نفق WireGuard نشط</string>
+    <string name="settings_mcp_lan_title">الإتاحة عبر Wi-Fi/LAN</string>
+    <string name="settings_mcp_lan_subtitle_on">مفعّل — قابل للوصول أيضًا عبر &lt;device-lan-ip&gt;:8730 على الشبكة المحلية</string>
+    <string name="settings_mcp_lan_subtitle_off">معطّل — فعّله للوصول المباشر من جهاز على نفس Wi-Fi/LAN</string>
+    <string name="settings_mcp_copy_url_title">نسخ رابط نقطة نهاية الوكيل</string>
+    <string name="settings_mcp_url_copied_toast">تم نسخ نقطة النهاية</string>
+    <string name="settings_mcp_copy_config_title">نسخ إعداد عميل MCP</string>
+    <string name="settings_mcp_copy_config_subtitle">مقتطف JSON قياسي للصقه في أي عميل MCP</string>
+    <string name="settings_mcp_config_copied_toast">تم نسخ الإعداد</string>
+    <string name="settings_mcp_proot_title">متاح أيضًا في PRoot</string>
+    <string name="settings_agent_activity_title">عرض نشاط الوكيل</string>
+    <string name="settings_agent_activity_subtitle">كل استدعاء MCP مسجّل مع إخفاء المعامِلات</string>
+    <string name="settings_agent_confirm_destructive_title">تأكيد إجراءات الوكيل التدميرية</string>
+    <string name="settings_agent_confirm_destructive_subtitle">مطالبة قبل أي استدعاء وكيل يكتب أو يحذف أو يرفع أو يقطع الاتصال. الاستدعاءات للقراءة فقط لا تطالب أبدًا.</string>
+    <string name="settings_agent_forget_allows_title">نسيان التصاريح المحفوظة</string>
+    <string name="settings_agent_forget_allows_subtitle">إعادة المطالبة بكل أداة حصلت سابقًا على موافقة مرة واحدة للجلسة.</string>
+    <string name="settings_agent_allows_cleared_toast">تم مسح التصاريح المحفوظة</string>
+    <string name="settings_font_from_url_body">الصق رابطًا مباشرًا لملف خط TTF أو OTF. تتوفر ملفات TTF خام لـ Nerd Fonts الشائعة على GitHub: github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/&lt;Name&gt;/Regular/&lt;Name&gt;NerdFont-Regular.ttf — انسخ الرابط هنا.</string>
+    <string name="settings_font_from_url_placeholder">https://…/font.ttf</string>
+    <string name="settings_recommended_fonts_dialog_body">اضغط لتنزيل وتطبيق خط ترميز أحادي المسافة شائع.</string>
+    <string name="settings_ime_flags_dialog_body">كل مفتاح تبديل يتحكم في بت EditorInfo واحد. تحترم بيئات IME المختلفة مجموعات مختلفة؛ عدّل حتى تكتب طرفيتك حرفيًا مع إبقاء ميزات IME التي تحتاجها.</string>
+    <string name="settings_cd_back">رجوع</string>
+    <string name="settings_filter_all">الكل</string>
+    <string name="settings_action_clear">مسح</string>
+    <string name="settings_cannot_be_undone">لا يمكن التراجع عن هذا.</string>
+    <string name="settings_cd_collapse">طي</string>
+    <string name="settings_cd_expand">توسيع</string>
+    <string name="settings_cd_failed">فشل</string>
+    <string name="settings_audit_log_title">سجل الاتصالات</string>
+    <string name="settings_audit_log_cd_clear">مسح السجلات</string>
+    <string name="settings_audit_log_cd_toggle_details">تبديل التفاصيل</string>
+    <string name="settings_audit_log_cd_copy">نسخ السجل</string>
+    <string name="settings_audit_log_cd_share">مشاركة السجل</string>
+    <string name="settings_audit_log_empty">لا توجد أحداث اتصال مسجّلة</string>
+    <string name="settings_audit_log_clear_dialog_title">مسح جميع السجلات؟</string>
+    <string name="settings_audit_log_no_verbose">لا يوجد سجل تفصيلي لهذا الإدخال</string>
+    <string name="settings_audit_log_share_chooser">مشاركة السجل</string>
+    <string name="settings_audit_log_status_sync">مزامنة</string>
+    <string name="settings_audit_log_status_sync_failed">فشل المزامنة</string>
+    <string name="settings_agent_activity_screen_title">نشاط الوكيل</string>
+    <string name="settings_agent_activity_cd_clear">مسح السجل</string>
+    <string name="settings_agent_activity_empty">لا يوجد نشاط وكيل بعد.\n\nعند استدعاء عميل MCP أداةً، سيظهر الاستدعاء هنا مع إخفاء المعامِلات وتلخيص النتيجة.</string>
+    <string name="settings_agent_activity_clear_dialog_title">مسح نشاط الوكيل؟</string>
+    <string name="settings_agent_activity_clear_dialog_text">ستُحذف جميع استدعاءات MCP المسجّلة من هذا الجهاز. لا يمكن التراجع عن هذا.</string>
+    <string name="settings_agent_activity_unknown_client">عميل غير معروف</string>
+    <string name="settings_agent_activity_args_redacted">المعامِلات (مخفية)</string>
+    <string name="settings_proot_install_log_screen_title">سجل تثبيت PRoot</string>
+    <string name="settings_proot_install_log_cd_clear">مسح السجل</string>
+    <string name="settings_proot_install_log_empty">لا توجد أحداث تثبيت مسجّلة بعد. ثبّت توزيعة عبر الاتصالات ← أسطح المكتب لملء هذا السجل.</string>
+    <string name="settings_proot_install_log_clear_dialog_title">مسح سجل التثبيت؟</string>
+    <string name="settings_proot_install_log_clear_dialog_text">ستُزال جميع أحداث التثبيت المسجّلة.</string>
+    <string name="settings_ime_flag_no_suggestions_title">إخفاء شريط الاقتراحات</string>
+    <string name="settings_ime_flag_no_suggestions_detail">TYPE_TEXT_FLAG_NO_SUGGESTIONS — مدعوم بشكل عام</string>
+    <string name="settings_ime_flag_visible_password_title">كبت التصحيح التلقائي / الكتابة بالأحرف الكبيرة / المسافة التلقائية</string>
+    <string name="settings_ime_flag_visible_password_detail">TYPE_TEXT_VARIATION_VISIBLE_PASSWORD — أقوى تلميح؛ يحترمه Gboard. حصري مع محرر كامل على معظم بيئات IME (بدون سحب/صوت).</string>
+    <string name="settings_ime_flag_auto_correct_title">تفعيل بروتوكول التصحيح التلقائي</string>
+    <string name="settings_ime_flag_auto_correct_detail">TYPE_TEXT_FLAG_AUTO_CORRECT — مطلوب لبوابة commit-text في Samsung Honeyboard (#110)؛ يفعّل صراحةً التصحيح التلقائي على Gboard.</string>
+    <string name="settings_ime_flag_full_editor_title">الصوت والسحب (محرر كامل)</string>
+    <string name="settings_ime_flag_full_editor_detail">إعطاء IME Editable حقيقيًا. مطلوب للإدخال الصوتي والكتابة بالسحب وتأليف CJK. يتعارض مع تلميح كبت التصحيح التلقائي أعلاه.</string>
+    <string name="settings_ime_flag_no_extract_ui_title">كبت IME ملء الشاشة</string>
+    <string name="settings_ime_flag_no_extract_ui_detail">IME_FLAG_NO_EXTRACT_UI — يمنع ظهور واجهة IME ملء الشاشة في الوضع الأفقي.</string>
+    <string name="settings_ime_flag_no_learning_title">منع IME من التعلم</string>
+    <string name="settings_ime_flag_no_learning_detail">IME_FLAG_NO_PERSONALIZED_LEARNING — خصوصية: يتجاهل مستودع كلمات IME ما يُكتب. قوي بما يكفي على Gboard لإخفاء الميكروفون أيضًا.</string>
+    <string name="settings_mcp_tools_title">أدوات MCP</string>
+    <string name="settings_mcp_tools_subtitle">أوقف أدوات الوكيل الفردية لتقليل ما يراه</string>
+    <string name="settings_mcp_tools_screen_title">أدوات MCP</string>
+    <string name="settings_mcp_tools_empty">تظهر قائمة الأدوات بعد تشغيل نقطة نهاية الوكيل.</string>
+    <string name="settings_mcp_tools_intro">الأدوات المتوقفة تختفى تمامًا من قائمة أدوات الوكيل — النماذج الصغيرة ترى فوضًا أقل وكل استدعاء يكلّف رموزًا أقل. لا يزال مفتاح نقطة النهاية والاقتران ورسائل الموافقة سارية.</string>
+    <string name="settings_mcp_tools_consent_every_call">يسأل عند كل استدعاء</string>
+    <string name="settings_mcp_tools_consent_once">يسأل مرة واحدة لكل جلسة</string>
+    <string name="settings_mcp_tools_consent_never">لا طلب عند الاستدعاء</string>
+    <string name="settings_paired_clients_title">عملاء MCP المقترنون</string>
+    <string name="settings_paired_clients_subtitle">راجع العملاء المقترنين، وتخطَّ المطالبات لكل عميل، أو ألغِ الاقتران</string>
+    <string name="settings_paired_clients_screen_title">عملاء MCP المقترنون</string>
+    <string name="settings_paired_clients_empty">لم يتم اقتران أي عميل MCP بعد. يظهر العميل هنا بعد موافقتك على مطالبة الاتصال الخاصة به.</string>
+    <string name="settings_paired_clients_bypass_label">تخطّي مطالبات الموافقة</string>
+    <string name="settings_paired_clients_bypass_on">يوافق تلقائيًا على كل استدعاء من هذا العميل، بما في ذلك العمليات المدمِّرة.</string>
+    <string name="settings_paired_clients_bypass_off">لا يزال كل استدعاء مدمِّر يطلب الموافقة (افتراضي).</string>
+    <string name="settings_paired_clients_cd_unpair">إلغاء اقتران العميل</string>
+    <string name="settings_paired_clients_unpair_title">إلغاء اقتران \'%1$s\'؟</string>
+    <string name="settings_paired_clients_unpair_message">سيتعين الموافقة عليه مجددًا في المرة التالية التي يتصل فيها، وسيتم إلغاء أي موافقة تلقائية.</string>
+    <string name="settings_paired_clients_unpair_confirm">إلغاء الاقتران</string>
+    <string name="settings_paired_clients_unpaired_toast">تم إلغاء اقتران \'%1$s\'</string>
+
+    <!-- MCP WireGuard / loopback trust -->
+    <string name="settings_mcp_wireguard_collision">شبكة VPN أخرى (%1$s) تستخدم %2$s — العنوان نفسه الذي ترتبط به نقطة النهاية هذه، لذا فهي محجوبة وغير قابلة للوصول من النظراء. أوقف تلك الشبكة، أو وجّه عميل MCP إلى نقطة نهاية الاسترجاع (127.0.0.1) بدلاً من ذلك.</string>
+    <string name="settings_mcp_trust_loopback_title">الثقة بالعملاء المحليين</string>
+    <string name="settings_mcp_trust_loopback_subtitle_on">مفعّل — يتصل العملاء المحليون (127.0.0.1) دون إقران أو مطالبات موافقة. لا يزال عملاء Wi-Fi/LAN وWireGuard يُطالَبون.</string>
+    <string name="settings_mcp_trust_loopback_subtitle_off">معطّل — يجب اقتران حتى العملاء المحليين والموافقة على كل طلب</string>
+
+    <!-- Terminal reflow, GPU stack, standing policies (#250) -->
+    <string name="settings_reflow_on_keyboard_title">ملاءمة الطرفية للوحة المفاتيح</string>
+    <string name="settings_reflow_on_keyboard_subtitle">عند فتح لوحة المفاتيح، يتم تغيير حجم الطرفية لتلائم المساحة فوقها بدلاً من تمرير العرض للأعلى. يساعد التطبيقات التي تعمل بملء الشاشة وتعرض شريط حالة في الأعلى؛ اتركه معطّلاً للأصداف العادية.</string>
+    <string name="settings_tab_titles_follow_session_title">تفضيل أسماء الجلسات في عناوين التبويبات</string>
+    <string name="settings_tab_titles_follow_session_subtitle">تحافظ التبويبات المتصلة بـ tmux/zellij/screen على اسم الجلسة بدلًا من العناوين التي تعينها البرامج.</string>
+    <string name="settings_gpu_venus_title">حزمة GPU تجريبية (venus + zink)</string>
+    <string name="settings_gpu_venus_subtitle">يستخدم venus (Vulkan إلى GPU) + zink لـ OpenGL الحديث (نحو 3.2 core) على أسطح المكتب المسرّعة، بدلاً من virgl (GL 2.1). تظهر تطبيقات Vulkan الأصلية؛ لكن عرض OpenGL بطيء حالياً. يتطلب تثبيت mesa-vulkan-drivers في النظام الضيف. معطّل = virgl الافتراضي.</string>
+    <string name="settings_standing_policies_header">السياسات الدائمة — تعمل هذه الأدوات دون طلب تأكيد</string>
+    <string name="settings_standing_policy_meta">%1$s · حتى %2$d استدعاء/دقيقة · ينتهي في %3$s</string>
+    <string name="settings_standing_policy_revoke">إبطال</string>
+
+    <!-- Desktop key placement (#245.2) -->
+    <string name="settings_toolbar_desktop_key">مفتاح سطح المكتب</string>
+    <string name="settings_desktop_key_left">يسار</string>
+    <string name="settings_desktop_key_right">يمين</string>
+    <string name="settings_desktop_key_hidden">مخفي</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="settings_prompt_chars_title">أحرف موجه shell</string>
+    <string name="settings_prompt_chars_subtitle">الافتراضي: $ # % &gt; ❯</string>
+    <string name="settings_prompt_chars_description">أحرف إضافية ينتهي بها موجه shell لديك، بحيث يُرسل الأمر المُجدوَل بمجرد ظهور الموجه من جديد (مثلًا بعد إعادة الاتصال أو إعادة إرفاق tmux). أضف الحرف أو الأحرف الأخيرة لموجهك المخصص — الأحرف المدمجة $ # % &gt; ❯ يتم التعرف عليها دائمًا.</string>
+    <string name="settings_prompt_chars_label">أحرف موجه إضافية</string>
+    <string name="settings_terminal_locale_title">لغة الطرفية</string>
+    <string name="settings_terminal_locale_description">قيمة LANG المُصدَّرة إلى shell Linux المحلي. تعمل en_US.UTF-8 (الافتراضية) و C.UTF-8 دائمًا؛ أما اللغات الأخرى (مثل zh_CN.UTF-8) فقد تحتاج إلى توليدها داخل الضيف بالأمر locale-gen قبل أن تستخدمها البرامج.</string>
+    <string name="settings_terminal_locale_label">LANG</string>
+    <string name="settings_terminal_opacity_title">عتامة الخلفية</string>
+    <string name="settings_terminal_opacity_value">%1$d%%</string>
+    <string name="settings_terminal_opacity_hint" formatted="false">أقل من 100% يصبح Haven شبه شفاف ويعرض خلفية جهازك خلف كل شاشة (الطرفية، القوائم، الإعدادات). التجاوز الخاص بكل اتصال ينطبق على طرفيته فقط.</string>
+    <string name="settings_section_mcp">وكيل الذكاء الاصطناعي (MCP)</string>
+    <string name="settings_tailscale_discovery_title">اكتشاف أقران Tailscale</string>
+    <string name="settings_tailscale_discovery_subtitle">البحث عن مضيفين في شبكة Tailscale عبر واجهة API المحلية أثناء الفحص. أوقفه لمنع Haven من قراءة قائمة الأقران؛ لن يتأثر Tailscale نفسه.</string>
+    <string name="settings_audio_bridge_title">صوت proot (تجريبي)</string>
+    <string name="settings_audio_bridge_subtitle">تشغيل الصوت من تطبيقات Linux عبر مكبّر صوت الجهاز من خلال جسر PulseAudio داخل الضيف. إخراج فقط. يبث باستمرار أثناء تفعيله — أوقفه عند عدم الاستخدام.</string>
+    <string name="settings_reverse_tunnel_status_active">Near (SSH): عبر %1$s — متصل</string>
+    <string name="settings_reverse_tunnel_status_inactive">Near (SSH): غير متصل — افتح %1$s للتفعيل</string>
+    <string name="settings_remote_clipboard_title">مزامنة حافظة الجهاز البعيد</string>
+    <string name="settings_remote_clipboard_subtitle">السماح لسطح مكتب بعيد (VNC) بالنسخ إلى حافظة الجهاز. مُعطّل افتراضيًا.</string>
+    <string name="settings_rdp_progressive_upgrade_title">RDP: فك ترميز مربّعات الترقية التدريجية (تجريبي)</string>
+    <string name="settings_rdp_progressive_upgrade_subtitle">يملأ المربّعات السوداء التي تظهر في بعض أسطح مكتب RDP على Windows عبر فك ترميز مربّعات التحسين RemoteFX-Progressive. تجريبي (#418) — إذا بدت الصورة أسوأ، فأوقف هذا الخيار</string>
+    <string name="settings_rdp_avc_title">RDP: فك ترميز H.264/AVC420</string>
+    <string name="settings_rdp_avc_subtitle">مُفعّل افتراضيًا. يفك ترميز رسوميات H.264 كي تظهر الخوادم التي تدعم H.264 فقط — وخاصةً KRDP (خادم RDP من KDE) — بدلًا من شاشة سوداء؛ ويجري فك الترميز بالعتاد على الجهاز عبر MediaCodec. أوقفه إذا ظهر سطح مكتب Windows أو xrdp بشكل غير صحيح (#425)</string>
+    <string name="settings_backup_auto_pull_label">السحب تلقائيًا</string>
+    <string name="settings_backup_auto_pull_hint">يسحب أحدث نسخة احتياطية دوريًا ويستعيدها. إذا كنت تحرّر الاتصالات على هذا الجهاز أيضًا، فقد تُستبدل التغييرات المحلية غير المحفوظة (تعتمد الجهة البعيدة على آخر كتابة).</string>
+    <string name="settings_backup_auto_pull_dialog_title">تفعيل السحب التلقائي</string>
+    <string name="settings_backup_auto_pull_dialog_description">أدخل عبارة مرور النسخة الاحتياطية. تُحفظ مشفّرة على هذا الجهاز لسحب النسخ في الخلفية — وإيقاف السحب التلقائي يحذفها.</string>
+    <string name="settings_backup_auto_pull_interval_label">فترة السحب</string>
+    <string name="settings_backup_auto_pull_interval_15m">15 دقيقة</string>
+    <string name="settings_backup_auto_pull_interval_1h">ساعة واحدة</string>
+    <string name="settings_backup_auto_pull_interval_6h">6 ساعات</string>
+    <string name="settings_backup_auto_pull_interval_24h">24 ساعة</string>
+    <string name="settings_backup_remember_password_label">تذكّر كلمة المرور هذه</string>
+    <string name="common_apply">تطبيق</string>
+    <string name="settings_rdp_desktop_size_title">حجم سطح مكتب RDP</string>
+    <string name="settings_rdp_desktop_size_subtitle">%1$d × %2$d — طابِق خادمك، وإلا فستُهمَل تحديثاته خارج هذه المساحة</string>
+    <string name="settings_rdp_desktop_size_hint">اضبط هذا على الدقة التي يستخدمها الجهاز البعيد فعليًا. القيمة الافتراضية في VirtualBox هي 2560 × 1600.</string>
+    <string name="settings_rdp_desktop_size_width">العرض</string>
+    <string name="settings_rdp_desktop_size_height">الارتفاع</string>
+    <string name="settings_native_crash_title">أعطال التطبيق</string>
+    <string name="settings_native_crash_subtitle">أُغلق Haven بشكل غير متوقع. يوضّح التقرير أدناه أين حدث ذلك — يُرجى إرفاقه ببلاغ الخطأ.</string>
+    <string name="settings_native_crash_subtitle_no_trace">أُغلق Haven بشكل غير متوقع. لم يحتفظ Android بتقرير مفصّل لهذه الأعطال، لذا لا يُعرف سوى الوقت والإشارة — يُرجى إرفاقهما ببلاغ الخطأ على أي حال، فالإشارة تضيّق نطاق البحث.</string>
+    <string name="settings_native_crash_no_trace">لم يُحفظ تقرير مفصّل لهذا العطل.</string>
+    <string name="settings_native_crash_copy">نسخ التقرير</string>
+    <string name="settings_native_crash_copied">تم نسخ تقرير العطل</string>
+    <string name="settings_native_crash_dismiss">تجاهل</string>
+    <plurals name="settings_proot_idle_minutes">
+        <item quantity="zero">0 دقيقة</item>
+        <item quantity="one">دقيقة واحدة</item>
+        <item quantity="two">دقيقتان</item>
+        <item quantity="few">%1$d دقائق</item>
+        <item quantity="many">%1$d دقيقة</item>
+        <item quantity="other">%1$d دقيقة</item>
+    </plurals>
+    <string name="settings_hide_nav_bar_in_terminal_title">إخفاء شريط علامات تبويب التطبيق في الطرفية</string>
+    <string name="settings_hide_nav_bar_in_terminal_subtitle">يخفي شريط علامات التبويب السفلي لـ Haven في شاشة الطرفية. يبقى شريطا الحالة والتنقل في Android ظاهرين.</string>
+    <string name="settings_credential_keystore_broken_title">تخزين بيانات الاعتماد غير متاح</string>
+    <string name="settings_credential_keystore_broken_subtitle">فقد مخزن المفاتيح في هذا الجهاز مفتاح بيانات الاعتماد الخاص بـ Haven. لا يمكن قراءة كلمات المرور المحفوظة ولا حفظ كلمات جديدة. اضغط للإصلاح.</string>
+    <string name="settings_credential_reset_title">إصلاح تخزين بيانات الاعتماد؟</string>
+    <string name="settings_credential_reset_body">سيؤدي هذا إلى إنشاء مفتاح جديد لبيانات الاعتماد حتى يمكن حفظ كلمات المرور مرة أخرى.\n\nستحتاج إلى إعادة إدخال كل كلمات المرور والعبارات والأسرار المحفوظة في Haven. هي غير قابلة للقراءة أصلاً — فقد ضاع المفتاح الذي كان يحميها — لذا فهذا يستعيد التطبيق بدل أن يفقد شيئًا إضافيًا.</string>
+    <string name="settings_credential_reset_confirm">إصلاح</string>
+    <string name="settings_credential_reset_cancel">إلغاء</string>
+    <string name="settings_update_check_title">التحقق من التحديثات</string>
+    <string name="settings_update_check_subtitle">البحث عن إصدار أحدث عند بدء Haven، مرة واحدة كل ساعة على الأكثر. مُعطَّل افتراضيًا.</string>
+    <string name="settings_update_check_now_title">تحقّق الآن</string>
+    <string name="settings_update_check_now_subtitle">اسأل GitHub عن أحدث إصدار</string>
+    <string name="settings_update_checking">جارٍ التحقق…</string>
+    <string name="settings_update_open_release">الإصدار %1$s متاح</string>
+    <string name="settings_update_check_available">اضغط لفتح صفحة الإصدار</string>
+    <string name="settings_update_check_up_to_date">مُحدَّث على %1$s</string>
+    <string name="settings_update_check_failed">فشل التحقق: %1$s</string>
+    <string name="settings_update_check_other_channel">لم تُثبَّت هذه النسخة من إصدار GitHub، لذا لا يمكن لتنزيل الإصدار أن يحل محلها. حدِّث من حيث ثبَّتَ Haven.</string>
+    <string name="settings_sshkey_keystore_broken_title">تخزين مفاتيح SSH غير متاح</string>
+    <string name="settings_sshkey_keystore_broken_subtitle">فقد مخزن المفاتيح في هذا الجهاز مفتاح SSH الخاص ب‎Haven. لا يمكن قراءة المفاتيح الخاصة المخزّنة ولا يمكن إنشاء مفاتيح جديدة. المس للإصلاح.</string>
+    <string name="settings_sshkey_reset_title">هل تريد إصلاح تخزين مفاتيح SSH؟</string>
+    <string name="settings_sshkey_reset_body">ينشئ هذا مفتاحًا جديدًا حتى يمكن إنشاء مفاتيح SSH مرة أخرى.
+
+سيتطلب استيراد أو إنشاء كل مفتاح خاص مخزّن بالفعل في Haven من جديد. إنها غير مقروءة بالفعل — فقد ضاع المفتاح الذي كان يحميها، عادةً لأن التطبيق أعيد تثبيته من مصدر مختلف — لذلك يسترجع التطبيق بدلاً من أن يفقد مزيدًا.</string>
+    <string name="settings_sshkey_reset_confirm">إصلاح</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="settings_inline_images_title">صور مضمّنة</string>
+    <string name="settings_inline_images_subtitle">الصور التي ترسلها البرامج إلى الجهاز الطرفي (رسوميات Kitty و iTerm2).</string>
+    <string name="settings_inline_images_off">إيقاف</string>
+    <string name="settings_inline_images_ask">اسأل</string>
+    <string name="settings_inline_images_always">دائمًا</string>
+    <string name="settings_ambiwidth_title">معالجة الأحرف ذات العرض الغامض</string>
+    <string name="settings_ambiwidth_subtitle">كيفية عرض أحرف شرق آسيا ذات العرض الغامض (الرموز، اليونانية)</string>
+    <string name="settings_ambiwidth_mode_narrow">ضيق (خلية واحدة)</string>
+    <string name="settings_ambiwidth_mode_narrow_desc">دائمًا خلية واحدة (يونكس القياسي / XTerm، الافتراضي)</string>
+    <string name="settings_ambiwidth_mode_auto_narrow">تلقائي + ضيق</string>
+    <string name="settings_ambiwidth_mode_auto_narrow_desc">قياس الخط النشط؛ والرجوع إلى خلية واحدة</string>
+    <string name="settings_ambiwidth_mode_wide">عريض (خليتان)</string>
+    <string name="settings_ambiwidth_mode_wide_desc">دائمًا خليتان (عرض CJK القديم)</string>
+    <string name="settings_ambiwidth_mode_auto_wide">تلقائي + عريض</string>
+    <string name="settings_ambiwidth_mode_auto_wide_desc">قياس الخط النشط؛ والرجوع إلى خليتين (CJK)</string>
+    <string name="settings_bell_notification_title">إشعار الرنين</string>
+    <string name="settings_bell_notification_subtitle">عندما يرنّ برنامج طرفية بينما Haven في الخلفية، تُنشر إشعارات تسمّي التبويب. لا يظهر شيء أثناء نظرك إلى الطرفية.</string>
+    <string name="settings_mcp_tools_category_off_count">%1$d متوقف</string>
+    <string name="settings_mcp_tools_cat_terminal">الطرفية</string>
+    <string name="settings_mcp_tools_cat_connections">الاتصالات</string>
+    <string name="settings_mcp_tools_cat_files">الملفات</string>
+    <string name="settings_mcp_tools_cat_desktop">سطح المكتب</string>
+    <string name="settings_mcp_tools_cat_guest">ضيف Linux</string>
+    <string name="settings_mcp_tools_cat_usb">USB والتسلسلي</string>
+    <string name="settings_mcp_tools_cat_keys">المفاتيح وبيانات الاعتماد</string>
+    <string name="settings_mcp_tools_cat_mail">البريد</string>
+    <string name="settings_mcp_tools_cat_rclone">التخزين السحابي</string>
+    <string name="settings_mcp_tools_cat_senses">أجهزة الاستشعار والموقع</string>
+    <string name="settings_mcp_tools_cat_agent">الوكيل والتحكم في الجهاز</string>
+    <string name="settings_mcp_tools_cat_other">أخرى</string>
+    <string name="settings_sudo_prompt_detection_title">اكتشاف مطالبات كلمة مرور sudo</string>
+    <string name="settings_sudo_prompt_detection_subtitle">عرض الملء التلقائي بالبصمة عند مطالبات [sudo] و doas. تبقى كلمات المرور مشفرة في Android Keystore على هذا الجهاز، وتتطلب فتح القفل بالبصمة في كل مرة، ولا تُكشف أبداً لأدوات AI/MCP.</string>
+    <string name="settings_root_files_title">متصفح ملفات الجذر Root (/)</string>
+    <string name="settings_root_files_subtitle">إظهار علامة تبويب Root (/) في الملفات تطلب صلاحية su فقط عند فتحها. معطل افتراضياً ومعزول عن أدوات MCP.</string>
+</resources>

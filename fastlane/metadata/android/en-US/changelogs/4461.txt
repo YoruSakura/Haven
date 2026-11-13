@@ -1,0 +1,4 @@
+Terminal fixes.
+
+- Fixed: scrolling back through history in tmux (and other mouse-mode apps) with a swipe. A change in 5.56.1 stopped the scroll wheel reaching apps on the normal screen; swipes now forward to the app's own scrollback again, as before.
+- Connection errors and warnings (like the "shell closed — is your session manager installed?" hint) now show once instead of as two stacked messages.

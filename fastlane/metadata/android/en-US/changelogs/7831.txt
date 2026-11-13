@@ -1,0 +1,1 @@
+- Fixed a crash on connect (#533): when a long output line soft-wraps and its first row scrolls into scrollback, any terminal resize could read memory from before the screen buffer and kill the app — on some devices reliably, on most silently. Reproduced under AddressSanitizer with the reporter's exact backtrace; the repro now runs as a permanent regression gate on every build.

@@ -1,0 +1,4 @@
+- The on-screen keyboard comes back when you return to Haven, instead of staying away and leaving the arrow buttons doing nothing.
+- Ctrl and Alt now apply to the extra keys above the keyboard, so Ctrl+End, Ctrl+Home and Ctrl+arrow finally do what they say.
+- Tap Ctrl twice to lock it on, for shortcuts you need to press twice.
+- The address of the machine you connect to over RDP no longer reaches the system log.

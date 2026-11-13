@@ -1,0 +1,1 @@
+- Fixed "zombie" desktop sessions: a Custom-command desktop whose command crashed at startup showed as running forever and Stop did nothing until Haven was force-killed (#550, #551). Crashes now surface their own error output in the desktop row, Stop always clears the session, and leaked background processes are torn down.

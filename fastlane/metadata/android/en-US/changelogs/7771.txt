@@ -1,0 +1,4 @@
+- Zooming or rotating no longer silently destroys terminal scrollback — wide history lines wrap onto a narrower screen instead of losing their tails.
+- RDP/VNC/SPICE/SMB "Route via" tunnel and proxy choices now actually save (they reverted to "None" before).
+- A locked Ctrl/Alt unlocks itself when your last session ends.
+- New optional "Swipe" toolbar key: swipes send ↑/↓ even at the shell prompt — command history with no arrow keys on the bar.

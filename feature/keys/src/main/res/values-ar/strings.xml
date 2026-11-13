@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">إلغاء</string>
+    <string name="common_save">حفظ</string>
+    <string name="common_done">تم</string>
+    <string name="common_close">إغلاق</string>
+    <string name="common_ok">موافق</string>
+    <string name="common_delete">حذف</string>
+    <string name="common_edit">تعديل</string>
+    <string name="common_rename">إعادة تسمية</string>
+    <string name="common_create">إنشاء</string>
+    <string name="common_connect">اتصال</string>
+    <string name="common_disconnect">قطع الاتصال</string>
+    <string name="common_copy">نسخ</string>
+    <string name="common_paste">لصق</string>
+    <string name="common_label">التسمية</string>
+    <string name="common_password">كلمة المرور</string>
+    <string name="common_port">المنفذ</string>
+    <string name="common_host">المضيف</string>
+    <string name="common_username">اسم المستخدم</string>
+    <string name="common_install">تثبيت</string>
+    <string name="common_reset">إعادة تعيين</string>
+    <string name="common_allow">سماح</string>
+    <string name="common_not_now">ليس الآن</string>
+    <string name="common_import">استيراد</string>
+    <string name="common_add">إضافة</string>
+    <string name="common_download">تنزيل</string>
+    <string name="common_unlock">فتح القفل</string>
+
+    <!-- KeysScreen -->
+    <string name="keys_add_key">إضافة مفتاح</string>
+    <string name="keys_no_ssh_keys">لا توجد مفاتيح SSH</string>
+    <string name="keys_tap_to_add">اضغط + لإنشاء أو استيراد مفتاح</string>
+    <string name="keys_copy_public_key">نسخ المفتاح العام</string>
+    <string name="keys_export_private_key">تصدير المفتاح الخاص</string>
+
+    <!-- AddKeyChooser -->
+    <string name="keys_add_ssh_key">إضافة مفتاح SSH</string>
+    <string name="keys_generate_new_key">إنشاء مفتاح جديد</string>
+    <string name="keys_generate_key_types">Ed25519 أو RSA أو ECDSA</string>
+    <string name="keys_import_from_file">استيراد من ملف</string>
+    <string name="keys_import_file_formats">تنسيق PEM أو OpenSSH أو Dropbear</string>
+    <string name="keys_paste_from_clipboard">لصق من الحافظة</string>
+    <string name="keys_paste_clipboard_hint">مفاتيح نصية فقط (PEM/OpenSSH). استخدم استيراد الملف لمفاتيح Dropbear الثنائية.</string>
+    <string name="keys_clipboard_empty">الحافظة فارغة</string>
+    <string name="keys_clipboard_not_text_key">الحافظة لا تحتوي على مفتاح SSH نصي. المفاتيح الثنائية (مثل Dropbear) يجب استيرادها من ملف.</string>
+
+    <!-- GenerateKeyDialog -->
+    <string name="keys_generate_ssh_key">إنشاء مفتاح SSH</string>
+    <string name="keys_label_placeholder">مثال: my-server</string>
+    <string name="keys_key_type">نوع المفتاح</string>
+    <string name="keys_generate">إنشاء</string>
+
+    <!-- GenerateKeyDialog: hardware-resident keys (device secure chip) -->
+    <string name="keys_hardware_toggle">الإنشاء في شريحة الأمان بالجهاز</string>
+    <string name="keys_hardware_algorithm">ECDSA P-256 (شريحة الأمان)</string>
+    <string name="keys_hardware_constraints">• المفتاح الخاص لا يخرج من الشريحة أبدًا\n• لا يمكن نسخه احتياطيًا أو تصديره\n• يتطلب كل استخدام تحققًا ببصمة الإصبع أو الوجه\n• يُفقد نهائيًا عند إعادة ضبط المصنع أو الانتقال إلى جهاز جديد</string>
+    <string name="keys_hardware_default_label">مفتاح شريحة الأمان</string>
+    <string name="keys_hardware_export_disabled_reason">المفتاح الخاص لا يخرج من الشريحة أبدًا، لذا لا يمكن تصديره</string>
+    <string name="keys_hardware_no_strong_biometrics">تحتاج مفاتيح شريحة الأمان إلى قياس حيوي قوي (بصمة إصبع أو وجه من الفئة 3) مسجّل على هذا الجهاز — سجّل أحدها في إعدادات Android ثم أعد المحاولة.</string>
+    <string name="keys_chip_secure_chip">شريحة الأمان</string>
+
+    <!-- PassphraseDialog -->
+    <string name="keys_encrypted_key">مفتاح مشفر</string>
+    <string name="keys_passphrase_prompt">هذا المفتاح محمي بعبارة مرور.</string>
+    <string name="keys_passphrase">عبارة المرور</string>
+    <string name="keys_unlock">فتح القفل</string>
+
+    <!-- ImportLabelDialog -->
+    <string name="keys_import_ssh_key">استيراد مفتاح SSH</string>
+    <string name="keys_import">استيراد</string>
+
+    <!-- copyPublicKey -->
+    <string name="keys_ssh_public_key_clip_label">مفتاح SSH العام</string>
+
+    <!-- #133 phase 2: step-ca generate-via-OIDC (en fallback) -->
+    <string name="keys_generate_via_stepca">إنشاء عبر step-ca</string>
+    <string name="keys_generate_via_stepca_hint">تسجيل الدخول عبر OIDC يُنشئ زوج مفاتيح جديدًا وشهادة موقّعة</string>
+    <string name="keys_generate_via_stepca_no_ca">اضغط على «سلطات الشهادات» أعلاه لإضافة واحدة</string>
+    <string name="keys_stepca_dialog_title">إنشاء عبر step-ca</string>
+    <string name="keys_stepca_pick_ca">سلطة الشهادات</string>
+    <string name="keys_stepca_principals_override_label">تجاوز الـ principals (اختياري، مفصولة بفواصل)</string>
+    <string name="keys_stepca_label">تسمية المفتاح</string>
+    <string name="keys_stepca_generate">إنشاء</string>
+    <string name="keys_chip_certificate_minted">أُصدر %1$s</string>
+
+    <!-- #133 phase 2b: regenerate menu (en fallback) -->
+    <string name="keys_regenerate_via_stepca">إعادة الإنشاء عبر step-ca</string>
+
+    <!-- #133 phase 2b: step-ca CA registration (moved from Settings) -->
+    <string name="stepca_add_title">إضافة سلطة شهادات</string>
+    <string name="stepca_edit_title">تعديل سلطة الشهادات</string>
+    <string name="stepca_add">Add</string>
+    <string name="stepca_save">حفظ</string>
+    <string name="stepca_cancel">إلغاء</string>
+    <string name="stepca_delete">حذف</string>
+    <string name="stepca_test_connection">اختبار الاتصال</string>
+    <string name="stepca_field_name">الاسم المعروض</string>
+    <string name="stepca_field_ca_url">رابط سلطة الشهادات</string>
+    <string name="stepca_field_ca_url_hint">https://ca.example.com</string>
+    <string name="stepca_field_oidc_issuer">رابط مُصدِر OIDC</string>
+    <string name="stepca_field_oidc_auth_url">رابط تفويض OIDC</string>
+    <string name="stepca_field_oidc_token_url">رابط رمز OIDC</string>
+    <string name="stepca_field_oidc_client_id">معرّف عميل OIDC</string>
+    <string name="stepca_field_provisioner">مُزوِّد step-ca</string>
+    <string name="stepca_field_principals">الـ principals الافتراضية (مفصولة بفواصل)</string>
+    <string name="stepca_field_root_cert">الشهادة الجذرية (PEM)</string>
+    <string name="stepca_field_root_cert_hint">-----BEGIN CERTIFICATE-----…</string>
+    <string name="stepca_test_ok">يمكن الوصول إليه</string>
+    <string name="stepca_test_bad_root_cert">شهادة جذرية غير صالحة: %1$s</string>
+    <string name="stepca_test_http_error">HTTP %1$d: %2$s</string>
+    <string name="stepca_test_network_error">خطأ في الشبكة: %1$s</string>
+    <string name="stepca_empty_state">لا توجد سلطات شهادات مُعدّة.\nاضغط + لإضافة واحدة.</string>
+    <string name="stepca_validation_required">%1$s مطلوب</string>
+    <string name="stepca_validation_url">يجب أن يبدأ %1$s بـ https://</string>
+    <string name="stepca_validation_pem">يجب أن تكون الشهادة الجذرية بترميز PEM</string>
+    <string name="stepca_validation_host_ca_or_signing">أدخل مفتاح مرجع مصادقة المضيف العام، أو املأ حقول التوقيع.</string>
+    <string name="stepca_validation_host_ca">مفتاح مرجع مصادقة المضيف العام غير صالح.</string>
+    <string name="stepca_delete_confirm_title">حذف %1$s؟</string>
+    <string name="stepca_delete_confirm_body">ستظل المفاتيح المُصدرة عبر هذه السلطة تعمل حتى تنتهي صلاحية شهاداتها، لكن لن يمكنك تجديدها أو إنشاء مفاتيح جديدة.</string>
+    <string name="stepca_field_ssh_host_ca">المفتاح العام لسلطة مضيف SSH (اختياري)</string>
+    <string name="stepca_field_ssh_host_ca_hint">ssh-ed25519 AAAAC3…</string>
+    <string name="stepca_discover_host_ca">اكتشاف من /1.0/ssh/config</string>
+    <string name="stepca_discovering">جارٍ الاكتشاف…</string>
+    <string name="stepca_import_from_file">استيراد من ملف</string>
+    <string name="stepca_import_failed">فشل الاستيراد: %1$s</string>
+    <string name="keys_section_certificate_authorities">سلطات الشهادات (%1$d)</string>
+    <string name="keys_section_ssh">مفاتيح SSH (%1$d)</string>
+    <string name="keys_section_drive">مفاتيح أقراص USB (%1$d)</string>
+    <string name="keys_section_passwords">كلمات المرور المحفوظة (%1$d)</string>
+    <string name="keys_chip_hardware_backed">محمي بالعتاد</string>
+    <string name="keys_chip_passphrase">عبارة المرور</string>
+    <string name="keys_chip_user_presence">حضور المستخدم</string>
+    <string name="keys_chip_user_verification">التحقق من المستخدم</string>
+    <string name="keys_chip_biometric">القياسات الحيوية مطلوبة</string>
+    <string name="keys_require_biometric">طلب القياسات الحيوية للاستخدام</string>
+    <string name="keys_clear_password_title">مسح %1$s؟</string>
+    <string name="keys_clear_password_body">المسح يزيل كلمة المرور المحفوظة على هذا الملف الشخصي. يبقى الملف الشخصي نفسه — سيُطلب منك ذلك في المرة القادمة التي تتصل فيها.</string>
+    <string name="keys_wipe_content_description">مسح %1$s</string>
+    <string name="keys_attach_certificate">إرفاق شهادة</string>
+    <string name="keys_remove_certificate">إزالة الشهادة</string>
+    <string name="keys_chip_certificate">تم إرفاق الشهادة</string>
+    <string name="stepca_bootstrap_intro">التهيئة من عنوان URL لسلطة التصديق + بصمة SHA-256. يُجلب الباقي (الشهادة الجذرية، الموفّرون، عناوين OIDC والسر) من سلطة التصديق.</string>
+    <string name="stepca_field_fingerprint">بصمة الشهادة الجذرية (SHA-256)</string>
+    <string name="stepca_field_fingerprint_hint">الصق من `step certificate fingerprint`</string>
+    <string name="stepca_bootstrap_action">التهيئة من سلطة التصديق</string>
+    <string name="stepca_bootstrapping">جارٍ التواصل مع سلطة التصديق…</string>
+    <string name="stepca_bootstrap_pick_provisioner">اختر موفّر OIDC:</string>
+    <string name="stepca_manual_entry">إدخال يدوي…</string>
+    <string name="stepca_field_oidc_client_secret">سر عميل OIDC (اختياري)</string>
+    <string name="stepca_field_oidc_client_secret_hint">اتركه فارغًا للعملاء العامين الذين يستخدمون PKCE فقط</string>
+    <string name="keys_discover_from_security_key">الاكتشاف من مفتاح الأمان</string>
+    <string name="keys_discover_from_security_key_hint">يعدّد بيانات اعتماد SSH-SK المقيمة من مفتاح أمان مُدرَج أو مُلامَس. يتخطى ssh-keygen -K.</string>
+    <string name="keys_discover_picker_title">مفاتيح SSH المقيمة</string>
+    <string name="keys_discover_picker_body">اختر بيانات الاعتماد المقيمة المراد استيرادها. يصبح كل منها إدخال مفتاح SSH جديد؛ وتبقى المادة الخاصة على مفتاح الأمان نفسه.</string>
+    <string name="keys_discover_import_selected">استيراد المحدد</string>
+    <string name="keys_fido_pin_title">رمز PIN لمفتاح الأمان</string>
+    <string name="keys_fido_pin_label">PIN</string>
+    <string name="keys_fido_pin_help">أدخل رمز PIN المضبوط على مفتاح الأمان للمتابعة.</string>
+    <string name="keys_fido_pin_wrong">رمز PIN خاطئ. تبقى %1$d محاولات قبل قفل المفتاح.</string>
+    <string name="keys_fido_waiting_title">مفتاح الأمان مطلوب</string>
+    <string name="keys_fido_waiting_body">وصّل مفتاح الأمان عبر USB، أو المسه بظهر الجهاز لـ NFC. سيتابع Haven تلقائيًا بمجرد اكتشافه.</string>
+    <string name="keys_fido_touch_usb_title">المس مفتاح الأمان</string>
+    <string name="keys_fido_touch_usb_body">اضغط الزر على مفتاح الأمان الآن للموافقة على الطلب.</string>
+    <string name="keys_fido_touch_nfc_title">أمسك مفتاح الأمان</string>
+    <string name="keys_fido_touch_nfc_body">أبقِ مفتاح الأمان ملاصقًا لظهر الجهاز لمدة ثانيتين. إبعاده مبكرًا يُلغي التبادل.</string>
+    <string name="keys_fido_cancel_hint">يبقى مفتوحًا حتى يستجيب مفتاح الأمان.</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="keys_export_certificate">تصدير الشهادة</string>
+    <string name="keys_totp_section_header">المصادق (TOTP) · %1$d</string>
+    <string name="keys_totp_delete_desc">حذف المصادق</string>
+    <string name="keys_totp_scan_qr">مسح رمز QR للمصادق (TOTP)</string>
+    <string name="keys_totp_scan_qr_hint">اختر صورة تحتوي على رمز QR بصيغة otpauth://</string>
+    <string name="keys_totp_paste">إضافة مصادق من الحافظة (TOTP)</string>
+    <string name="keys_totp_paste_hint">الصق رابط otpauth:// أو سر base32</string>
+    <!-- RenameKeyDialog (#231) -->
+    <string name="keys_rename">إعادة تسمية</string>
+    <string name="keys_rename_title">إعادة تسمية المفتاح</string>
+
+    <!-- FIDO2 / security-key registration (#250) -->
+    <string name="keys_offer_for_connections">عرضه للاتصالات</string>
+    <string name="keys_sk_require_pin">طلب رمز PIN عند تسجيل الدخول</string>
+    <string name="keys_security_key">مفتاح الأمان (YubiKey)</string>
+    <string name="keys_security_key_hint">أنشئ مفتاح SSH جديدًا على مفتاح FIDO2، أو استورد المفاتيح الموجودة عليه بالفعل.</string>
+    <string name="keys_security_key_setup">إعداد مفتاح جديد عليه</string>
+    <string name="keys_security_key_setup_hint">أنشئ مفتاح SSH على مفتاح الأمان (يضبط رمز PIN إذا كان جديدًا). دون حاسوب محمول أو ssh-keygen.</string>
+    <string name="keys_security_key_import">استيراد المفاتيح الموجودة عليه بالفعل</string>
+    <string name="keys_security_key_import_hint">أضِف بيانات اعتماد SSH-SK المقيمة المخزّنة على المفتاح بالفعل (التي أُنشئت في مكان آخر عبر ssh-keygen -O resident).</string>
+    <string name="keys_register_on_security_key">إعداد مفتاح SSH على مفتاح الأمان</string>
+    <string name="keys_register_on_security_key_body">ينشئ بيانات اعتماد sk-ssh-ed25519 مقيمة على مفتاح الأمان. ثم: وصّله عبر USB واضغط عليه، أو ضعه على الجهة الخلفية للهاتف من أجل NFC.</string>
+    <string name="keys_register_verify_required">طلب رمز PIN في كل تسجيل دخول</string>
+    <string name="keys_register_verify_required_hint">مفعّل: يطلب المفتاح رمز PIN في كل مرة يوقّع فيها تسجيل دخول SSH (verify-required — أكثر أمانًا). معطّل: اللمس فقط.</string>
+    <string name="keys_register_pin">رمز PIN لمفتاح الأمان</string>
+    <string name="keys_register_pin_confirm">تأكيد رمز PIN</string>
+    <string name="keys_register_pin_hint">اختر رمز PIN إذا كان المفتاح جديدًا، أو أدخل رمزه الحالي. 4 أحرف فأكثر.</string>
+    <string name="keys_register_pin_mismatch">رمزا PIN غير متطابقين</string>
+    <string name="keys_register_action">تسجيل</string>
+    <string name="keys_fido_pin_set_title">إنشاء رمز PIN لمفتاح الأمان</string>
+    <string name="keys_fido_pin_set_help">لا يحتوي مفتاح الأمان هذا على رمز PIN بعد. اختر واحدًا (4–63 حرفًا) — ستدخله عندما يوقّع المفتاح.</string>
+    <string name="keys_fido_pin_confirm_label">تأكيد رمز PIN</string>
+    <string name="keys_fido_pin_mismatch">رمزا PIN غير متطابقين</string>
+
+    <!-- Key reordering (#238) -->
+    <string name="keys_move_up">نقل لأعلى</string>
+    <string name="keys_move_down">نقل لأسفل</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="keys_store_passphrase">تخزين عبارة المرور على هذا الجهاز</string>
+    <string name="keys_store_passphrase_warning">يحفظ عبارة مرور هذا المفتاح في التخزين المشفّر المدعوم بالعتاد على هذا الجهاز، فلا تطلبها الاتصالات التي تستخدم هذا المفتاح أبدًا. يمكن لأي شخص يستطيع فتح قفل هذا الجهاز استخدام المفتاح. فعّله فقط إذا قبلت هذه المخاطرة.</string>
+    <string name="keys_store_passphrase_confirm">تخزين</string>
+    <string name="keys_age_section_header">هويات التشفير (age) · %1$d</string>
+    <string name="keys_generate_age">إنشاء هوية age</string>
+    <string name="keys_generate_age_hint">زوج مفاتيح X25519 لتشفير الملفات (age)</string>
+    <string name="keys_generate_age_title">هوية age جديدة</string>
+    <string name="keys_age_label_hint">التسمية</string>
+    <string name="keys_age_recipient_copied">تم نسخ المستلم</string>
+    <string name="keys_identity_section_header">الهويات · %1$d</string>
+    <string name="keys_identity_add">إضافة هوية</string>
+    <string name="keys_identity_add_hint">اسم مستخدم وكلمة مرور ومفتاح لإعادة الاستخدام مع العديد من المضيفين</string>
+    <string name="keys_identity_add_title">هوية جديدة</string>
+    <string name="keys_identity_edit_title">تعديل الهوية</string>
+    <string name="keys_identity_name_label">الاسم</string>
+    <string name="keys_identity_username_label">اسم المستخدم</string>
+    <string name="keys_identity_password_label">كلمة المرور (اختيارية)</string>
+    <string name="keys_identity_password_keep_label">كلمة المرور (اتركها فارغة للإبقاء عليها)</string>
+    <string name="keys_identity_clear_password">إزالة كلمة المرور المحفوظة</string>
+    <string name="keys_identity_key_label">المفتاح: %1$s</string>
+    <string name="keys_identity_key_none">بلا</string>
+    <string name="keys_identity_no_username">بدون اسم مستخدم</string>
+    <string name="keys_identity_has_password">كلمة مرور</string>
+    <string name="keys_sort">ترتيب المفاتيح</string>
+    <string name="keys_sort_manual">ترتيبي</string>
+    <string name="keys_sort_label_asc">الاسم (أ–ي)</string>
+    <string name="keys_sort_label_desc">الاسم (ي–أ)</string>
+    <string name="keys_sort_newest">الأحدث أولًا</string>
+    <string name="keys_sort_oldest">الأقدم أولًا</string>
+    <string name="keys_select">تحديد…</string>
+    <string name="keys_select_all">تحديد الكل</string>
+    <string name="keys_selection_cancel">إنهاء وضع التحديد</string>
+    <string name="keys_selection_delete">حذف المفاتيح المحددة</string>
+    <plurals name="keys_bulk_delete_title">
+        <item quantity="zero">حذف المفاتيح؟</item>
+        <item quantity="one">حذف هذا المفتاح؟</item>
+        <item quantity="two">حذف المفتاحين؟</item>
+        <item quantity="few">حذف %1$d مفاتيح؟</item>
+        <item quantity="many">حذف %1$d مفتاحًا؟</item>
+        <item quantity="other">حذف %1$d مفتاح؟</item>
+    </plurals>
+    <string name="keys_bulk_delete_body">لا يمكن التراجع عن هذا. سيتم محو مادة المفتاح الخاص من مخزن المفاتيح.</string>
+    <string name="keys_bulk_delete_in_use">مستخدم من قِبل اتصال محفوظ: %1$s. ستتوقف تلك الاتصالات عن المصادقة بمفتاح.</string>
+    <string name="keys_section_collapse">طيّ %1$s</string>
+    <string name="keys_section_expand">توسيع %1$s</string>
+    <string name="keys_from_provider">استخدام مفتاح من %1$s</string>
+    <string name="keys_from_provider_hint">اختر مفتاحًا يحتفظ به ذلك التطبيق. سيوقّع نيابةً عن Haven — ويبقى المفتاح الخاص في مكانه، بما في ذلك على رمز أمان مادي.</string>
+    <string name="keys_totp_code_copied">تم نسخ الرمز</string>
+    <plurals name="keys_selected_count">
+        <item quantity="zero">لم يُحدد شيء</item>
+        <item quantity="one">محدد واحد</item>
+        <item quantity="two">محددان</item>
+        <item quantity="few">%1$d محددة</item>
+        <item quantity="many">%1$d محددًا</item>
+        <item quantity="other">%1$d محدد</item>
+    </plurals>
+</resources>

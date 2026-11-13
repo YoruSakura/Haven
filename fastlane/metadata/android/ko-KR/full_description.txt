@@ -1,0 +1,55 @@
+Haven은 네이티브 Wayland 데스크톱과 클라우드 저장소를 갖춘 Android용 오픈소스 SSH, VNC, RDP, SFTP 클라이언트입니다.
+
+터미널:
+- 유니코드, 다중 탭, 6가지 색상 구성표를 지원하는 완전한 VT100/xterm 에뮬레이터
+- tmux, zellij, screen, byobu를 통한 세션 유지
+- TUI 앱(vim, htop, mc)을 위한 마우스 모드
+- Esc, Ctrl, Alt, 방향키, 기능키, 사용자 매크로를 담은 설정 가능한 키보드 툴바
+- 단어 단위 확장 선택, 복사, 클릭 가능한 URL 인식
+- 음성 입력 및 자동 완성 모드
+- 로밍과 연결 유지를 위한 Mosh 및 Eternal Terminal
+
+네이티브 Wayland 데스크톱:
+- 기기에서 직접 실행되는 GPU 가속 labwc 컴포지터
+- Waybar 패널, fuzzel 앱 실행기, thunar 파일 관리자, mousepad 편집기
+- Firefox, 계산기, 이미지 뷰어가 포함된 스타터 팩 애드온
+- X11 앱 호환을 위한 XWayland
+- 다중 데스크톱 관리 — 여러 데스크톱을 동시에 실행
+- 루팅 불필요 (Alpine Linux 기반 PRoot)
+
+VNC 원격 데스크톱:
+- 핀치 줌, 화면 이동, 전체 화면 모드를 지원하는 VNC 뷰어
+- 암호화된 연결을 위한 SSH 터널 지원
+- 드래그 제스처를 지원하는 터치 클릭
+
+RDP 원격 데스크톱:
+- Windows 원격 데스크톱, xrdp, GNOME 원격 데스크톱에 연결
+- 핀치 줌, 스캔코드 매핑 키보드
+- 저장된 프로필을 통한 SSH 터널 자동 연결
+
+클라우드 저장소:
+- rclone을 통한 60개 이상의 제공업체 — Google Drive, Dropbox, OneDrive, S3 등
+- 브라우저 플로우를 사용하는 OAuth 인증
+- 필터, 대역폭 제한, 시뮬레이션 미리보기를 갖춘 폴더 동기화
+- 로컬 HTTP 서버를 통한 VLC 미디어 스트리밍
+- 스마트 TV와 Chromecast를 위한 DLNA 서버
+
+파일 전송:
+- 업로드, 다운로드, 이름 변경, 삭제, 폴더 전송을 지원하는 SFTP 브라우저
+- 선택적 SSH 터널을 지원하는 SMB/Windows 파일 공유 탐색
+- 모든 백엔드 간 파일 시스템 교차 복사
+
+네트워킹:
+- 자동 재연결, 포트 포워딩, ProxyJump 다중 홉을 지원하는 SSH
+- Tailscale 피어 자동 검색
+- rnsh를 통한 Reticulum 메시 네트워크 지원
+- 로컬 네트워크의 SSH 호스트 검색
+
+보안:
+- 암호화 저장을 지원하는 SSH 키 생성 (Ed25519, RSA, ECDSA)
+- NFC 또는 USB를 통한 FIDO2 하드웨어 키 지원 (ed25519-sk, ecdsa-sk)
+- 시간 제한을 설정할 수 있는 생체 인식 앱 잠금
+- 연결 감사 로그
+- 광고 없음, 추적 없음, 데이터 수집 없음
+
+Haven은 무료 오픈소스 소프트웨어입니다 (AGPLv3).

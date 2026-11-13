@@ -1,0 +1,1 @@
+⌨️ Fixed short taps in terminal apps turning into text selections instead of reaching the app — the finger-up could be swallowed by the pinch-detection window, leaving the gesture stuck and a long-press firing with no finger down. (#435, #440)

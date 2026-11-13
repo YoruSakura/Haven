@@ -1,0 +1,3 @@
+App windows (Cage):
+
+- GL/3D apps in an app window now render on the device GPU where possible — Haven routes their OpenGL through its built-in virgl renderer instead of always falling back to software. Verified on a Pixel 8 Pro (glxgears reports the Mali GPU as the renderer). The window compositor itself is unchanged, so the gain is at the app's GL layer.

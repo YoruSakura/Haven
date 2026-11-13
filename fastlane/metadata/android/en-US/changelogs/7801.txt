@@ -1,0 +1,3 @@
+- Fixed "Too many authentication failures": keys minted for opened USB drives no longer sit in the "try any saved key" pool, burning the server's auth-attempt limit before your real key is offered. Stale ones are cleaned up.
+- FIDO2 security keys (sk-ssh-ed25519, e.g. YubiKey resident keys) can now be offered for connections (#531): the "Offer for connections" toggle appears for them and auto-auth includes them.
+- The Keys screen groups per-drive VM keys under their own collapsed section.

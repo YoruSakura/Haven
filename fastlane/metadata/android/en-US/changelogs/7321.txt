@@ -1,0 +1,5 @@
+📐 Terminal text no longer runs off the right edge when a computer is attached to the same tmux session. tmux sized the shared view for whichever device was used most recently; Haven now fits it to the smallest attached screen. (#479)
+
+🔀 Picking a session from the remote-session list attaches properly instead of dropping you in a plain shell, with the attach command appearing later. (#482)
+
+📜 The About Haven page scrolls again — its text was cut off with no way to reach the rest. (#485)

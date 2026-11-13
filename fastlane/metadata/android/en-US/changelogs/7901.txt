@@ -1,0 +1,3 @@
+- Fixed runaway scrolling when swiping up in the terminal — two compounding round-downs cost a full line per pointer event; scrolling is now symmetric in both directions (#542).
+- RDP follows server redirection: GNOME Remote Desktop's Remote Login now connects instead of failing (#117).
+- German QWERTZ, French AZERTY, and UK keyboard layouts now type correctly on scancode-only RDP servers like VirtualBox (#504).

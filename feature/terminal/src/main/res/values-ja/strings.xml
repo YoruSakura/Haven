@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_save">保存</string>
+    <string name="common_done">完了</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">削除</string>
+    <string name="common_edit">編集</string>
+    <string name="common_rename">名前変更</string>
+    <string name="common_create">作成</string>
+    <string name="common_connect">接続</string>
+    <string name="common_disconnect">切断</string>
+    <string name="common_copy">コピー</string>
+    <string name="common_paste">貼り付け</string>
+    <string name="common_label">ラベル</string>
+    <string name="common_password">パスワード</string>
+    <string name="common_port">ポート</string>
+    <string name="common_host">ホスト</string>
+    <string name="common_username">ユーザー名</string>
+    <string name="common_install">インストール</string>
+    <string name="common_reset">リセット</string>
+    <string name="common_allow">許可</string>
+    <string name="common_not_now">後で</string>
+    <string name="common_import">インポート</string>
+    <string name="common_add">追加</string>
+    <string name="common_download">ダウンロード</string>
+    <string name="common_unlock">ロック解除</string>
+
+    <!-- Tab bar -->
+    <string name="terminal_reconnecting">再接続中</string>
+    <string name="terminal_sessions">セッション</string>
+    <string name="terminal_move_left">左に移動</string>
+    <string name="terminal_move_right">右に移動</string>
+    <string name="terminal_close">閉じる</string>
+    <string name="terminal_switch_tab">タブを切り替え</string>
+    <string name="terminal_copy_last_output">最後の出力をコピー</string>
+    <string name="terminal_copied_output">出力をコピーしました（%d文字）</string>
+    <string name="terminal_no_command_output">コマンド出力が見つかりません（シェル統合が必要）</string>
+    <string name="terminal_paste_no_active_tab">貼り付け先のアクティブなタブがありません</string>
+    <string name="terminal_search">検索</string>
+
+    <!-- EmptyTerminalState -->
+    <string name="terminal_connect_prompt">サーバーに接続してセッションを開始してください。</string>
+
+    <!-- NewTabSessionPickerDialog -->
+    <string name="terminal_sessions_title">%s セッション</string>
+    <string name="terminal_rename_session">セッション名を変更</string>
+    <string name="terminal_kill_session">セッションを終了</string>
+
+    <!-- VncSettingsDialog -->
+    <string name="terminal_vnc_desktop">VNCデスクトップ</string>
+    <string name="terminal_connect_to_host">%sに接続</string>
+    <string name="terminal_port">ポート</string>
+    <string name="terminal_password">パスワード</string>
+    <string name="terminal_tunnel_through_ssh">SSH経由でトンネル</string>
+    <string name="terminal_save_for_connection">この接続用に保存</string>
+    <string name="terminal_connect">接続</string>
+
+    <!-- RenameSessionDialog -->
+    <string name="terminal_rename_session_title">セッション名を変更</string>
+    <string name="terminal_name">名前</string>
+    <string name="terminal_rename">名前変更</string>
+    <string name="terminal_rename_exists">\"%1$s\" という名前のセッションがこのサーバーに既に存在します</string>
+    <string name="terminal_new_tab_no_active">複製できるアクティブなセッションがありません</string>
+    <string name="terminal_new_tab_no_config">接続設定が見つかりません — 先に再接続してください</string>
+    <string name="terminal_new_tab_host_key_changed">%s のホスト鍵が変更されました — セキュリティのため接続を拒否しました</string>
+    <string name="terminal_new_tab_connection_failed">接続できませんでした: %s</string>
+    <string name="terminal_new_tab_shell_failed">シェルを開けませんでした: %s</string>
+    <string name="terminal_new_tab_reticulum_no_session">複製できるアクティブな Reticulum セッションがありません</string>
+    <string name="terminal_new_tab_connecting">接続中…</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="terminal_no_contact">サーバー応答なし（%1$d 秒）— 再試行中</string>
+    <string name="terminal_attach_notice_unavailable">セッションマネージャー %1$s が起動しませんでした — 通常のシェルに表示されています。ホストにインストールされているか確認するか、接続エディタ（詳細）でセッションコマンドを設定してください。</string>
+    <string name="terminal_attach_notice_missing">%1$s セッション "%2$s" にアタッチできませんでした — 通常のシェルに表示されています。起動コマンドを確認するか、接続エディタ（詳細）でセッションコマンドを設定してください。</string>
+    <string name="terminal_attach_notice_dismiss">閉じる</string>
+    <string name="terminal_new_session_create">作成</string>
+    <string name="terminal_vnc_username_label">ユーザー名 (任意 — VeNCrypt のみ)</string>
+    <string name="terminal_vnc_username_placeholder">従来の VncAuth を使う場合は空欄のまま</string>
+    <string name="terminal_vnc_color_depth">色深度</string>
+    <string name="terminal_open_plain_shell">プレーンシェルを開く</string>
+
+    <string name="terminal_enter_fullscreen">全画面表示にする</string>
+    <string name="terminal_exit_fullscreen">全画面表示を終了</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="terminal_link_open_failed">このリンクを開けるアプリがありません</string>
+    <string name="terminal_link_scheme_blocked">ブロックされたリンク（未対応のスキーム）</string>
+    <string name="terminal_local_vnc_failed">ローカルデスクトップを起動できませんでした</string>
+    <string name="terminal_attach_title">添付</string>
+    <string name="terminal_attach_send_file">ファイルを送信</string>
+    <string name="terminal_attach_send_file_desc">リモートにアップロードしてパスを貼り付け</string>
+    <string name="terminal_attach_take_photo">写真を撮る</string>
+    <string name="terminal_attach_take_photo_desc">撮影した写真をファイルとして送信します</string>
+    <string name="terminal_attach_scan_camera">コードをスキャン（カメラ）</string>
+    <string name="terminal_attach_scan_camera_desc">QR コードまたはバーコードを撮影して内容を貼り付け</string>
+    <string name="terminal_attach_scan_gallery">コードをスキャン（フォト）</string>
+    <string name="terminal_attach_scan_gallery_desc">QR コードまたはバーコードの写真を選択して内容を貼り付け</string>
+    <string name="terminal_attach_ocr_camera">テキストを認識（カメラ）</string>
+    <string name="terminal_attach_ocr_camera_desc">印刷テキストを撮影して検出内容を貼り付け</string>
+    <string name="terminal_attach_ocr_gallery">テキストを認識（フォト）</string>
+    <string name="terminal_attach_ocr_gallery_desc">印刷テキストの写真を選択して検出内容を貼り付け</string>
+    <string name="terminal_scan_no_code">画像にコードが検出されませんでした</string>
+    <string name="terminal_scan_no_text">画像にテキストが検出されませんでした</string>
+    <string name="terminal_scan_failed">スキャン失敗: %s</string>
+    <string name="terminal_scan_no_camera">カメラアプリがありません</string>
+    <string name="terminal_selection_copy">コピー</string>
+    <string name="terminal_selection_paste">貼り付け</string>
+    <string name="terminal_selection_open">開く</string>
+    <string name="terminal_selection_macros">マクロ</string>
+    <string name="terminal_selection_copied">コピーしました</string>
+    <string name="terminal_selection_copy_one_line">1行にしてコピー</string>
+    <string name="terminal_selection_no_url">URL が検出されませんでした</string>
+    <string name="terminal_selection_anchor_start">開始</string>
+    <string name="terminal_selection_anchor_end">終了</string>
+    <string name="terminal_selection_up">上</string>
+    <string name="terminal_selection_down">下</string>
+    <string name="terminal_selection_left">左</string>
+    <string name="terminal_selection_right">右</string>
+    <string name="terminal_selection_cancel">キャンセル</string>
+    <string name="terminal_vnc_depth_24bit">24 ビットカラー（最高品質）</string>
+    <string name="terminal_vnc_depth_16bit">16 ビットカラー（高速）</string>
+    <string name="terminal_vnc_depth_256">256 色（最小帯域幅）</string>
+    <string name="terminal_new_tab_host_key_unknown">%s のホストキーが不明です — まずこの接続を開いて確認し、信頼してください</string>
+    <string name="terminal_text_input_title">テキスト入力</string>
+    <string name="terminal_text_input_placeholder">送信するテキストを入力\u2026</string>
+    <string name="terminal_text_input_send">送信</string>
+    <string name="terminal_text_input_expand">大きくする</string>
+    <string name="terminal_text_input_shrink">小さくする</string>
+    <string name="terminal_text_input_move_up">上へ移動</string>
+    <string name="terminal_text_input_move_down">下へ移動</string>
+    <string name="terminal_text_input_move_left">左へ移動</string>
+    <string name="terminal_text_input_move_right">右へ移動</string>
+    <string name="terminal_text_input_resize_handle">テキスト入力ウィンドウのサイズ変更</string>
+    <string name="terminal_save_connection">接続を保存</string>
+    <string name="terminal_save_connection_title">接続を保存</string>
+    <string name="terminal_save_connection_name_label">名前</string>
+    <string name="terminal_save_connection_name_hint">接続一覧に表示されます</string>
+    <string name="terminal_save_connection_id">プロファイル ID</string>
+    <string name="terminal_save_connection_id_hint">保存された接続を識別します。セッション名ではありません</string>
+    <string name="terminal_save_connection_context">接続: %1$s\nトランスポート: %2$s\n固定するセッション: %3$s</string>
+    <string name="terminal_save_connection_mismatch">この接続はセッション \"%1$s\" に固定されていますが、現在は \"%2$s\" にいます。保存すると現在のセッションに固定し直されます。</string>
+    <string name="terminal_save_connection_update">固定を更新</string>
+    <string name="terminal_save_connection_saved">接続 \"%1$s\" を保存しました</string>
+    <string name="terminal_save_connection_updated">接続 \"%1$s\" を更新しました</string>
+    <string name="terminal_save_connection_need_session">このタブのセッション名を検出できませんでした。名前付きの tmux/zellij/screen セッションを開くか、プロファイルにリモートコマンドを設定してから、もう一度お試しください。</string>
+    <string name="terminal_details">詳細</string>
+    <string name="terminal_details_title">現在地は?</string>
+    <string name="terminal_details_door">ドア (接続カード)</string>
+    <string name="terminal_details_path">経路 (トランスポート)</string>
+    <string name="terminal_details_room">部屋 (tmux / セッション)</string>
+    <string name="terminal_details_room_unknown">\u2014 不明 \u2014</string>
+    <string name="terminal_details_room_pin">カードの固定: %1$s</string>
+    <string name="terminal_details_room_no_pin">\u2014 なし \u2014</string>
+    <string name="terminal_details_room_mismatch">現在の部屋がカードの固定と異なります \u2014 別のドアから入ったか、自動作成されたセッションに入った可能性があります。</string>
+    <string name="terminal_details_copy">コピー</string>
+    <string name="terminal_details_copied">現在地をコピーしました</string>
+    <string name="terminal_details_unavailable">このタブの接続詳細を読み取れませんでした。</string>
+    <string name="terminal_mouse_requested_but_disabled">このアプリがマウスを要求しています。使うには設定 → ターミナルで「TUIアプリでのマウス入力」をオンにしてください。</string>
+    <string name="terminal_dictate_unavailable">このデバイスでは音声入力アプリを利用できません</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="terminal_inline_image_title">インライン画像</string>
+    <string name="terminal_inline_image_question">ターミナルがインラインで画像を表示しようとしています。</string>
+    <string name="terminal_inline_image_protocol_kitty">Kitty グラフィックプロトコル</string>
+    <string name="terminal_inline_image_protocol_iterm2">iTerm2 プロトコル</string>
+    <string name="terminal_inline_image_name">ファイル: %1$s</string>
+    <string name="terminal_inline_image_dimensions">サイズ: %1$d × %2$d px</string>
+    <string name="terminal_inline_image_deny">拒否</string>
+    <string name="terminal_inline_image_always_tab">このタブでは常に許可</string>
+    <string name="terminal_bell_notification_title">ターミナル</string>
+    <string name="terminal_bell_notification_body">ターミナルのプログラムがベルを鳴らしました</string>
+    <string name="terminal_sudo_prompt_detected">sudo パスワードが要求されています</string>
+    <string name="terminal_sudo_prompt_subtitle">Android Keystore • 生体認証ロック解除 • 「入力」タップ時のみ送信</string>
+    <string name="terminal_sudo_fill_action">入力</string>
+    <string name="terminal_sudo_turn_off_action">オフにする</string>
+    <string name="terminal_sudo_disabled_toast">sudo プロンプト検出をオフにしました（設定 → セキュリティとプライバシー）</string>
+    <string name="terminal_sudo_entry_title">%1$s の sudo パスワード</string>
+    <string name="terminal_sudo_entry_hint">この接続にはまだパスワードが保存されていません。一度入力すると SSH 経由でこのターミナルへ直接送信されます。保存した場合、この端末の Android Keystore 内で暗号化され、使用ごとの生体認証ロック解除が必要となり、AI/MCP ツールには一切公開されません。</string>
+    <string name="terminal_sudo_turn_off_detection">sudo プロンプト検出をオフにする</string>
+    <string name="terminal_sudo_send_action">送信</string>
+</resources>

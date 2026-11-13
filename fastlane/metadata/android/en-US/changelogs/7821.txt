@@ -1,0 +1,2 @@
+- Haven now reads its own death certificates (#494): when Android kills it in the background (force stop, freezer, low memory), the next launch says when and why — including the "Select debug app" developer setting. Agents get the history via a new get_process_exits MCP verb.
+- A battery exemption switched off behind your back (some ROMs reset it on update) is detected and re-offered with an explanation; "Don't ask again" makes the quiet permanent.

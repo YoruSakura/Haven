@@ -1,0 +1,1 @@
+📁 Fixed "Pick rclone.conf" opening a strange system screen on some devices — the config-file picker now always uses the system file picker. (#468)

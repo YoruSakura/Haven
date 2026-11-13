@@ -1,0 +1,15 @@
+💾 **USB flash drives that never worked on some phones now get their VM engine installed.** A reporter's drive failed with "VM didn't reach a login prompt in 420s" — 1.7 seconds after starting — and did the same on three different drives, which is what ruled the drives out.
+
+Haven runs a small Linux VM to talk to a USB drive, and installs that VM engine into your Linux guest the first time it needs it. There were two ways into that boot, and only one of them ran the install. His went through the other, every time, so the VM launched on a guest with no engine and died instantly — reported as a seven-minute timeout, because that is what the wait reported for everything.
+
+The check now lives in the step that actually starts the VM, so nothing can reach it without going through the check. If the install then fails, you get your package manager's own reason instead of a timeout.
+
+🔑 **SSH output loss on the experimental engine is fixed.** If a command's output arrived while nothing was reading it yet, it could be discarded when the channel closed — whole stdout or stderr gone, or a large transfer cut short. A shell that wrote and exited quickly could lose everything, which showed up as a blank terminal instead of the error explaining why.
+
+Fixed upstream in the SSH library and picked up here. Measured on the same machine before and after: 1000 commands lost 11 stdouts, 12 stderrs and truncated 3 of 200 large transfers before, and none after. The workaround Haven carried for it, and the test retry that hid it, are both gone — a retry on a real defect is a temporary measure or it is a blindfold.
+
+This affects the opt-in alternative SSH engine only; the default engine was never affected.
+
+🔍 **Hardware-key sign-in failures now say why.** When a key held in OpenKeychain — and through it a YubiKey or similar — refused to sign, Haven's log showed the request going out and then nothing at all, followed by a generic authentication failure. Three unrelated causes look identical from inside that silence. The reason is now recorded, along with which prompt in the sequence it reached: permission, key chooser, or PIN and tap.
+
+That is a diagnosis rather than a cure. It is what makes the next report solvable instead of another round of guessing.

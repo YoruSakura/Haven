@@ -1,0 +1,2 @@
+- With a physical keyboard on an RDP session, letters, digits and punctuation reach the remote again — v5.87.11's focus fix had quietly cut the only path that carried them.
+- The fullscreen menu chip can now be held and dragged to any edge of the screen, and it remembers where you parked it.

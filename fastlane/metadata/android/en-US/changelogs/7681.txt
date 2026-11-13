@@ -1,0 +1,2 @@
+- Number-pad keys now work in remote desktop sessions — previously they did nothing at all.
+- If SSH connections feel slow, Haven now records where the time went, so a log can say which part is slow.

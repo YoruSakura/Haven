@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_connections">कनेक्शन</string>
+    <string name="nav_terminal">टर्मिनल</string>
+    <string name="nav_desktop">डेस्कटॉप</string>
+    <string name="nav_keys">कुंजियाँ</string>
+    <string name="nav_sftp">फ़ाइलें</string>
+    <string name="nav_settings">सेटिंग्स</string>
+    <string name="nav_mail">मेल</string>
+    <string name="nav_chat">चैट</string>
+    <string name="common_cancel">रद्द करें</string>
+    <string name="common_save">सहेजें</string>
+    <string name="common_done">हो गया</string>
+    <string name="common_close">बंद करें</string>
+    <string name="common_ok">ठीक है</string>
+    <string name="common_delete">हटाएँ</string>
+    <string name="common_edit">संपादित करें</string>
+    <string name="common_rename">नाम बदलें</string>
+    <string name="common_create">बनाएँ</string>
+    <string name="common_connect">कनेक्ट करें</string>
+    <string name="common_disconnect">डिस्कनेक्ट करें</string>
+    <string name="common_copy">कॉपी करें</string>
+    <string name="common_paste">पेस्ट करें</string>
+    <string name="common_label">लेबल</string>
+    <string name="common_password">पासवर्ड</string>
+    <string name="common_port">पोर्ट</string>
+    <string name="common_host">होस्ट</string>
+    <string name="common_username">उपयोगकर्ता नाम</string>
+    <string name="common_install">इंस्टॉल करें</string>
+    <string name="common_reset">रीसेट करें</string>
+    <string name="common_allow">अनुमति दें</string>
+    <string name="common_not_now">अभी नहीं</string>
+    <string name="common_import">आयात करें</string>
+    <string name="common_add">जोड़ें</string>
+    <string name="common_download">डाउनलोड करें</string>
+    <string name="common_github">GitHub</string>
+    <string name="common_support">सहायता</string>
+    <string name="common_unlock">अनलॉक करें</string>
+    <string name="wayland_cd_session_menu">सत्र मेनू</string>
+    <string name="wayland_cd_reset_zoom">ज़ूम रीसेट करें</string>
+    <string name="wayland_cd_exit_fullscreen">पूर्णस्क्रीन से बाहर निकलें</string>
+    <string name="wayland_cd_toggle_keyboard">कीबोर्ड दिखाएँ/छिपाएँ</string>
+    <string name="wayland_cd_fullscreen">पूर्णस्क्रीन</string>
+    <string name="wayland_cd_desktop_resolution">डेस्कटॉप रिज़ॉल्यूशन</string>
+    <string name="external_display_cd_on">बाहरी डिस्प्ले आउटपुट चालू (डिवाइस स्क्रीन पर दिखाने के लिए टैप करें)</string>
+    <string name="external_display_cd_off">बाहरी डिस्प्ले आउटपुट बंद (बाहरी डिस्प्ले पर दिखाने के लिए टैप करें)</string>
+</resources>

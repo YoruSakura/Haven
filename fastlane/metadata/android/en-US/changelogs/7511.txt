@@ -1,0 +1,9 @@
+🖥️ The stop button on a VNC desktop actually stops it now. The sweep that kills the leftover VNC server asked the system for a process list and filtered on the display number — but that listing prints process names and no arguments, and the display number is only ever an argument. It matched nothing, on every device, every run, since the day it was written, so it killed nothing. Stopping display 1 also no longer risks taking 10 and 11 with it. (#501)
+
+🐧 A shell in the Linux guest is bash, if the guest has bash. It was always the minimal shell — dash on Debian, busybox on Alpine — even with bash sitting right there. Distros without bash behave exactly as before. (#501)
+
+🖥️ Starting one Linux desktop no longer makes all the others look like they started too. The install progress said which step was running but not which desktop it belonged to, so every row showed the same spinner. Install buttons still go inactive everywhere while any install runs — one package database, and a second install would collide — but that is now separate from the spinner instead of one flag doing both jobs. (#502)
+
+⏱️ A desktop install can no longer wedge forever. One step compiles a VNC server from source and waited with no limit at all — and waited for the output pipe to close rather than for the command to finish, so a stray background process holding that pipe kept Haven waiting long after the work was done. That matches the report: the install sat there while nothing was running in the guest. Now bounded at 20 minutes. Other steps are untouched and still wait as long as they need. (#503)
+
+🔑 A key held in OpenKeychain is no longer offered where it cannot be used. Its stored bytes point at a key inside OpenKeychain rather than being key material, so the SSH library could only reject them, once per connection. The reconnect problem reported alongside it is not fixed. (#487)

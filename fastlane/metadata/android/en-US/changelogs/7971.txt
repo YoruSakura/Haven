@@ -1,0 +1,3 @@
+- Declining a key's biometric prompt now stops the connection (#559 — thanks andar1an)
+- Connection failures say which half failed — reaching the host, or SSH itself — and against which address (#557)
+- The rootfs import field accepts `file://` paths and says so when handed a bare one (#560)

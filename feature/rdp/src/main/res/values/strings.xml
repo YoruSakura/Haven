@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rdp_status_connecting">Connecting…</string>
+    <string name="rdp_status_connecting_hint">Handshake in progress. If this hangs, enable verbose connection logging in Settings and retry to see the underlying error.</string>
+    <string name="rdp_status_waiting_for_frame">Connected — waiting for first frame…</string>
+    <string name="rdp_status_connection_failed">Connection failed</string>
+    <string name="rdp_action_close">Close</string>
+    <string name="rdp_action_cancel">Cancel</string>
+    <string name="rdp_action_retry">Retry</string>
+    <string name="rdp_cd_disconnect">Disconnect</string>
+    <string name="rdp_cd_toggle_keyboard">Toggle keyboard</string>
+    <string name="rdp_cd_reset_zoom">Reset zoom</string>
+    <string name="rdp_cd_fullscreen">Fullscreen</string>
+    <string name="rdp_cd_session_menu">Session menu</string>
+    <string name="rdp_cd_exit_fullscreen">Exit fullscreen</string>
+    <string name="rdp_cd_input_mode_trackpad_on">Trackpad mode on (tap for direct touch)</string>
+    <string name="rdp_cd_input_mode_touchscreen_on">Native touchscreen mode on (tap for direct mouse)</string>
+    <string name="rdp_cd_input_mode_direct">Direct touch mode (tap for trackpad)</string>
+    <string name="rdp_cd_trackpad_sensitivity">Trackpad sensitivity</string>
+    <string name="rdp_cd_two_finger_viewport">Two-finger pans the view (tap to scroll the remote)</string>
+    <string name="rdp_cd_two_finger_scroll_on">Two-finger scrolls the remote (tap to pan the view)</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_off">Viewport navigation off (tap to zoom or pan view)</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_on">Viewport navigation on (tap to resume touchscreen input)</string>
+    <string name="rdp_orientation_landscape_desc">Lock landscape (tap to switch to portrait)</string>
+    <string name="rdp_orientation_portrait_desc">Lock portrait (tap to switch to auto)</string>
+    <string name="rdp_orientation_auto_desc">Auto rotate (tap to switch to landscape)</string>
+
+    <!-- Error hints (rdpErrorHint) -->
+    <string name="rdp_hint_legacy_rdp_title">Server is using legacy unencrypted RDP</string>
+    <string name="rdp_hint_legacy_rdp_body">Haven only supports TLS-encrypted RDP. Your server (commonly xrdp on Linux) negotiated the deprecated STANDARD_RDP_SECURITY protocol — usually because the server\'s TLS certificate is missing or unreadable. Regenerate /etc/xrdp/cert.pem and /etc/xrdp/key.pem on the server, then restart xrdp.</string>
+    <string name="rdp_hint_legacy_rdp_link">Server-side fix instructions</string>
+    <string name="rdp_hint_nla_internal_error_title">Server rejected the TLS session during NLA</string>
+    <string name="rdp_hint_nla_internal_error_body">This used to be the symptom of a Haven bug fixed in v5.24.37 — if you\'re on a newer build and still see this, the server may not speak CredSSP at all. Try unticking Network Level Authentication on the connection profile and reconnecting.</string>
+    <string name="rdp_hint_logon_failure_title">Wrong username or password</string>
+    <string name="rdp_hint_logon_failure_body">The server completed CredSSP cleanly and rejected your credentials. Check the username (try DOMAIN\\User if the account is domain-joined) and password.</string>
+    <string name="rdp_hint_pubkey_hash_title">Server rejected the CredSSP public-key hash</string>
+    <string name="rdp_hint_pubkey_hash_body">Linux gnome-remote-desktop and certain xrdp builds compute the CredSSP pub_key_auth hash differently than Haven\'s ironrdp/sspi-rs — the TLS handshake succeeds but NLA fails one layer up.\n\nWorkaround: edit this connection\'s profile and uncheck \"Network Level Authentication (NLA)\". RDP will fall back to authenticating after channel setup, which doesn\'t go through the mismatched hash.</string>
+    <string name="rdp_hint_pubkey_hash_link">Issue tracker</string>
+    <string name="rdp_hint_time_skew_title">Device clock differs from server\'s</string>
+    <string name="rdp_hint_time_skew_body">CredSSP rejects the session when the device clock is more than a few minutes off the server\'s. Check Settings → Date &amp; time → Set automatically and reconnect.</string>
+    <string name="rdp_hint_tls_ciphers_title">Server requires TLS ciphers Haven doesn\'t support</string>
+    <string name="rdp_hint_tls_ciphers_body">Haven uses the rustls/ring TLS stack which has narrower cipher coverage than Microsoft\'s RDP client (SChannel) or OpenSSL. The most compatible server-side setting is ECDHE-RSA + AES-GCM over TLS 1.2 or 1.3.</string>
+    <string name="rdp_hint_nla_required_title">Server requires Network Level Authentication</string>
+    <string name="rdp_hint_nla_required_body">The server is configured to only accept clients that authenticate with NLA, and NLA is unticked on this connection profile. Either tick \"Network Level Authentication (NLA)\" in the profile, or relax the requirement on the PC: Settings → System → Remote Desktop → Advanced settings → untick \"Require devices to use Network Level Authentication\".</string>
+    <string name="rdp_hint_mixed_username_title">NLA can\'t use this username form</string>
+    <string name="rdp_hint_mixed_username_body">NLA rejects a username that combines a domain prefix with an email address (like MicrosoftAccount\\you@example.com), and for a plain email it truncates everything after the @ — an upstream limitation in the sspi library for Microsoft accounts.\n\nFor a Microsoft-account PC: untick \"Network Level Authentication (NLA)\" on this profile, allow non-NLA connections on the PC (Remote Desktop → Advanced settings), and use MicrosoftAccount\\you@example.com or just you@example.com as the username.</string>
+    <string name="rdp_hint_mixed_username_link">Issue tracker</string>
+</resources>

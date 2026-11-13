@@ -1,0 +1,3 @@
+🖥️ Remote desktops stay responsive when the server draws outside the agreed screen size. Updates landing outside it drew nothing yet still made Haven rebuild the whole screen — ~36 GB of pointless copying in one 38-second session. It now updates only the part touched. (#422)
+
+🔁 Mosh sessions that stall mid-scroll reconnect by themselves. One that keeps receiving packets it cannot use looked healthy to the watchdog, so recovery never fired. (#421)

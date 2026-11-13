@@ -1,0 +1,1 @@
+⌨️ Fixed the terminal keyboard sometimes refusing to open after returning to the app from the background — the show-keyboard request could be silently dropped and never retried. (#476)

@@ -1,0 +1,1 @@
+🎞️ H.264 (AVC420) remote desktop frames now convert about 2.6x faster, easing the lag that made high-resolution KRDP sessions fall behind and drop. (#466)

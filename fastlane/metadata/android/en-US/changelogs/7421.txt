@@ -1,0 +1,1 @@
+🔗 Fixes an over-eager join from v5.86.32: a link at the end of a line was being glued to a filename on the next line, opening the wrong page. Links genuinely split across two lines still open in full.

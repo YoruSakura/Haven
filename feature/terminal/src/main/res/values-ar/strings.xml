@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">إلغاء</string>
+    <string name="common_save">حفظ</string>
+    <string name="common_done">تم</string>
+    <string name="common_close">إغلاق</string>
+    <string name="common_ok">موافق</string>
+    <string name="common_delete">حذف</string>
+    <string name="common_edit">تعديل</string>
+    <string name="common_rename">إعادة تسمية</string>
+    <string name="common_create">إنشاء</string>
+    <string name="common_connect">اتصال</string>
+    <string name="common_disconnect">قطع الاتصال</string>
+    <string name="common_copy">نسخ</string>
+    <string name="common_paste">لصق</string>
+    <string name="common_label">التسمية</string>
+    <string name="common_password">كلمة المرور</string>
+    <string name="common_port">المنفذ</string>
+    <string name="common_host">المضيف</string>
+    <string name="common_username">اسم المستخدم</string>
+    <string name="common_install">تثبيت</string>
+    <string name="common_reset">إعادة تعيين</string>
+    <string name="common_allow">سماح</string>
+    <string name="common_not_now">ليس الآن</string>
+    <string name="common_import">استيراد</string>
+    <string name="common_add">إضافة</string>
+    <string name="common_download">تنزيل</string>
+    <string name="common_unlock">فتح القفل</string>
+
+    <!-- Tab bar -->
+    <string name="terminal_reconnecting">إعادة الاتصال</string>
+    <string name="terminal_sessions">الجلسات</string>
+    <string name="terminal_move_left">نقل لليسار</string>
+    <string name="terminal_move_right">نقل لليمين</string>
+    <string name="terminal_close">إغلاق</string>
+    <string name="terminal_switch_tab">تبديل علامة التبويب</string>
+    <string name="terminal_copy_last_output">نسخ آخر مخرجات</string>
+    <string name="terminal_copied_output">تم نسخ المخرجات (%d حرف)</string>
+    <string name="terminal_no_command_output">لم يتم العثور على مخرجات الأمر (يتطلب تكامل Shell)</string>
+    <string name="terminal_paste_no_active_tab">لا توجد علامة تبويب نشطة للصق</string>
+    <string name="terminal_search">بحث</string>
+
+    <!-- EmptyTerminalState -->
+    <string name="terminal_connect_prompt">اتصل بخادم لبدء جلسة.</string>
+
+    <!-- NewTabSessionPickerDialog -->
+    <string name="terminal_sessions_title">جلسات %s</string>
+    <string name="terminal_rename_session">إعادة تسمية الجلسة</string>
+    <string name="terminal_kill_session">إنهاء الجلسة</string>
+
+    <!-- VncSettingsDialog -->
+    <string name="terminal_vnc_desktop">سطح مكتب VNC</string>
+    <string name="terminal_connect_to_host">الاتصال بـ %s</string>
+    <string name="terminal_port">المنفذ</string>
+    <string name="terminal_password">كلمة المرور</string>
+    <string name="terminal_tunnel_through_ssh">الأنفاق عبر SSH</string>
+    <string name="terminal_save_for_connection">حفظ لهذا الاتصال</string>
+    <string name="terminal_connect">اتصال</string>
+
+    <!-- RenameSessionDialog -->
+    <string name="terminal_rename_session_title">إعادة تسمية الجلسة</string>
+    <string name="terminal_name">الاسم</string>
+    <string name="terminal_rename">إعادة تسمية</string>
+    <string name="terminal_rename_exists">توجد جلسة بالاسم \"%1$s\" على هذا الخادم بالفعل</string>
+    <string name="terminal_new_tab_no_active">لا توجد جلسة نشطة لاستنساخها</string>
+    <string name="terminal_new_tab_no_config">لم يُعثر على إعدادات الاتصال — أعد الاتصال أولًا</string>
+    <string name="terminal_new_tab_host_key_changed">تغيّر مفتاح المضيف لـ %s — رُفض الاتصال لأسباب أمنية</string>
+    <string name="terminal_new_tab_connection_failed">تعذّر الاتصال: %s</string>
+    <string name="terminal_new_tab_shell_failed">تعذّر فتح الصدفة: %s</string>
+    <string name="terminal_new_tab_reticulum_no_session">لا توجد جلسة Reticulum نشطة لاستنساخها</string>
+    <string name="terminal_new_tab_connecting">جارٍ الاتصال…</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="terminal_no_contact">لا استجابة من الخادم منذ %1$d ث — تجري إعادة المحاولة</string>
+    <string name="terminal_attach_notice_unavailable">لم يبدأ مدير الجلسات %1$s — أنت في صدفة عادية. تحقق من أنه مثبّت على المضيف، أو اضبط أمر الجلسة في محرر الاتصال (متقدم).</string>
+    <string name="terminal_attach_notice_missing">لم تُرفق جلسة %1$s "%2$s" — أنت في صدفة عادية. تحقق من أمر البدء، أو اضبط أمر الجلسة في محرر الاتصال (متقدم).</string>
+    <string name="terminal_attach_notice_dismiss">تجاهل</string>
+    <string name="terminal_new_session_create">إنشاء</string>
+    <string name="terminal_vnc_username_label">اسم المستخدم (اختياري — VeNCrypt فقط)</string>
+    <string name="terminal_vnc_username_placeholder">اتركه فارغًا لاستخدام VncAuth التقليدي</string>
+    <string name="terminal_vnc_color_depth">عمق الألوان</string>
+    <string name="terminal_open_plain_shell">فتح shell عادي</string>
+
+    <string name="terminal_enter_fullscreen">الدخول إلى وضع ملء الشاشة</string>
+    <string name="terminal_exit_fullscreen">الخروج من وضع ملء الشاشة</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="terminal_link_open_failed">لا يوجد تطبيق يمكنه فتح هذا الرابط</string>
+    <string name="terminal_link_scheme_blocked">رابط محظور (نظام غير مدعوم)</string>
+    <string name="terminal_local_vnc_failed">تعذّر تشغيل سطح المكتب المحلي</string>
+    <string name="terminal_attach_title">إرفاق</string>
+    <string name="terminal_attach_send_file">إرسال ملف</string>
+    <string name="terminal_attach_send_file_desc">رفع إلى الجهاز البعيد ولصق مساره</string>
+    <string name="terminal_attach_take_photo">التقط صورة</string>
+    <string name="terminal_attach_take_photo_desc">التقط صورة وأرسلها كأنها ملف</string>
+    <string name="terminal_attach_scan_camera">مسح الرمز (الكاميرا)</string>
+    <string name="terminal_attach_scan_camera_desc">التقط رمز QR أو الباركود والصق محتوياته</string>
+    <string name="terminal_attach_scan_gallery">مسح الرمز (الصور)</string>
+    <string name="terminal_attach_scan_gallery_desc">اختر صورة رمز QR أو الباركود والصق محتوياته</string>
+    <string name="terminal_attach_ocr_camera">التعرف على النص (الكاميرا)</string>
+    <string name="terminal_attach_ocr_camera_desc">التقط نصًا مطبوعًا والصق ما يُكتشف</string>
+    <string name="terminal_attach_ocr_gallery">التعرف على النص (الصور)</string>
+    <string name="terminal_attach_ocr_gallery_desc">اختر صورة نص مطبوع والصق ما يُكتشف</string>
+    <string name="terminal_scan_no_code">لم يُكتشف رمز في الصورة</string>
+    <string name="terminal_scan_no_text">لم يُكتشف نص في الصورة</string>
+    <string name="terminal_scan_failed">فشل المسح: %s</string>
+    <string name="terminal_scan_no_camera">لا يوجد تطبيق كاميرا</string>
+    <string name="terminal_selection_copy">نسخ</string>
+    <string name="terminal_selection_paste">لصق</string>
+    <string name="terminal_selection_open">فتح</string>
+    <string name="terminal_selection_macros">ماكروات</string>
+    <string name="terminal_selection_copied">تم النسخ</string>
+    <string name="terminal_selection_copy_one_line">نسخ كسطر واحد</string>
+    <string name="terminal_selection_no_url">لم يُكتشف رابط</string>
+    <string name="terminal_selection_anchor_start">البداية</string>
+    <string name="terminal_selection_anchor_end">النهاية</string>
+    <string name="terminal_selection_up">أعلى</string>
+    <string name="terminal_selection_down">أسفل</string>
+    <string name="terminal_selection_left">يسار</string>
+    <string name="terminal_selection_right">يمين</string>
+    <string name="terminal_selection_cancel">إلغاء</string>
+    <string name="terminal_vnc_depth_24bit">لون 24 بت (أفضل جودة)</string>
+    <string name="terminal_vnc_depth_16bit">لون 16 بت (أسرع)</string>
+    <string name="terminal_vnc_depth_256">256 لونًا (أقل عرض نطاق)</string>
+    <string name="terminal_new_tab_host_key_unknown">مفتاح مضيف غير معروف لـ %s — افتح هذا الاتصال أولاً للتحقق منه والوثوق به</string>
+    <string name="terminal_text_input_title">إدخال النص</string>
+    <string name="terminal_text_input_placeholder">اكتب النص المراد إرساله\u2026</string>
+    <string name="terminal_text_input_send">إرسال</string>
+    <string name="terminal_text_input_expand">تكبير</string>
+    <string name="terminal_text_input_shrink">تصغير</string>
+    <string name="terminal_text_input_move_up">تحريك لأعلى</string>
+    <string name="terminal_text_input_move_down">تحريك لأسفل</string>
+    <string name="terminal_text_input_move_left">تحريك لليسار</string>
+    <string name="terminal_text_input_move_right">تحريك لليمين</string>
+    <string name="terminal_text_input_resize_handle">تغيير حجم نافذة الإدخال</string>
+    <string name="terminal_save_connection">حفظ الاتصال</string>
+    <string name="terminal_save_connection_title">حفظ الاتصال</string>
+    <string name="terminal_save_connection_name_label">الاسم</string>
+    <string name="terminal_save_connection_name_hint">يظهر في قائمة الاتصالات</string>
+    <string name="terminal_save_connection_id">معرّف الملف الشخصي</string>
+    <string name="terminal_save_connection_id_hint">يعرّف الاتصال المحفوظ، وليس اسم الجلسة</string>
+    <string name="terminal_save_connection_context">الاتصال: %1$s\nالنقل: %2$s\nالجلسة المراد تثبيتها: %3$s</string>
+    <string name="terminal_save_connection_mismatch">هذا الاتصال مثبّت على الجلسة \"%1$s\" لكنك في \"%2$s\". سيؤدي الحفظ إلى إعادة تثبيته على الجلسة الحالية.</string>
+    <string name="terminal_save_connection_update">تحديث التثبيت</string>
+    <string name="terminal_save_connection_saved">تم حفظ الاتصال \"%1$s\"</string>
+    <string name="terminal_save_connection_updated">تم تحديث الاتصال \"%1$s\"</string>
+    <string name="terminal_save_connection_need_session">تعذّر اكتشاف اسم جلسة لهذا التبويب. افتح جلسة tmux/zellij/screen باسم، أو اضبط الأمر البعيد في الملف الشخصي، ثم أعد المحاولة.</string>
+    <string name="terminal_details">التفاصيل</string>
+    <string name="terminal_details_title">أين أنا؟</string>
+    <string name="terminal_details_door">الباب (بطاقة الاتصال)</string>
+    <string name="terminal_details_path">المسار (النقل)</string>
+    <string name="terminal_details_room">الغرفة (tmux / الجلسة)</string>
+    <string name="terminal_details_room_unknown">\u2014 غير معروفة \u2014</string>
+    <string name="terminal_details_room_pin">تثبيت البطاقة: %1$s</string>
+    <string name="terminal_details_room_no_pin">\u2014 لا شيء \u2014</string>
+    <string name="terminal_details_room_mismatch">الغرفة الحالية تختلف عن تثبيت البطاقة \u2014 ربما دخلت من باب آخر أو وصلت إلى جلسة أُنشئت تلقائيًا.</string>
+    <string name="terminal_details_copy">نسخ</string>
+    <string name="terminal_details_copied">تم نسخ الموقع</string>
+    <string name="terminal_details_unavailable">تعذّرت قراءة تفاصيل الاتصال لهذا التبويب.</string>
+    <string name="terminal_mouse_requested_but_disabled">يطلب هذا التطبيق الماوس. فعّل “إدخال الماوس في تطبيقات TUI” من الإعدادات ← الطرفية.</string>
+    <string name="terminal_dictate_unavailable">لا يتوفر أي تطبيق للإدخال الصوتي على هذا الجهاز</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="terminal_inline_image_title">صورة مضمّنة</string>
+    <string name="terminal_inline_image_question">يريد هذا الجهاز الطرفي عرض صورة مضمّنة.</string>
+    <string name="terminal_inline_image_protocol_kitty">بروتوكول الرسوميات Kitty</string>
+    <string name="terminal_inline_image_protocol_iterm2">بروتوكول iTerm2</string>
+    <string name="terminal_inline_image_name">الملف: %1$s</string>
+    <string name="terminal_inline_image_dimensions">الأبعاد: %1$d × %2$d بكسل</string>
+    <string name="terminal_inline_image_deny">رفض</string>
+    <string name="terminal_inline_image_always_tab">دائمًا في هذا التبويب</string>
+    <string name="terminal_bell_notification_title">الطرفية</string>
+    <string name="terminal_bell_notification_body">رنّ برنامج طرفية</string>
+    <string name="terminal_sudo_prompt_detected">طُلبت كلمة مرور sudo</string>
+    <string name="terminal_sudo_prompt_subtitle">Android Keystore • فتح بالبصمة • تُرسل فقط عند الضغط على ملء</string>
+    <string name="terminal_sudo_fill_action">ملء</string>
+    <string name="terminal_sudo_turn_off_action">إيقاف</string>
+    <string name="terminal_sudo_disabled_toast">تم إيقاف اكتشاف مطالبات sudo (الإعدادات ← الأمان والخصوصية)</string>
+    <string name="terminal_sudo_entry_title">كلمة مرور sudo لـ %1$s</string>
+    <string name="terminal_sudo_entry_hint">لا توجد كلمة مرور محفوظة لهذا الاتصال بعد. أدخلها مرة واحدة لإرسالها مباشرة عبر SSH إلى هذه الطرفية. عند الحفظ، تبقى مشفرة في Android Keystore على هذا الجهاز، وتتطلب فتح القفل بالبصمة في كل مرة، ولا تُكشف أبداً لأدوات AI/MCP.</string>
+    <string name="terminal_sudo_turn_off_detection">إيقاف اكتشاف مطالبات sudo</string>
+    <string name="terminal_sudo_send_action">إرسال</string>
+</resources>

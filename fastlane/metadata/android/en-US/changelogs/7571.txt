@@ -1,0 +1,11 @@
+⚡ **Remote desktop colour conversion is roughly three times faster, and the next log will say where the rest of the time goes.**
+
+A reporter's KDE session at 2560x1440 was running at 6.6 fps, and his log carried the timings that split the frame up. 68 ms of every frame was going into converting the decoded picture to screen pixels — a step that had already been moved out of Kotlin and into Rust, and was still the second largest cost in the frame.
+
+The reason turned out to be the shape of the loop rather than the arithmetic: it appended the result one byte at a time, which at his resolution is 14.7 million append operations per frame, each one re-checking whether the buffer needed to grow. Writing into the buffer directly instead measured **24.5 ms → 7.9 ms** on a desktop, built the same size-optimised way the shipped library is. The output is byte-for-byte identical — the colour tests pass unchanged.
+
+Those are desktop numbers, and a ratio rather than a promise. What it is worth on a phone has to be measured on a phone.
+
+🔍 **A measurement, not a fix, for the largest remaining cost.** The same log showed the hardware decoder taking 6–8 ms and the frame packing 2–5 ms, inside a round trip that Haven measured at 83 ms. So around 72 ms per frame is spent handing the frame between Haven's Kotlin and Rust halves rather than doing anything with it.
+
+There are two plausible reasons for that, and they call for opposite fixes. Rather than guess, this release measures the one thing that separates them — what it costs *your* device to allocate and copy that many bytes — and prints it alongside. If you have been sending remote-desktop logs, the next one answers it.

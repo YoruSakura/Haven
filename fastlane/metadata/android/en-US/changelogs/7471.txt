@@ -1,0 +1,5 @@
+🖥️ RDP on VirtualBox: the connection now completes instead of failing on the last message of the handshake. VirtualBox understates that message's length by the 8 bytes of content it carries; nothing was ever missing, so Haven now uses it as received. (#422)
+
+📡 Mosh no longer abandons automatic reconnection after a single failed attempt — one transient name-lookup miss used to end it for good. (#421)
+
+📊 Remote desktop frame timings now appear in the Audit Log, so a laggy session can be diagnosed without a cable. Also removes a wasteful per-frame copy from the H.264 path. (#477)

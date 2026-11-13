@@ -1,0 +1,3 @@
+Reconnect after the app comes back from the background
+
+Terminal/SFTP sessions whose connection died quietly while Haven was in the background (NAT or Doze idle-timeout, a server close that never reached the phone) no longer sit frozen when you return. On every return to the foreground Haven now probes each live session and reconnects any whose socket has died — typically within a few seconds, instead of waiting up to ~45s for the keepalive to time out.

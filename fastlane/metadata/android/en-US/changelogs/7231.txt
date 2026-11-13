@@ -1,0 +1,1 @@
+🖥️ Remote desktop screens now repaint only the region that changed instead of rebuilding the whole screen each time — fixing multi-second lag and eventual freezes on sessions that send many small updates. (#422, #466)

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">কাস্টম কী যোগ করুন</string>
+    <string name="toolbar_toggle_keyboard">কীবোর্ড দেখান/লুকান</string>
+    <string name="toolbar_reorder_keys">টুলবারের কী সাজান</string>
+    <string name="toolbar_done_reordering">সাজানো শেষ</string>
+    <string name="toolbar_vnc_desktop">VNC ডেস্কটপ</string>
+    <string name="toolbar_settings">টুলবার সেটিংস</string>
+    <string name="toolbar_custom_key_dialog_title">কাস্টম কী যোগ করুন</string>
+    <string name="toolbar_custom_key_label">লেবেল</string>
+    <string name="toolbar_custom_key_sequence">সিকোয়েন্স</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">বাতিল</string>
+    <string name="toolbar_snippet_add">স্নিপেট যোগ করুন</string>
+    <string name="toolbar_snippet_search">স্নিপেট খুঁজুন…</string>
+    <string name="toolbar_snippet_delete">মুছুন</string>
+    <string name="toolbar_snippet_dialog_title">স্নিপেট যোগ করুন</string>
+    <string name="toolbar_snippet_label">লেবেল</string>
+    <string name="toolbar_snippet_command">কমান্ড</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="toolbar_snippet_title">Snippets</string>
+    <string name="toolbar_snippet_empty">এখনো কোনো snippet নেই। টুলবারে কাস্টম কী যোগ করুন, বা উপরে + চাপুন।</string>
+    <string name="toolbar_snippet_empty_filtered">কোনো মেলানো snippet নেই।</string>
+    <string name="toolbar_snippet_label_placeholder">যেমন Deploy, Restart</string>
+    <string name="toolbar_keyboard_standard_desc">Standard কীবোর্ড (ভয়েস, সাজেশন, autocorrect চালু)</string>
+    <string name="toolbar_keyboard_secure_desc">Secure কীবোর্ড (কোনো সাজেশন নেই, কোনো autocorrect নেই)</string>
+    <string name="toolbar_attach_desc">রিমোটে পাঠাতে ফাইল সংযুক্ত করুন</string>
+    <string name="toolbar_presets_label">Presets</string>
+    <string name="toolbar_custom_key_label_placeholder">যেমন ^C, Paste</string>
+    <string name="toolbar_text_input_desc">ভাসমান টেক্সট ইনপুট খুলুন</string>
+    <string name="toolbar_dictate_desc">ডিক্টেশন: ভয়েস ইনপুট চালু করুন</string>
+</resources>

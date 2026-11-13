@@ -1,0 +1,2 @@
+- Haven no longer writes hostnames, usernames or clipboard contents to the device log.
+- If you have shared a log with anyone, it may contain more than you intended — worth checking.

@@ -1,0 +1,3 @@
+- Backups now include your authenticator entries. They never did before — restoring onto a new device silently lost them.
+- Haven no longer shows settings for features a build doesn't include.
+- The lighter Terminal download is now 35 MB, down from 54 MB.

@@ -1,0 +1,1 @@
+- With a physical keyboard on an RDP session, Enter and Space now go to the remote machine instead of opening Haven's own menus — one stray Enter could previously even drop you out of the session.

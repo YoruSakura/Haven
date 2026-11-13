@@ -1,0 +1,1 @@
+🔑 Fixed long-pressing a key on the Keys screen opening both Haven's menu and Android's text copy/paste popup at the same time. (#460)

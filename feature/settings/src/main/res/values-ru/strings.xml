@@ -1,0 +1,567 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">Отмена</string>
+    <string name="common_save">Сохранить</string>
+    <string name="common_done">Готово</string>
+    <string name="common_close">Закрыть</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">Удалить</string>
+    <string name="common_edit">Изменить</string>
+    <string name="common_rename">Переименовать</string>
+    <string name="common_create">Создать</string>
+    <string name="common_connect">Подключить</string>
+    <string name="common_disconnect">Отключить</string>
+    <string name="common_copy">Копировать</string>
+    <string name="common_paste">Вставить</string>
+    <string name="common_label">Метка</string>
+    <string name="common_password">Пароль</string>
+    <string name="common_port">Порт</string>
+    <string name="common_host">Хост</string>
+    <string name="common_username">Имя пользователя</string>
+    <string name="common_install">Установить</string>
+    <string name="common_reset">Сбросить</string>
+    <string name="common_allow">Разрешить</string>
+    <string name="common_not_now">Не сейчас</string>
+    <string name="common_import">Импорт</string>
+    <string name="common_add">Добавить</string>
+    <string name="common_download">Скачать</string>
+    <string name="common_unlock">Разблокировать</string>
+
+    <!-- Top-level screen -->
+    <string name="settings_title">Настройки</string>
+
+    <!-- Security section -->
+    <string name="settings_biometric_title">Блокировка экрана</string>
+    <string name="settings_biometric_subtitle">Требовать аутентификацию для открытия Haven</string>
+    <string name="settings_lock_timeout_title">Время блокировки</string>
+    <string name="settings_prevent_screenshots_title">Запрет снимков экрана</string>
+    <string name="settings_prevent_screenshots_subtitle">Блокировать захват экрана и превью в диспетчере задач</string>
+
+    <!-- Logging section -->
+    <string name="settings_exclude_recents_title">Скрывать из недавних</string>
+    <string name="settings_exclude_recents_subtitle">Скрывает карточку Haven на экране недавних; сеансы продолжают работать. Открыть снова — с иконки приложения.</string>
+    <string name="settings_connection_logging_title">Журнал подключений</string>
+    <string name="settings_connection_logging_subtitle">Записывать события подключений (подключение, отключение, ошибки). Хранится локально, защищено шифрованием устройства</string>
+    <string name="settings_view_connection_log_title">Просмотр журнала подключений</string>
+    <string name="settings_view_connection_log_subtitle">История подключений и события</string>
+    <string name="settings_verbose_logging_title">Подробный журнал подключений</string>
+    <string name="settings_verbose_logging_subtitle">Захват деталей протокола для подключений SSH, Mosh, ET, RDP и SPICE — включая тайминги кадров RDP и события ввода SPICE, которые нужны при медленном или неотвечающем удалённом рабочем столе. Включите до подключения. Может включать имена хостов и пользователей</string>
+
+    <!-- Terminal section -->
+    <string name="settings_session_persistence_title">Сохранение сессий</string>
+    <string name="settings_session_persistence_none">Нет</string>
+    <string name="settings_font_size_title">Размер шрифта терминала</string>
+    <string name="settings_font_size_subtitle">%1$dsp</string>
+    <string name="settings_horizontal_padding_title">Горизонтальные отступы</string>
+    <string name="settings_horizontal_padding_subtitle">%1$d dp</string>
+    <string name="settings_color_scheme_title">Цветовая схема терминала</string>
+    <string name="settings_toolbar_title">Панель клавиатуры</string>
+    <string name="settings_toolbar_subtitle">Настроить кнопки и расположение панели</string>
+    <string name="settings_search_button_title">Кнопка поиска</string>
+    <string name="settings_search_button_subtitle">Показать значок поиска в панели вкладок — отправляет клавиши поиска менеджера сессий (tmux/zellij/screen) или Ctrl+R</string>
+    <string name="settings_copy_output_title">Копировать последний вывод</string>
+    <string name="settings_copy_output_subtitle">Показать значок копирования — копирует вывод последней команды. Требуется интеграция с оболочкой (нажмите для настройки)</string>
+    <string name="settings_mouse_input_title">Мышь в TUI-приложениях</string>
+    <string name="settings_mouse_input_subtitle">Передавать нажатия как клики и удержание как правый клик, когда приложения типа htop, mc или vim включают отслеживание мыши</string>
+    <string name="settings_right_click_title">Удержание — правый клик</string>
+    <string name="settings_right_click_subtitle">Отправлять правый клик в терминал вместо выделения текста. Полезно для контекстного меню tmux</string>
+    <string name="settings_standard_keyboard_title">Голосовой ввод и автодополнение</string>
+    <string name="settings_standard_keyboard_subtitle">Отключает флаги защищённой клавиатуры (режим пароля, без подсказок). Включает голосовой ввод, свайп-набор и предсказание слов — но клавиатура может запоминать введённые пароли</string>
+
+    <!-- Appearance section -->
+    <string name="settings_theme_title">Тема</string>
+    <string name="settings_navigation_tabs_title">Вкладки навигации</string>
+    <string name="settings_navigation_tabs_subtitle">Измените порядок вкладок и выберите, какие из них показывать</string>
+
+    <!-- Wayland section -->
+    <string name="settings_wayland_shell_title">Оболочка рабочего стола Wayland</string>
+    <string name="settings_proot_idle_title">Автоостановка простаивающего гостя Linux</string>
+    <string name="settings_proot_idle_off">Выключено — гость Linux работает, пока вы его не остановите</string>
+    <string name="settings_proot_idle_on">Останавливает гостя через %1$d мин после выхода из Haven (запущенная гостевая служба удерживает его)</string>
+    <string name="settings_proot_idle_dialog_title">Автоостановка простаивающего гостя Linux</string>
+    <string name="settings_proot_idle_dialog_body">Когда Haven пробыл в фоне столько времени, остановить терминалы и рабочие столы гостя Linux, чтобы освободить память. Запущенная гостевая служба удерживает его. Долгая задача в фоновом терминале тоже будет остановлена — оставьте выключенным, если не нужна очистка при простое.</string>
+    <string name="settings_proot_idle_off_label">Выключено</string>
+    <string name="settings_shizuku_title">Интеграция Shizuku</string>
+    <string name="settings_shizuku_enabled">Включено — автоисключение батареи, общий сокет Wayland</string>
+    <string name="settings_shizuku_available">Shizuku установлен — нажмите для предоставления доступа</string>
+    <string name="settings_shizuku_not_running">Shizuku установлен, но не запущен — нажмите для запуска через Беспроводную отладку</string>
+    <string name="settings_shizuku_not_installed">Установить Shizuku для исключения батареи и доступа Wayland</string>
+
+    <!-- Backup section -->
+    <string name="settings_backup_sync_title">Синхронизировать с удалённым</string>
+    <string name="settings_backup_sync_subtitle_set">%1$s : %2$s</string>
+    <string name="settings_backup_sync_subtitle_unset">Отправка/загрузка зашифрованной копии в подключение SFTP/SMB/rclone</string>
+    <string name="settings_backup_sync_description">Отправляет или загружает зашифрованную резервную копию в уже имеющееся подключение. Файл шифруется AES-256-GCM вашей парольной фразой до выхода с устройства — удалённая сторона никогда не видит конфигурацию в открытом виде.</string>
+    <string name="settings_backup_sync_no_remotes">Пока нет подключений SFTP, SMB или rclone. Сначала добавьте одно, чтобы хранить копию.</string>
+    <string name="settings_backup_sync_choose_remote">Выберите подключение…</string>
+    <string name="settings_backup_sync_remote_label">Подключение назначения</string>
+    <string name="settings_backup_sync_path_label">Путь к файлу на удалённом</string>
+    <string name="settings_backup_sync_connect_hint">Сначала подключите назначение (откройте его на вкладке «Файлы»), затем «Отправить» или «Загрузить».</string>
+    <string name="settings_backup_sync_push_button">Отправить</string>
+    <string name="settings_backup_sync_pull_button">Загрузить</string>
+    <string name="settings_backup_auto_sync_label">Отправлять автоматически</string>
+    <string name="settings_backup_auto_sync_hint">Повторно отправляет зашифрованную резервную копию через пару минут после изменения настроек, плюс ежедневная досылка. Требует хранения парольной фразы (в зашифрованном виде) на этом устройстве для фоновой отправки. Автоматическая загрузка — отдельная опция ниже.</string>
+    <string name="settings_backup_auto_sync_dialog_title">Включить автоматическую отправку</string>
+    <string name="settings_backup_auto_sync_dialog_description">Задайте пароль, которым будет шифроваться каждая автоматическая резервная копия. Он хранится в зашифрованном виде на этом устройстве — при отключении автоотправки он удаляется.</string>
+    <string name="settings_export_backup_title">Экспорт резервной копии</string>
+    <string name="settings_export_backup_subtitle">Ключи, подключения и настройки</string>
+    <string name="settings_restore_backup_title">Восстановление из копии</string>
+    <string name="settings_restore_backup_subtitle">Импорт из файла резервной копии</string>
+    <string name="settings_backup_working">Обработка…</string>
+
+    <!-- About section -->
+    <string name="settings_about_title">О Haven</string>
+    <string name="settings_support_title">Поддержать Haven</string>
+    <string name="settings_support_subtitle">Угостить разработчика кофе</string>
+    <string name="settings_version_unknown">неизвестно</string>
+
+    <!-- Wayland shell dialog -->
+    <string name="settings_wayland_dialog_title">Оболочка рабочего стола Wayland</string>
+    <string name="settings_wayland_dialog_description">Команда оболочки для терминала foot в Wayland-рабочем столе. Дополнительные оболочки можно установить через apk (напр. apk add bash).</string>
+    <string name="settings_wayland_shell_command_label">Команда оболочки</string>
+
+    <!-- Lock timeout dialog -->
+    <string name="settings_lock_timeout_dialog_title">Время блокировки</string>
+
+    <!-- OSC 133 shell integration dialog -->
+    <string name="settings_osc133_dialog_title">Настройка интеграции оболочки</string>
+    <string name="settings_osc133_description">Для копирования последнего вывода оболочка должна отправлять маркеры OSC 133. Добавьте один из этих фрагментов в конфиг оболочки:</string>
+    <string name="settings_osc133_bash">Bash</string>
+    <string name="settings_osc133_zsh">Zsh</string>
+    <string name="settings_osc133_copied_bash">Фрагмент для bash скопирован</string>
+    <string name="settings_osc133_copied_zsh">Фрагмент для zsh скопирован</string>
+    <string name="settings_osc133_footer">Нажмите на фрагмент для копирования. Многие инструменты (iTerm2, VS Code, WezTerm) включают эти маркеры по умолчанию.</string>
+    <string name="settings_osc133_learn_more">Подробнее</string>
+
+    <!-- Backup password dialog -->
+    <string name="settings_backup_export_dialog_title">Экспорт резервной копии</string>
+    <string name="settings_backup_restore_dialog_title">Восстановление из копии</string>
+    <string name="settings_backup_password_min_length">Минимум 6 символов</string>
+    <string name="settings_backup_passwords_mismatch">Пароли не совпадают</string>
+    <string name="settings_backup_export_description">Зашифруйте резервную копию паролем. Это защитит ваши SSH-ключи и данные подключений.</string>
+    <string name="settings_backup_restore_description">Введите пароль, использованный при создании резервной копии.</string>
+    <string name="settings_backup_password_label">Пароль</string>
+    <string name="settings_backup_confirm_password_label">Подтвердите пароль</string>
+    <string name="settings_backup_export_button">Экспорт</string>
+    <string name="settings_backup_restore_button">Восстановить</string>
+
+    <!-- About dialog -->
+    <string name="settings_about_dialog_title">О Haven</string>
+    <string name="settings_about_app_name">Haven</string>
+    <string name="settings_about_description">Клиент SSH, VNC, RDP и облачного хранилища с открытым кодом для Android</string>
+    <string name="settings_about_version">Версия %1$s (сборка %2$d)</string>
+    <string name="settings_about_android">Android %1$s (API %2$d)</string>
+    <string name="settings_about_libraries_title">Библиотеки с открытым кодом</string>
+
+    <!-- Theme dialog -->
+    <string name="settings_theme_dialog_title">Тема</string>
+
+    <!-- Color scheme dialog -->
+    <string name="settings_color_scheme_dialog_title">Цветовая схема терминала</string>
+
+    <!-- Session manager dialog -->
+    <string name="settings_session_dialog_title">Сохранение сессий</string>
+    <string name="settings_session_no_scrollback">Без сенсорной прокрутки</string>
+    <string name="settings_session_custom_command_label">Пользовательская команда</string>
+    <string name="settings_session_custom_command_hint">Используйте {name} для имени сессии. Оставьте пустым для значения по умолчанию.</string>
+    <string name="settings_session_save_command">Сохранить команду</string>
+
+    <!-- Font size dialog -->
+    <string name="settings_font_size_dialog_title">Размер шрифта терминала</string>
+    <string name="settings_font_size_sample">Пример текста</string>
+    <string name="settings_font_size_value">%1$dsp</string>
+    <string name="settings_horizontal_padding_dialog_title">Горизонтальные отступы терминала</string>
+    <string name="settings_horizontal_padding_sample">Пример текста</string>
+    <string name="settings_horizontal_padding_value">%1$d dp</string>
+
+    <!-- Toolbar config dialog -->
+    <string name="settings_toolbar_dialog_title">Панель клавиатуры</string>
+    <string name="settings_toolbar_assign_hint">Назначьте каждую клавишу: Ряд 1, Ряд 2 или Выкл</string>
+    <string name="settings_toolbar_arrow_keys">Расположение стрелок</string>
+    <string name="settings_toolbar_edit_controls">Элементы режима редактирования</string>
+    <string name="settings_edit_controls_split">Раздельно</string>
+    <string name="settings_edit_controls_left">Слева</string>
+    <string name="settings_edit_controls_right">Справа</string>
+    <string name="settings_toolbar_function_keys">Функциональные клавиши</string>
+    <string name="settings_toolbar_symbols">Символы</string>
+    <string name="settings_toolbar_custom_keys">Пользовательские клавиши</string>
+    <string name="settings_toolbar_add_custom_key">Добавить клавишу</string>
+    <string name="settings_toolbar_edit_json">Редактировать JSON</string>
+    <string name="settings_toolbar_row1">R1</string>
+    <string name="settings_toolbar_row2">R2</string>
+    <string name="settings_toolbar_off">Выкл</string>
+    <string name="settings_toolbar_paste_clipboard">Вставить из буфера</string>
+
+    <!-- Custom key dialog -->
+    <string name="settings_custom_key_edit_title">Редактировать клавишу</string>
+    <string name="settings_custom_key_add_title">Добавить клавишу</string>
+    <string name="settings_custom_key_presets">Шаблоны</string>
+    <string name="settings_custom_key_label">Метка</string>
+    <string name="settings_custom_key_label_placeholder">напр. ^C, Paste</string>
+    <string name="settings_custom_key_sequence_label">Последовательность</string>
+    <string name="settings_custom_key_sequence_placeholder">напр. \\u0003</string>
+    <string name="settings_custom_key_escape_hint">\\u001b для Escape, \\u0003 для Ctrl+C, \\n для Enter</string>
+
+    <!-- JSON editor dialog -->
+    <string name="settings_json_editor_title">Редактировать JSON панели</string>
+    <string name="settings_json_editor_format_hint">String = встроенный ID, Object = пользовательская клавиша {\"label\": \"…\", \"send\": \"…\"}</string>
+    <string name="settings_json_editor_builtin_ids">Built-in IDs: keyboard, esc, tab, shift, ctrl, alt, arrow_left, arrow_up, arrow_down, arrow_right, home, end, pgup, pgdn, sym_pipe, sym_tilde, sym_slash, sym_dash, sym_underscore, sym_equals, sym_plus, sym_backslash, sym_squote, sym_dquote, sym_semicolon, sym_colon, sym_bang, sym_question, sym_at, sym_hash, sym_dollar, sym_percent, sym_caret, sym_amp, sym_star, sym_lparen, sym_rparen, sym_lbracket, sym_rbracket, sym_lbrace, sym_rbrace, sym_lt, sym_gt, sym_backtick</string>
+
+    <!-- Common strings -->
+    <string name="common_support">Поддержка</string>
+    <string name="common_github">GitHub</string>
+    <string name="common_simple">Простой</string>
+    <string name="settings_language_title">Язык</string>
+    <string name="settings_media_extensions_title">Расширения медиафайлов</string>
+    <string name="settings_media_extensions_description">Расширения файлов через пробел, которые в файловом браузере считаются потоковым медиа.</string>
+    <string name="settings_media_extensions_label">Расширения</string>
+    <string name="settings_show_desktops_title">Показывать карточку рабочих столов</string>
+    <string name="settings_show_desktops_subtitle">Показывать менеджер окружений рабочего стола на экране подключений</string>
+    <string name="settings_show_linux_vm_title">Показывать карточку Linux VM</string>
+    <string name="settings_show_linux_vm_subtitle">Показывать настройку Android Linux VM на экране подключений</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="settings_keep_screen_on_title">Не выключать экран в терминале</string>
+    <string name="settings_keep_screen_on_subtitle">Дисплей остаётся включённым, пока открыта вкладка терминала. Расходует заряд; включайте только если следите за длительным выводом.</string>
+
+    <!-- #135 -->
+    <string name="settings_keyboard_mode_title">Режим клавиатуры</string>
+    <string name="settings_dev_install_title">Установка для разработки</string>
+    <string name="settings_dev_install_apk_url">URL APK</string>
+    <string name="settings_font_install_title">Установить шрифт по URL</string>
+    <string name="settings_ime_flags_title">Флаги IME</string>
+    <!-- #133 phase 2b: SSH host CA pubkey field (en fallback) -->
+    <string name="settings_scrollback_rows_title">Строки истории</string>
+    <string name="settings_scrollback_rows_subtitle">%1$,d строк на вкладку — применяется к новым вкладкам</string>
+    <string name="settings_scrollback_rows_dialog_title">Строк истории на вкладку</string>
+    <string name="settings_scrollback_rows_dialog_body">Больший размер истории использует больше памяти. Около 2 КБ на строку при обычной ширине столбцов, умноженное на количество открытых вкладок.</string>
+    <string name="settings_scrollback_rows_value">%1$,d строк</string>
+    <string name="settings_tap_to_position_title">Нажмите для перемещения курсора в поддерживаемых приглашениях</string>
+    <string name="settings_tap_to_position_subtitle">Нажмите внутри приглашения shell, чтобы переместить курсор в этот столбец. Требуются маркеры OSC 133 (starship, fish 3.6+, современные настройки интеграции оболочки bash/zsh). Не влияет на оболочки, которые их не выдают</string>
+    <string name="settings_swipe_arrows_title">Свайп отправляет стрелки</string>
+    <string name="settings_swipe_arrows_subtitle">Горизонтальные свайпы в терминале отправляют ← → (удерживайте для повтора) вместо переключения вкладок. Клавиша свайпа на панели переключает тот же режим</string>
+    <string name="settings_swipe_arrows_exit_hint">Если панель вкладок приложения скрыта и сеанс открыт, свайпы продолжают отправлять стрелки, пока не нажата клавиша свайпа на панели. Добавьте клавишу свайпа на панель, чтобы она всегда была под рукой</string>
+    <string name="settings_swipe_arrows_add_key">Добавить клавишу свайпа</string>
+
+    <string name="settings_bandwidth_suggest_subtitle">Обнаруживает пропускную способность ниже ~1 Мбит/с через несколько секунд и предлагает переподключение с 256 цветами одним касанием. Выключено — подсказка не показывается.</string>
+    <string name="settings_bandwidth_suggest_title">Предлагать 256 цветов на медленных VNC-соединениях</string>
+    <string name="settings_section_about">О приложении</string>
+    <string name="settings_section_advanced">Дополнительно</string>
+    <string name="settings_section_appearance">Оформление</string>
+    <string name="settings_section_backup">Резервное копирование</string>
+    <string name="settings_section_connections_screen">Экран подключений</string>
+    <string name="settings_section_desktop">Рабочий стол (VNC &amp; RDP)</string>
+    <string name="settings_section_diagnostics">Диагностика</string>
+    <string name="settings_section_keyboard_input">Клавиатура и ввод</string>
+    <string name="settings_section_security_privacy">Безопасность и конфиденциальность</string>
+    <string name="settings_section_terminal">Терминал</string>
+    <string name="settings_show_terminal_tab_bar_subtitle">Показывать вкладки сеансов над терминалом</string>
+    <string name="settings_show_terminal_tab_bar_title">Показывать панель вкладок терминала</string>
+    <string name="settings_touchpad_input_direct_subtitle">Прямое касание — положение пальца является указателем. Включите для ввода в стиле трекпада.</string>
+    <string name="settings_touchpad_input_title">Ввод с тачпада</string>
+    <string name="settings_touchpad_input_touchpad_subtitle">Перетаскивание перемещает удалённый курсор; касание выполняет щелчок в позиции курсора. При увеличении область просмотра следует за курсором.</string>
+
+    <!-- #210 i18n sweep -->
+    <string name="settings_color_scheme_auto_switch_title">Авто-переключение по системной теме</string>
+    <string name="settings_color_scheme_auto_switch_subtitle">Использовать разные цветовые схемы терминала для светлой и тёмной темы</string>
+    <string name="settings_color_scheme_light_title">Цветовая схема терминала (светлая)</string>
+    <string name="settings_color_scheme_dark_title">Цветовая схема терминала (тёмная)</string>
+    <string name="settings_color_scheme_light_dialog_title">Цветовая схема терминала — светлая</string>
+    <string name="settings_color_scheme_dark_dialog_title">Цветовая схема терминала — тёмная</string>
+    <string name="settings_color_scheme_apply_palette_title">Применять палитру ANSI из схемы</string>
+    <string name="settings_color_scheme_apply_palette_subtitle">Перекрасить 16 цветов ANSI под схему. При выключении сохраняются стандартные цвета, поэтому полноэкранные приложения вроде mutt выглядят как ожидается.</string>
+    <string name="settings_toolbar_min_key_width">Минимальная ширина клавиши: %1$d dp</string>
+    <string name="settings_toolbar_key_scale">Масштаб клавиш: %1$d%%</string>
+    <string name="settings_toolbar_uniform_grid">Единая сетка клавиш</string>
+    <string name="settings_toolbar_uniform_grid_desc">Каждая клавиша занимает ячейку одинаковой ширины, как в Termux; длинные подписи переносятся. Без бокового скролла.</string>
+    <string name="settings_terminal_font_title">Шрифт терминала</string>
+    <string name="settings_terminal_font_default_label">Hack Nerd Font Mono (по умолчанию)</string>
+    <string name="settings_terminal_font_custom_fmt">Пользовательский: %1$s</string>
+    <string name="settings_terminal_font_subtitle_fmt">%1$s — нажмите, чтобы выбрать TTF/OTF (Nerd Fonts поддерживаются)</string>
+    <string name="settings_recommended_fonts_title">Рекомендуемые шрифты</string>
+    <string name="settings_recommended_fonts_subtitle">Установка одним касанием: Source Code Pro, JetBrains Mono, Hack, Inconsolata</string>
+    <string name="settings_font_from_url_title">Установить шрифт по URL…</string>
+    <string name="settings_font_from_url_subtitle">Загрузить .ttf/.otf или .zip с ними (аналог инструмента агента set_terminal_font_from_url)</string>
+    <string name="settings_reset_font_title">Сбросить шрифт терминала</string>
+    <string name="settings_reset_font_subtitle">Вернуться к встроенному Hack Nerd Font Mono</string>
+    <string name="settings_terminal_font_reset_toast">Шрифт терминала сброшен</string>
+    <string name="settings_terminal_font_set_toast">Шрифт терминала установлен: %1$s</string>
+    <string name="settings_terminal_font_decode_failed_toast">Не удалось загрузить шрифт — Android не смог декодировать его как гарнитуру</string>
+    <string name="settings_font_installed_toast">Установлен (%1$d КиБ)</string>
+    <string name="settings_font_installing_toast">Установка %1$s…</string>
+    <string name="settings_font_named_installed_toast">%1$s установлен (%2$d КиБ)</string>
+    <string name="settings_language_system_default">По умолчанию системы</string>
+    <string name="settings_keyboard_mode_subtitle_raw">Raw — только физическая клавиатура</string>
+    <string name="settings_keyboard_mode_subtitle_standard">Standard — все возможности Gboard</string>
+    <string name="settings_keyboard_mode_subtitle_custom">Custom — выбранные пользователем флаги EditorInfo</string>
+    <string name="settings_keyboard_mode_subtitle_secure">Secure — по умолчанию, подавляет автокоррекцию</string>
+    <string name="settings_keyboard_mode_secure_label">Защищённый (по умолчанию)</string>
+    <string name="settings_keyboard_mode_secure_desc">Настоящая экранная клавиатура с флагами конфиденциальности: микрофон Gboard, автокоррекция, свайп-набор и помощник набора отключены. Лучший выбор для ввода паролей; работает и с Bluetooth-клавиатурами.</string>
+    <string name="settings_keyboard_mode_standard_label">Стандартный</string>
+    <string name="settings_keyboard_mode_standard_desc">Все возможности Gboard — голосовой ввод, свайп-набор, автокоррекция, предсказание слов. Выберите, если клавиатура не работает в защищённом режиме или нужна автокоррекция.</string>
+    <string name="settings_keyboard_mode_raw_label">Raw — только Bluetooth/USB</string>
+    <string name="settings_keyboard_mode_raw_desc">Без экранной клавиатуры. В терминал поступают только физические клавиши (Bluetooth или USB). Максимальная приватность; экранная клавиатура не появляется при нажатии на терминал.</string>
+    <string name="settings_keyboard_mode_custom_label">Пользовательский — выберите флаги</string>
+    <string name="settings_keyboard_mode_custom_desc">Расширенный режим. Выберите, какие биты EditorInfo устанавливает терминал, чтобы подобрать сочетание под особенности вашего IME (напр. голосовой ввод Gboard без автокоррекции). Настраивается в Настройках → «IME-флаги» после выбора.</string>
+    <string name="settings_ime_flags_subtitle">Выберите, какие биты EditorInfo устанавливает терминал</string>
+    <string name="settings_ctrl_shift_v_title">Ctrl+Shift+V вставляет</string>
+    <string name="settings_ctrl_shift_v_subtitle">Ctrl+Shift+V на физической клавиатуре вставляет из буфера обмена Android. В выключенном состоянии клавиши передаются в удалённую оболочку.</string>
+    <string name="settings_auto_show_keyboard_title">Показывать клавиатуру при открытии терминала</string>
+    <string name="settings_auto_show_keyboard_subtitle">Программная клавиатура появляется автоматически при открытии или переключении терминальной сессии. Отключите, чтобы скрывать её в сессиях только для чтения; клавиша клавиатуры на панели инструментов и двойное нажатие по-прежнему вызывают её</string>
+
+    <!-- Navigation Tabs dialog -->
+
+    <string name="settings_nav_tab_visibility_auto_title">Авто</string>
+    <string name="settings_nav_tab_visibility_show_title">Показывать</string>
+    <string name="settings_nav_tab_visibility_hide_title">Скрывать</string>
+    <string name="settings_nav_tab_visibility_always_hint">Всегда виден</string>
+
+    <string name="settings_usb_guest_title">Открыть USB-устройства для Linux-гостя</string>
+    <string name="settings_usb_guest_subtitle">Разрешить подключённым USB-устройствам работать с гостевыми приложениями через шим haven-usb. Каждое подключение запрашивает согласие.</string>
+    <string name="settings_gps_guest_title">Открыть GPS для Linux-гостя</string>
+    <string name="settings_gps_guest_subtitle">Передавать GPS-позицию телефона в гостя как NMEA-устройство (haven-gps). После включения любой гостевой процесс может читать позицию. Каждое подключение запрашивает согласие.</string>
+    <string name="settings_proot_install_log_title">Просмотр журнала установки PRoot</string>
+    <string name="settings_proot_install_log_subtitle">Пофазные события установки дистрибутивов Linux (задача #162)</string>
+    <string name="settings_logcat_capture_title">Захват Logcat</string>
+    <string name="settings_logcat_capture_subtitle_on">Запись в /sdcard/Download/haven-logcat.txt</string>
+    <string name="settings_logcat_capture_subtitle_off">Захват logcat для удалённой отладки</string>
+    <string name="settings_logcat_saved_toast">Logcat сохранён</string>
+    <string name="settings_logcat_started_toast">Захват logcat запущен</string>
+    <string name="settings_logcat_start_failed_toast">Не удалось запустить захват</string>
+    <string name="settings_agent_endpoint_title">Конечная точка агента (MCP)</string>
+    <string name="settings_agent_endpoint_subtitle_on">Включено — локальный MCP-сервер на loopback. Инструменты записи запрашивают согласие.</string>
+    <string name="settings_agent_endpoint_subtitle_off">Отключено — включите, чтобы локальные AI-агенты могли читать состояние и (с согласия) действовать</string>
+    <string name="settings_agent_file_read_title">Разрешить агентам читать содержимое файлов</string>
+    <string name="settings_agent_file_read_subtitle_on">Включено — `serve_file` возвращает одноразовый URL для скачивания после согласия на каждый вызов</string>
+    <string name="settings_agent_file_read_subtitle_off">Отключено — запросы `serve_file` сразу завершаются ошибкой без запроса</string>
+    <string name="settings_agent_terminal_input_title">Разрешить агентам ставить ввод в очередь терминала</string>
+    <string name="settings_agent_terminal_input_subtitle_on">Включено — `queue_terminal_input` следит за выводом SSH-сессии и вводит текст при следующем приглашении (согласие на каждый вызов)</string>
+    <string name="settings_agent_terminal_input_subtitle_off">Отключено — запросы `queue_terminal_input` сразу завершаются ошибкой без запроса</string>
+    <string name="settings_reverse_tunnel_title">Постоянное MCP-подключение</string>
+    <string name="settings_reverse_tunnel_subtitle_set">Туннель к \"%1$s\" — сохраняется при смене Wi-Fi и перезапуске приложения</string>
+    <string name="settings_reverse_tunnel_subtitle_unset">Не задана — конечная точка доступна только на устройстве</string>
+    <string name="settings_reverse_tunnel_none">Нет (только на устройстве)</string>
+    <string name="settings_mcp_wireguard_title">Открыть через туннель WireGuard</string>
+    <string name="settings_mcp_wireguard_subtitle_on">Включено — также доступно по адресу &lt;wg-ip&gt;:8730 в активном туннеле WireGuard</string>
+    <string name="settings_mcp_wireguard_subtitle_off">Отключено — включите для доступа к конечной точке через активный туннель WireGuard</string>
+    <string name="settings_mcp_lan_title">Открыть через Wi-Fi/LAN</string>
+    <string name="settings_mcp_lan_subtitle_on">Включено — также доступно по адресу &lt;device-lan-ip&gt;:8730 в локальной сети</string>
+    <string name="settings_mcp_lan_subtitle_off">Отключено — включите для прямого доступа с устройства в той же Wi-Fi/LAN-сети</string>
+    <string name="settings_mcp_copy_url_title">Скопировать URL конечной точки агента</string>
+    <string name="settings_mcp_url_copied_toast">Конечная точка скопирована</string>
+    <string name="settings_mcp_copy_config_title">Скопировать конфигурацию MCP-клиента</string>
+    <string name="settings_mcp_copy_config_subtitle">Стандартный JSON-фрагмент для вставки в любой MCP-клиент</string>
+    <string name="settings_mcp_config_copied_toast">Конфигурация скопирована</string>
+    <string name="settings_mcp_proot_title">Также доступно в PRoot</string>
+    <string name="settings_agent_activity_title">Просмотр активности агента</string>
+    <string name="settings_agent_activity_subtitle">Все вызовы MCP записываются с замаскированными аргументами</string>
+    <string name="settings_agent_confirm_destructive_title">Подтверждать деструктивные действия агента</string>
+    <string name="settings_agent_confirm_destructive_subtitle">Запрашивать подтверждение перед вызовами агента, которые записывают, удаляют, загружают или отключают. Вызовы только для чтения не запрашивают.</string>
+    <string name="settings_agent_forget_allows_title">Забыть запомненные разрешения</string>
+    <string name="settings_agent_forget_allows_subtitle">Запрашивать заново для каждого инструмента, ранее получившего одноразовое одобрение.</string>
+    <string name="settings_agent_allows_cleared_toast">Запомненные разрешения очищены</string>
+    <string name="settings_font_from_url_body">Вставьте прямую ссылку на файл шрифта TTF или OTF. Популярные Nerd Fonts имеют TTF-файлы на GitHub: github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/&lt;Name&gt;/Regular/&lt;Name&gt;NerdFont-Regular.ttf — скопируйте этот URL сюда.</string>
+    <string name="settings_font_from_url_placeholder">https://…/font.ttf</string>
+    <string name="settings_recommended_fonts_dialog_body">Нажмите для загрузки и применения популярного моноширинного шрифта для программирования.</string>
+    <string name="settings_ime_flags_dialog_body">Каждый переключатель управляет одним битом EditorInfo. Разные IME учитывают разные комбинации; подбирайте до тех пор, пока терминал не будет вводить точно, но пропускать нужные функции IME.</string>
+    <string name="settings_cd_back">Назад</string>
+    <string name="settings_filter_all">Все</string>
+    <string name="settings_action_clear">Очистить</string>
+    <string name="settings_cannot_be_undone">Это действие нельзя отменить.</string>
+    <string name="settings_cd_collapse">Свернуть</string>
+    <string name="settings_cd_expand">Развернуть</string>
+    <string name="settings_cd_failed">Сбой</string>
+    <string name="settings_audit_log_title">Журнал подключений</string>
+    <string name="settings_audit_log_cd_clear">Очистить журналы</string>
+    <string name="settings_audit_log_cd_toggle_details">Показать/скрыть подробности</string>
+    <string name="settings_audit_log_cd_copy">Скопировать журнал</string>
+    <string name="settings_audit_log_cd_share">Поделиться журналом</string>
+    <string name="settings_audit_log_empty">Событий подключений не записано</string>
+    <string name="settings_audit_log_clear_dialog_title">Очистить все журналы?</string>
+    <string name="settings_audit_log_no_verbose">Подробного журнала для этой записи нет</string>
+    <string name="settings_audit_log_share_chooser">Поделиться журналом</string>
+    <string name="settings_audit_log_status_sync">Синхронизация</string>
+    <string name="settings_audit_log_status_sync_failed">Ошибка синхронизации</string>
+    <string name="settings_agent_activity_screen_title">Активность агента</string>
+    <string name="settings_agent_activity_cd_clear">Очистить историю</string>
+    <string name="settings_agent_activity_empty">Активности агента пока нет.\n\nКогда MCP-клиент вызывает инструмент, вызов появится здесь с замаскированными аргументами и кратким результатом.</string>
+    <string name="settings_agent_activity_clear_dialog_title">Очистить активность агента?</string>
+    <string name="settings_agent_activity_clear_dialog_text">Все записанные вызовы MCP будут удалены с этого устройства. Это действие нельзя отменить.</string>
+    <string name="settings_agent_activity_unknown_client">неизвестный клиент</string>
+    <string name="settings_agent_activity_args_redacted">аргументы (скрыты)</string>
+    <string name="settings_proot_install_log_screen_title">Журнал установки PRoot</string>
+    <string name="settings_proot_install_log_cd_clear">Очистить журнал</string>
+    <string name="settings_proot_install_log_empty">Событий установки пока не записано. Установите дистрибутив через «Подключения → Рабочие столы», чтобы заполнить журнал.</string>
+    <string name="settings_proot_install_log_clear_dialog_title">Очистить журнал установки?</string>
+    <string name="settings_proot_install_log_clear_dialog_text">Все записанные события установки будут удалены.</string>
+    <string name="settings_ime_flag_no_suggestions_title">Скрыть панель подсказок</string>
+    <string name="settings_ime_flag_no_suggestions_detail">TYPE_TEXT_FLAG_NO_SUGGESTIONS — поддерживается повсеместно</string>
+    <string name="settings_ime_flag_visible_password_title">Отключить автокоррекцию / автозаглавные / автопробел</string>
+    <string name="settings_ime_flag_visible_password_detail">TYPE_TEXT_VARIATION_VISIBLE_PASSWORD — сильнейшая подсказка; Gboard учитывает. Несовместима с полным редактором на большинстве IME (нет свайпа / голоса).</string>
+    <string name="settings_ime_flag_auto_correct_title">Включить протокол автокоррекции</string>
+    <string name="settings_ime_flag_auto_correct_detail">TYPE_TEXT_FLAG_AUTO_CORRECT — требуется шлюзом commit-text у Samsung Honeyboard (#110); явно включает автокоррекцию в Gboard.</string>
+    <string name="settings_ime_flag_full_editor_title">Голос и свайп (полный редактор)</string>
+    <string name="settings_ime_flag_full_editor_detail">Предоставляет IME настоящий Editable. Нужен для голосового ввода, свайп-набора и CJK-композиции. Конфликтует с подсказкой отключения автокоррекции выше.</string>
+    <string name="settings_ime_flag_no_extract_ui_title">Подавить полноэкранный IME</string>
+    <string name="settings_ime_flag_no_extract_ui_detail">IME_FLAG_NO_EXTRACT_UI — предотвращает показ полноэкранного IME в альбомной ориентации.</string>
+    <string name="settings_ime_flag_no_learning_title">Запретить IME обучаться</string>
+    <string name="settings_ime_flag_no_learning_detail">IME_FLAG_NO_PERSONALIZED_LEARNING — конфиденциальность: словарь IME игнорирует введённый текст. Достаточно сильно, чтобы скрыть микрофон в Gboard.</string>
+    <string name="settings_mcp_tools_title">Инструменты MCP</string>
+    <string name="settings_mcp_tools_subtitle">Отключайте отдельные инструменты агента, чтобы уменьшить то, что он видит</string>
+    <string name="settings_mcp_tools_screen_title">Инструменты MCP</string>
+    <string name="settings_mcp_tools_empty">Список инструментов появится после запуска конечной точки агента.</string>
+    <string name="settings_mcp_tools_intro">Отключённые инструменты полностью исчезают из списка инструментов агента: маленькие модели видят меньше лишнего, и каждый вызов стоит меньше токенов. Переключатель конечной точки, сопряжение и запросы согласия продолжают действовать.</string>
+    <string name="settings_mcp_tools_consent_every_call">Спрашивает при каждом вызове</string>
+    <string name="settings_mcp_tools_consent_once">Спрашивает один раз за сессию</string>
+    <string name="settings_mcp_tools_consent_never">Без запроса на вызов</string>
+    <string name="settings_paired_clients_title">Сопряжённые клиенты MCP</string>
+    <string name="settings_paired_clients_subtitle">Просмотр сопряжённых клиентов, пропуск запросов по клиенту или разрыв сопряжения</string>
+    <string name="settings_paired_clients_screen_title">Сопряжённые клиенты MCP</string>
+    <string name="settings_paired_clients_empty">Пока нет сопряжённых клиентов MCP. Клиент появится здесь после того, как вы одобрите его запрос на подключение.</string>
+    <string name="settings_paired_clients_bypass_label">Пропускать запросы подтверждения</string>
+    <string name="settings_paired_clients_bypass_on">Автоматически одобряет каждый вызов этого клиента, включая разрушительные.</string>
+    <string name="settings_paired_clients_bypass_off">Каждый разрушительный вызов по-прежнему запрашивает согласие (по умолчанию).</string>
+    <string name="settings_paired_clients_cd_unpair">Разорвать сопряжение клиента</string>
+    <string name="settings_paired_clients_unpair_title">Разорвать сопряжение с \'%1$s\'?</string>
+    <string name="settings_paired_clients_unpair_message">При следующем подключении его потребуется одобрить заново, а любое автоодобрение отменяется.</string>
+    <string name="settings_paired_clients_unpair_confirm">Разорвать</string>
+    <string name="settings_paired_clients_unpaired_toast">Сопряжение с \'%1$s\' разорвано</string>
+
+    <!-- MCP endpoint: VPN collision + loopback trust -->
+    <string name="settings_mcp_wireguard_collision">Другой VPN (%1$s) использует %2$s — тот же адрес, к которому привязана эта конечная точка, поэтому она перекрыта и недоступна для пиров. Остановите этот VPN или укажите MCP-клиенту конечную точку loopback (127.0.0.1).</string>
+    <string name="settings_mcp_trust_loopback_title">Доверять локальным клиентам</string>
+    <string name="settings_mcp_trust_loopback_subtitle_on">Включено — локальные клиенты (127.0.0.1) подключаются без сопряжения и запросов подтверждения. Клиенты по Wi-Fi/LAN и WireGuard по-прежнему запрашивают подтверждение.</string>
+    <string name="settings_mcp_trust_loopback_subtitle_off">Отключено — даже локальные клиенты должны быть сопряжены и подтверждать каждый запрос</string>
+
+    <!-- Terminal reflow, GPU stack, standing policies (#250) -->
+    <string name="settings_reflow_on_keyboard_title">Подгонять терминал под клавиатуру</string>
+    <string name="settings_reflow_on_keyboard_subtitle">Когда открывается клавиатура, терминал уменьшается, чтобы поместиться над ней, вместо прокрутки экрана вверх. Помогает полноэкранным приложениям со строкой состояния вверху; для обычных оболочек оставьте выключенным.</string>
+    <string name="settings_tab_titles_follow_session_title">Предпочитать имена сеансов в заголовках вкладок</string>
+    <string name="settings_tab_titles_follow_session_subtitle">Вкладки, подключённые к tmux/zellij/screen, сохраняют имя сеанса вместо заголовков, задаваемых запущенными программами.</string>
+    <string name="settings_gpu_venus_title">Экспериментальный стек GPU (venus + zink)</string>
+    <string name="settings_gpu_venus_subtitle">Использует venus (Vulkan к GPU) + zink для современного OpenGL (~3.2 core) на ускоренных рабочих столах вместо virgl (GL 2.1). Нативные приложения Vulkan отображаются; вывод OpenGL пока медленный. Требуется mesa-vulkan-drivers в гостевой системе. Выключено = virgl по умолчанию.</string>
+    <string name="settings_standing_policies_header">Постоянные политики — эти инструменты выполняются без запроса</string>
+    <string name="settings_standing_policy_meta">%1$s · до %2$d вызовов/мин · истекает %3$s</string>
+    <string name="settings_standing_policy_revoke">Отозвать</string>
+
+    <!-- Desktop key placement (#245.2) -->
+    <string name="settings_toolbar_desktop_key">Кнопка рабочего стола</string>
+    <string name="settings_desktop_key_left">Слева</string>
+    <string name="settings_desktop_key_right">Справа</string>
+    <string name="settings_desktop_key_hidden">Скрыта</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="settings_prompt_chars_title">Символы приглашения shell</string>
+    <string name="settings_prompt_chars_subtitle">По умолчанию: $ # % &gt; ❯</string>
+    <string name="settings_prompt_chars_description">Дополнительные символы, которыми заканчивается ваше приглашение shell, чтобы отложенная команда отправлялась, как только приглашение появится снова (напр. после переподключения или повторного подключения tmux). Добавьте завершающие символы вашего приглашения — встроенные $ # % &gt; ❯ распознаются всегда.</string>
+    <string name="settings_prompt_chars_label">Дополнительные символы приглашения</string>
+    <string name="settings_terminal_locale_title">Локаль терминала</string>
+    <string name="settings_terminal_locale_description">Значение LANG, экспортируемое в локальный shell Linux. en_US.UTF-8 (по умолчанию) и C.UTF-8 работают всегда; другие локали (напр. zh_CN.UTF-8) может потребоваться сгенерировать в гостевой системе командой locale-gen, прежде чем программы смогут их использовать.</string>
+    <string name="settings_terminal_locale_label">LANG</string>
+    <string name="settings_terminal_opacity_title">Непрозрачность фона</string>
+    <string name="settings_terminal_opacity_value">%1$d%%</string>
+    <string name="settings_terminal_opacity_hint" formatted="false">Ниже 100% Haven становится полупрозрачным и показывает обои устройства за каждым экраном (терминал, списки, настройки). Переопределение для отдельного подключения действует только на его терминал.</string>
+    <string name="settings_section_mcp">ИИ-агент (MCP)</string>
+    <string name="settings_tailscale_discovery_title">Обнаружение узлов Tailscale</string>
+    <string name="settings_tailscale_discovery_subtitle">Искать хосты вашей сети Tailscale через локальный API при сканировании. Отключите, чтобы Haven не читал список узлов; на сам Tailscale это не влияет.</string>
+    <string name="settings_audio_bridge_title">Звук proot (экспериментально)</string>
+    <string name="settings_audio_bridge_subtitle">Воспроизводит звук из приложений Linux через динамик устройства с помощью моста PulseAudio в гостевой системе. Только вывод. Поток идёт непрерывно, пока включено — выключайте, когда не используется.</string>
+    <string name="settings_reverse_tunnel_status_active">Near (SSH): через %1$s — подключено</string>
+    <string name="settings_reverse_tunnel_status_inactive">Near (SSH): не подключено — откройте %1$s, чтобы включить</string>
+    <string name="settings_remote_clipboard_title">Синхронизировать удалённый буфер обмена</string>
+    <string name="settings_remote_clipboard_subtitle">Разрешить удалённому рабочему столу (VNC) копировать в буфер обмена устройства. По умолчанию выключено.</string>
+    <string name="settings_rdp_progressive_upgrade_title">RDP: декодирование плиток прогрессивного обновления (экспериментально)</string>
+    <string name="settings_rdp_progressive_upgrade_subtitle">Заполняет чёрные квадраты, появляющиеся на некоторых рабочих столах Windows RDP, декодируя уточняющие плитки RemoteFX-Progressive. Экспериментально (#418) — если изображение стало хуже, отключите это</string>
+    <string name="settings_rdp_avc_title">RDP: декодирование H.264/AVC420</string>
+    <string name="settings_rdp_avc_subtitle">Включено по умолчанию. Декодирует графику H.264, чтобы серверы, поддерживающие только H.264 — в частности KRDP (RDP-сервер KDE) — отображались вместо чёрного экрана; аппаратное декодирование на устройстве через MediaCodec. Отключите, если рабочий стол Windows или xrdp отображается неправильно (#425)</string>
+    <string name="settings_backup_auto_pull_label">Загружать автоматически</string>
+    <string name="settings_backup_auto_pull_hint">Периодически загружает последнюю резервную копию и восстанавливает её. Если вы также редактируете подключения на этом устройстве, несохранённые локальные изменения могут быть перезаписаны (на удалённой стороне побеждает последняя запись).</string>
+    <string name="settings_backup_auto_pull_dialog_title">Включить автозагрузку</string>
+    <string name="settings_backup_auto_pull_dialog_description">Введите парольную фразу резервной копии. Она хранится в зашифрованном виде на этом устройстве для фоновой загрузки — при отключении автозагрузки она удаляется.</string>
+    <string name="settings_backup_auto_pull_interval_label">Интервал загрузки</string>
+    <string name="settings_backup_auto_pull_interval_15m">15 минут</string>
+    <string name="settings_backup_auto_pull_interval_1h">1 час</string>
+    <string name="settings_backup_auto_pull_interval_6h">6 часов</string>
+    <string name="settings_backup_auto_pull_interval_24h">24 часа</string>
+    <string name="settings_backup_remember_password_label">Запомнить этот пароль</string>
+    <string name="common_apply">Применить</string>
+    <string name="settings_rdp_desktop_size_title">Размер рабочего стола RDP</string>
+    <string name="settings_rdp_desktop_size_subtitle">%1$d × %2$d — задайте как на сервере, иначе его обновления вне этой области отбрасываются</string>
+    <string name="settings_rdp_desktop_size_hint">Укажите разрешение, которое действительно использует удалённая машина. По умолчанию в VirtualBox — 2560 × 1600.</string>
+    <string name="settings_rdp_desktop_size_width">Ширина</string>
+    <string name="settings_rdp_desktop_size_height">Высота</string>
+    <string name="settings_native_crash_title">Сбои приложения</string>
+    <string name="settings_native_crash_subtitle">Haven неожиданно закрылся. Отчёт ниже показывает, где именно — приложите его к сообщению об ошибке.</string>
+    <string name="settings_native_crash_subtitle_no_trace">Haven неожиданно закрылся. Android не сохранил подробный отчёт для таких случаев, известны только время и сигнал — всё равно приложите их к сообщению об ошибке: сигнал сужает круг причин.</string>
+    <string name="settings_native_crash_no_trace">Подробный отчёт для этого сбоя не сохранён.</string>
+    <string name="settings_native_crash_copy">Скопировать отчёт</string>
+    <string name="settings_native_crash_copied">Отчёт о сбое скопирован</string>
+    <string name="settings_native_crash_dismiss">Скрыть</string>
+    <plurals name="settings_proot_idle_minutes">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минуты</item>
+    </plurals>
+    <string name="settings_hide_nav_bar_in_terminal_title">Скрывать панель вкладок приложения в терминале</string>
+    <string name="settings_hide_nav_bar_in_terminal_subtitle">Скрывает нижнюю панель вкладок Haven на экране терминала. Строка состояния и панель навигации Android остаются видимыми.</string>
+    <string name="settings_credential_keystore_broken_title">Хранилище учётных данных недоступно</string>
+    <string name="settings_credential_keystore_broken_subtitle">Хранилище ключей этого устройства потеряло ключ учётных данных Haven. Сохранённые пароли нельзя прочитать, а новые — сохранить. Нажмите, чтобы восстановить.</string>
+    <string name="settings_credential_reset_title">Восстановить хранилище учётных данных?</string>
+    <string name="settings_credential_reset_body">Будет создан новый ключ, чтобы пароли снова можно было сохранять.\n\nВсе пароли, парольные фразы и секреты, уже сохранённые в Haven, придётся ввести заново. Они и так нечитаемы — защищавший их ключ утрачен, — поэтому это восстанавливает приложение, а не теряет что-то ещё.</string>
+    <string name="settings_credential_reset_confirm">Восстановить</string>
+    <string name="settings_credential_reset_cancel">Отмена</string>
+    <string name="settings_update_check_title">Проверять обновления</string>
+    <string name="settings_update_check_subtitle">Искать новый выпуск при запуске Haven, не чаще раза в час. По умолчанию выключено.</string>
+    <string name="settings_update_check_now_title">Проверить сейчас</string>
+    <string name="settings_update_check_now_subtitle">Запросить у GitHub последний выпуск</string>
+    <string name="settings_update_checking">Проверка…</string>
+    <string name="settings_update_open_release">Доступна версия %1$s</string>
+    <string name="settings_update_check_available">Нажмите, чтобы открыть страницу выпуска</string>
+    <string name="settings_update_check_up_to_date">Установлена последняя версия %1$s</string>
+    <string name="settings_update_check_failed">Не удалось проверить: %1$s</string>
+    <string name="settings_update_check_other_channel">Эта копия установлена не из выпуска на GitHub, поэтому загрузка с GitHub её не заменит. Обновляйтесь там, где вы установили Haven.</string>
+    <string name="settings_sshkey_keystore_broken_title">Хранилище SSH-ключей недоступно</string>
+    <string name="settings_sshkey_keystore_broken_subtitle">Хранилище ключей этого устройства потеряло SSH-ключ Haven. Сохранённые закрытые ключи нельзя прочитать, а новые нельзя создать. Нажмите, чтобы восстановить.</string>
+    <string name="settings_sshkey_reset_title">Восстановить хранилище SSH-ключей?</string>
+    <string name="settings_sshkey_reset_body">Это создаст новый ключ, чтобы SSH-ключи можно было создавать снова.
+
+Каждый закрытый ключ, уже сохранённый в Haven, потребуется импортировать или создать заново. Они уже нечитаемы — ключ, который их защищал, утерян, обычно потому что приложение было переустановлено из другого источника — поэтому это восстанавливает приложение, а не приводит к новым потерям.</string>
+    <string name="settings_sshkey_reset_confirm">Восстановить</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="settings_inline_images_title">Встроенные изображения</string>
+    <string name="settings_inline_images_subtitle">Изображения, которые программы показывают в терминале (графика Kitty, iTerm2).</string>
+    <string name="settings_inline_images_off">Выкл</string>
+    <string name="settings_inline_images_ask">Спрашивать</string>
+    <string name="settings_inline_images_always">Всегда</string>
+    <string name="settings_ambiwidth_title">Обработка символов неоднозначной ширины</string>
+    <string name="settings_ambiwidth_subtitle">Как отображаются восточноазиатские символы неоднозначной ширины (знаки, греческие буквы)</string>
+    <string name="settings_ambiwidth_mode_narrow">Узкий (1 ячейка)</string>
+    <string name="settings_ambiwidth_mode_narrow_desc">Всегда 1 ячейка (стандартный Unix / XTerm, по умолчанию)</string>
+    <string name="settings_ambiwidth_mode_auto_narrow">Авто + Узкий</string>
+    <string name="settings_ambiwidth_mode_auto_narrow_desc">Замерять активный шрифт; при сбое 1 ячейка</string>
+    <string name="settings_ambiwidth_mode_wide">Широкий (2 ячейки)</string>
+    <string name="settings_ambiwidth_mode_wide_desc">Всегда 2 ячейки (классический CJK ambiwidth)</string>
+    <string name="settings_ambiwidth_mode_auto_wide">Авто + Широкий</string>
+    <string name="settings_ambiwidth_mode_auto_wide_desc">Замерять активный шрифт; при сбое 2 ячейки (CJK)</string>
+    <string name="settings_bell_notification_title">Уведомление о звонке</string>
+    <string name="settings_bell_notification_subtitle">Когда программа в терминале подаёт звуковой сигнал, пока Haven в фоновом режиме, приходит уведомление с названием вкладки. Пока вы смотрите в терминал, ничего не появляется.</string>
+    <string name="settings_mcp_tools_category_off_count">выкл. %1$d</string>
+    <string name="settings_mcp_tools_cat_terminal">Терминал</string>
+    <string name="settings_mcp_tools_cat_connections">Подключения</string>
+    <string name="settings_mcp_tools_cat_files">Файлы</string>
+    <string name="settings_mcp_tools_cat_desktop">Рабочий стол</string>
+    <string name="settings_mcp_tools_cat_guest">Гость Linux</string>
+    <string name="settings_mcp_tools_cat_usb">USB и последовательный порт</string>
+    <string name="settings_mcp_tools_cat_keys">Ключи и учётные данные</string>
+    <string name="settings_mcp_tools_cat_mail">Почта</string>
+    <string name="settings_mcp_tools_cat_rclone">Облачное хранилище</string>
+    <string name="settings_mcp_tools_cat_senses">Датчики и местоположение</string>
+    <string name="settings_mcp_tools_cat_agent">Агент и управление устройством</string>
+    <string name="settings_mcp_tools_cat_other">Прочее</string>
+    <string name="settings_sudo_prompt_detection_title">Обнаруживать запросы пароля sudo</string>
+    <string name="settings_sudo_prompt_detection_subtitle">Предлагать биометрическое автозаполнение при запросах [sudo] и doas. Пароли хранятся в зашифрованном виде в Android Keystore на этом устройстве, требуют биометрической разблокировки при каждом использовании и никогда не передаются инструментам ИИ/MCP.</string>
+    <string name="settings_root_files_title">Файловый менеджер Root (/)</string>
+    <string name="settings_root_files_subtitle">Показывать вкладку Root (/) в «Файлах», запрашивающую su только при открытии. Выключено по умолчанию и изолировано от инструментов MCP.</string>
+</resources>

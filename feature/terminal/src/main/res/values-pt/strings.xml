@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_save">Salvar</string>
+    <string name="common_done">Concluído</string>
+    <string name="common_close">Fechar</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">Excluir</string>
+    <string name="common_edit">Editar</string>
+    <string name="common_rename">Renomear</string>
+    <string name="common_create">Criar</string>
+    <string name="common_connect">Conectar</string>
+    <string name="common_disconnect">Desconectar</string>
+    <string name="common_copy">Copiar</string>
+    <string name="common_paste">Colar</string>
+    <string name="common_label">Rótulo</string>
+    <string name="common_password">Senha</string>
+    <string name="common_port">Porta</string>
+    <string name="common_host">Host</string>
+    <string name="common_username">Usuário</string>
+    <string name="common_install">Instalar</string>
+    <string name="common_reset">Redefinir</string>
+    <string name="common_allow">Permitir</string>
+    <string name="common_not_now">Agora não</string>
+    <string name="common_import">Importar</string>
+    <string name="common_add">Adicionar</string>
+    <string name="common_download">Baixar</string>
+    <string name="common_unlock">Desbloquear</string>
+
+    <!-- Tab bar -->
+    <string name="terminal_reconnecting">Reconectando</string>
+    <string name="terminal_sessions">Sessões</string>
+    <string name="terminal_move_left">Mover para esquerda</string>
+    <string name="terminal_move_right">Mover para direita</string>
+    <string name="terminal_close">Fechar</string>
+    <string name="terminal_switch_tab">Alternar aba</string>
+    <string name="terminal_copy_last_output">Copiar última saída</string>
+    <string name="terminal_copied_output">Saída copiada (%d caracteres)</string>
+    <string name="terminal_no_command_output">Saída do comando não encontrada (requer integração do shell)</string>
+    <string name="terminal_paste_no_active_tab">Nenhuma aba ativa para colar</string>
+    <string name="terminal_search">Pesquisar</string>
+
+    <!-- EmptyTerminalState -->
+    <string name="terminal_connect_prompt">Conecte-se a um servidor para iniciar uma sessão.</string>
+
+    <!-- NewTabSessionPickerDialog -->
+    <string name="terminal_sessions_title">Sessões de %s</string>
+    <string name="terminal_rename_session">Renomear sessão</string>
+    <string name="terminal_kill_session">Encerrar sessão</string>
+
+    <!-- VncSettingsDialog -->
+    <string name="terminal_vnc_desktop">Desktop VNC</string>
+    <string name="terminal_connect_to_host">Conectar a %s</string>
+    <string name="terminal_port">Porta</string>
+    <string name="terminal_password">Senha</string>
+    <string name="terminal_tunnel_through_ssh">Tunelamento via SSH</string>
+    <string name="terminal_save_for_connection">Salvar para esta conexão</string>
+    <string name="terminal_connect">Conectar</string>
+
+    <!-- RenameSessionDialog -->
+    <string name="terminal_rename_session_title">Renomear sessão</string>
+    <string name="terminal_name">Nome</string>
+    <string name="terminal_rename">Renomear</string>
+    <string name="terminal_rename_exists">Já existe uma sessão chamada \"%1$s\" neste servidor</string>
+    <string name="terminal_new_tab_no_active">Nenhuma sessão ativa para clonar</string>
+    <string name="terminal_new_tab_no_config">Configuração da conexão não encontrada — reconecte primeiro</string>
+    <string name="terminal_new_tab_host_key_changed">A chave de host de %s mudou — conexão recusada por segurança</string>
+    <string name="terminal_new_tab_connection_failed">Não foi possível conectar: %s</string>
+    <string name="terminal_new_tab_shell_failed">Não foi possível abrir o shell: %s</string>
+    <string name="terminal_new_tab_reticulum_no_session">Nenhuma sessão Reticulum ativa para clonar</string>
+    <string name="terminal_new_tab_connecting">Connecting…</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="terminal_no_contact">Sem resposta do servidor há %1$ds — tentando novamente</string>
+    <string name="terminal_attach_notice_unavailable">O gerenciador de sessões %1$s não iniciou — você está em um shell simples. Verifique se está instalado no host, ou defina um Comando de sessão no editor de conexões (avançado).</string>
+    <string name="terminal_attach_notice_missing">A sessão "%2$s" de %1$s não anexou — você está em um shell simples. Verifique o comando de início, ou defina um Comando de sessão no editor de conexões (avançado).</string>
+    <string name="terminal_attach_notice_dismiss">Ignorar</string>
+    <string name="terminal_new_session_create">Criar</string>
+    <string name="terminal_vnc_username_label">Nome de usuário (opcional — apenas VeNCrypt)</string>
+    <string name="terminal_vnc_username_placeholder">Deixe em branco para o VncAuth clássico</string>
+    <string name="terminal_vnc_color_depth">Colour depth</string>
+    <string name="terminal_open_plain_shell">Abrir shell simples</string>
+
+    <string name="terminal_enter_fullscreen">Entrar em tela cheia</string>
+    <string name="terminal_exit_fullscreen">Sair da tela cheia</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="terminal_link_open_failed">Nenhum app pode abrir este link</string>
+    <string name="terminal_link_scheme_blocked">Link bloqueado (esquema não suportado)</string>
+    <string name="terminal_local_vnc_failed">Não foi possível iniciar o desktop local</string>
+    <string name="terminal_attach_title">Anexar</string>
+    <string name="terminal_attach_send_file">Enviar um arquivo</string>
+    <string name="terminal_attach_send_file_desc">Faz upload para o remoto e cola o caminho</string>
+    <string name="terminal_attach_take_photo">Tirar foto</string>
+    <string name="terminal_attach_take_photo_desc">Capture uma foto e envie-a como um arquivo</string>
+    <string name="terminal_attach_scan_camera">Escanear código (Câmera)</string>
+    <string name="terminal_attach_scan_camera_desc">Fotografe um QR ou código de barras e cole o conteúdo</string>
+    <string name="terminal_attach_scan_gallery">Escanear código (Fotos)</string>
+    <string name="terminal_attach_scan_gallery_desc">Escolha uma foto de QR ou código de barras e cole o conteúdo</string>
+    <string name="terminal_attach_ocr_camera">Reconhecer texto (Câmera)</string>
+    <string name="terminal_attach_ocr_camera_desc">Fotografe texto impresso e cole o que for detectado</string>
+    <string name="terminal_attach_ocr_gallery">Reconhecer texto (Fotos)</string>
+    <string name="terminal_attach_ocr_gallery_desc">Escolha uma foto de texto impresso e cole o que for detectado</string>
+    <string name="terminal_scan_no_code">Nenhum código detectado na imagem</string>
+    <string name="terminal_scan_no_text">Nenhum texto detectado na imagem</string>
+    <string name="terminal_scan_failed">Escaneamento falhou: %s</string>
+    <string name="terminal_scan_no_camera">Nenhum app de câmera disponível</string>
+    <string name="terminal_selection_copy">Copiar</string>
+    <string name="terminal_selection_paste">Colar</string>
+    <string name="terminal_selection_open">Abrir</string>
+    <string name="terminal_selection_macros">Macros</string>
+    <string name="terminal_selection_copied">Copiado</string>
+    <string name="terminal_selection_copy_one_line">Copiar em uma linha</string>
+    <string name="terminal_selection_no_url">Nenhuma URL detectada</string>
+    <string name="terminal_selection_anchor_start">Início</string>
+    <string name="terminal_selection_anchor_end">Fim</string>
+    <string name="terminal_selection_up">Acima</string>
+    <string name="terminal_selection_down">Abaixo</string>
+    <string name="terminal_selection_left">Esquerda</string>
+    <string name="terminal_selection_right">Direita</string>
+    <string name="terminal_selection_cancel">Cancelar</string>
+    <string name="terminal_vnc_depth_24bit">Cor de 24 bits (melhor qualidade)</string>
+    <string name="terminal_vnc_depth_16bit">Cor de 16 bits (mais rápido)</string>
+    <string name="terminal_vnc_depth_256">256 cores (menor largura de banda)</string>
+    <string name="terminal_new_tab_host_key_unknown">Chave de host desconhecida para %s — abra esta conexão primeiro para verificá-la e confiar nela</string>
+    <string name="terminal_text_input_title">Entrada de texto</string>
+    <string name="terminal_text_input_placeholder">Digite o texto a enviar\u2026</string>
+    <string name="terminal_text_input_send">Enviar</string>
+    <string name="terminal_text_input_expand">Aumentar</string>
+    <string name="terminal_text_input_shrink">Diminuir</string>
+    <string name="terminal_text_input_move_up">Mover para cima</string>
+    <string name="terminal_text_input_move_down">Mover para baixo</string>
+    <string name="terminal_text_input_move_left">Mover para a esquerda</string>
+    <string name="terminal_text_input_move_right">Mover para a direita</string>
+    <string name="terminal_text_input_resize_handle">Redimensionar a janela de entrada</string>
+    <string name="terminal_save_connection">Salvar conexão</string>
+    <string name="terminal_save_connection_title">Salvar conexão</string>
+    <string name="terminal_save_connection_name_label">Nome</string>
+    <string name="terminal_save_connection_name_hint">Exibido na lista de Conexões</string>
+    <string name="terminal_save_connection_id">ID do perfil</string>
+    <string name="terminal_save_connection_id_hint">Identifica a conexão salva, não o nome da sessão</string>
+    <string name="terminal_save_connection_context">Conexão: %1$s\nTransporte: %2$s\nSessão a fixar: %3$s</string>
+    <string name="terminal_save_connection_mismatch">Esta conexão está fixada na sessão \"%1$s\" mas você está em \"%2$s\". Salvar irá refixá-la na sessão atual.</string>
+    <string name="terminal_save_connection_update">Atualizar fixação</string>
+    <string name="terminal_save_connection_saved">Conexão \"%1$s\" salva</string>
+    <string name="terminal_save_connection_updated">Conexão \"%1$s\" atualizada</string>
+    <string name="terminal_save_connection_need_session">Não foi possível detectar um nome de sessão para esta aba. Abra uma sessão tmux/zellij/screen nomeada, ou defina Comando remoto no perfil, e tente novamente.</string>
+    <string name="terminal_details">Detalhes</string>
+    <string name="terminal_details_title">Onde estou?</string>
+    <string name="terminal_details_door">Porta (cartão de conexão)</string>
+    <string name="terminal_details_path">Caminho (transporte)</string>
+    <string name="terminal_details_room">Sala (tmux / sessão)</string>
+    <string name="terminal_details_room_unknown">\u2014 desconhecida \u2014</string>
+    <string name="terminal_details_room_pin">Fixação do cartão: %1$s</string>
+    <string name="terminal_details_room_no_pin">\u2014 nenhuma \u2014</string>
+    <string name="terminal_details_room_mismatch">A sala ativa difere da fixação do cartão: você pode ter entrado por outra porta ou caído numa sessão criada automaticamente.</string>
+    <string name="terminal_details_copy">Copiar</string>
+    <string name="terminal_details_copied">Localização copiada</string>
+    <string name="terminal_details_unavailable">Não foi possível ler os detalhes de conexão desta aba.</string>
+    <string name="terminal_mouse_requested_but_disabled">Este app está pedindo o mouse. Ative “Entrada de mouse em apps TUI” em Configurações → Terminal para usá-lo.</string>
+    <string name="terminal_dictate_unavailable">Nenhum app de entrada de voz está disponível neste dispositivo</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="terminal_inline_image_title">Imagem embutida</string>
+    <string name="terminal_inline_image_question">Este terminal quer exibir uma imagem embutida no texto.</string>
+    <string name="terminal_inline_image_protocol_kitty">Protocolo gráfico Kitty</string>
+    <string name="terminal_inline_image_protocol_iterm2">Protocolo iTerm2</string>
+    <string name="terminal_inline_image_name">Arquivo: %1$s</string>
+    <string name="terminal_inline_image_dimensions">Tamanho: %1$d × %2$d px</string>
+    <string name="terminal_inline_image_deny">Negar</string>
+    <string name="terminal_inline_image_always_tab">Sempre nesta aba</string>
+    <string name="terminal_bell_notification_title">Terminal</string>
+    <string name="terminal_bell_notification_body">Um programa do terminal tocou a campainha</string>
+    <string name="terminal_sudo_prompt_detected">Senha do sudo solicitada</string>
+    <string name="terminal_sudo_prompt_subtitle">Android Keystore • Desbloqueio biométrico • Enviada só ao tocar em Preencher</string>
+    <string name="terminal_sudo_fill_action">Preencher</string>
+    <string name="terminal_sudo_turn_off_action">Desativar</string>
+    <string name="terminal_sudo_disabled_toast">Detecção de sudo desativada (Configurações → Segurança e privacidade)</string>
+    <string name="terminal_sudo_entry_title">Senha do sudo para %1$s</string>
+    <string name="terminal_sudo_entry_hint">Nenhuma senha foi salva nesta conexão ainda. Digite-a uma vez para enviá-la diretamente via SSH a este terminal. Se salva, permanece criptografada no Android Keystore neste dispositivo, exige desbloqueio biométrico a cada uso e nunca é exposta às ferramentas de IA/MCP.</string>
+    <string name="terminal_sudo_turn_off_detection">Desativar detecção de solicitações do sudo</string>
+    <string name="terminal_sudo_send_action">Enviar</string>
+</resources>

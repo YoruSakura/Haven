@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Without this, package visibility on Android 11+ hides every SSH
+      Authentication API provider from queryIntentServices, and Haven would
+      report that OpenKeychain is not installed on a device where it is (#487).
+    -->
+    <queries>
+        <intent>
+            <action android:name="org.openintents.ssh.authentication.ISshAuthenticationService" />
+        </intent>
+    </queries>
+
+    <application>
+        <!--
+          Launches the provider's unlock/PIN prompt on behalf of a signature
+          requested from JSch's thread, which has no activity of its own.
+          Transparent and finishes as soon as the prompt is answered.
+        -->
+        <activity
+            android:name="sh.haven.core.ssh.openkeychain.OpenKeychainPromptActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+    </application>
+
+</manifest>

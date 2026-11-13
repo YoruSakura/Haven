@@ -1,0 +1,234 @@
+package sh.haven.feature.vnc
+
+import android.view.InputDevice
+import android.view.MotionEvent
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.pointer.PointerButtons
+import androidx.compose.ui.input.pointer.PointerType
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+/**
+ * Bug #5 (desktop VNC keyboard): typing `abcABC123` into the VNC viewer
+ * produced duplicated and dropped characters. A raw-RFB capture rig proved
+ * the guest Xvnc keymap is clean (a protocol-correct client typed `KT-OK`
+ * exactly), so the garble is produced client-side, in the hidden text
+ * field's commit diff.
+ *
+ * The old handler diffed each new value against the reset `" "` sentinel
+ * (`newText.substring(oldText.length)`), never against the text the IME
+ * actually holds. The rig recorded the emitted strings for `abcABC123` as
+ * `a, c, A, AB, C, C1, C12` — 'b' never emitted, 'A' twice, 'C' three
+ * times — the signature of slicing a growing IME buffer at a fixed offset.
+ *
+ * [diffImeCommit] trims the common prefix and common suffix between the
+ * last value the IME reported and the new one, so the delta is exactly
+ * what changed whether the IME appended, replaced a word (autocorrect), or
+ * edited mid-string. The handler must call it with the IME's last reported
+ * text as the baseline, not the reset sentinel.
+ */
+class VncImeDiffTest {
+
+    @Test
+    fun `appending one character to the empty field emits just that character`() {
+        assertEquals("a" to 0, diffImeCommit("", "a"))
+    }
+
+    @Test
+    fun `a leading space is typed, not swallowed`() {
+        // The old sentinel was " ", so a real typed space collided with it;
+        // the field now starts empty and a space is just another character.
+        assertEquals(" " to 0, diffImeCommit("", " "))
+        assertEquals("h" to 0, diffImeCommit(" ", " h"))
+    }
+
+    @Test
+    fun `unchanged value emits nothing`() {
+        assertEquals(null to 0, diffImeCommit("abc", "abc"))
+    }
+
+    @Test
+    fun `a growing buffer never re-emits earlier characters`() {
+        // The regression: with a stale (sentinel) baseline each commit
+        // re-slices the buffer and re-emits its leading characters. With
+        // the IME's last text as the baseline, each commit yields only the
+        // newly added tail.
+        var last = ""
+        val emitted = mutableListOf<String>()
+        for (newText in listOf("a", "ab", "abc", "abcA", "abcAB", "abcABC", "abcABC1", "abcABC12", "abcABC123")) {
+            val (added, deleted) = diffImeCommit(last, newText)
+            assertEquals(0, deleted)
+            if (added != null) emitted.add(added)
+            last = newText
+        }
+        assertEquals(listOf("a", "b", "c", "A", "B", "C", "1", "2", "3"), emitted)
+    }
+
+    @Test
+    fun `the stale-sentinel baseline reproduces the captured re-emission`() {
+        // Documents the bug: diffing every commit against the 1-char
+        // sentinel (the old `newText.substring(1)`) re-emits the buffer's
+        // leading characters — the `C, C1, C12` signature from the rig.
+        val buffer = listOf("C", "C1", "C12")
+        val stale = buffer.map { it.substring(1) }
+        assertEquals(listOf("", "1", "12"), stale)
+        // With the correct baseline the same commits emit only the tail.
+        var last = ""
+        val correct = buffer.map { newText ->
+            val added = diffImeCommit(last, newText).first
+            last = newText
+            added
+        }
+        assertEquals(listOf("C", "1", "2"), correct)
+    }
+
+    @Test
+    fun `backspace deletes exactly the removed characters`() {
+        assertEquals(null to 2, diffImeCommit("hello", "hel"))
+    }
+
+    @Test
+    fun `a full clear is backspaces not an insertion`() {
+        assertEquals(null to 3, diffImeCommit("abc", ""))
+    }
+
+    @Test
+    fun `autocorrect word replacement emits the minimal edit`() {
+        // Gboard can swap a committed word in a single commit. Prefix/suffix
+        // trimming sees the changed interior: "teh" -> "the" keeps the
+        // common "t", so the remote needs 2 backspaces then "he".
+        assertEquals("he" to 2, diffImeCommit("teh", "the"))
+    }
+
+    @Test
+    fun `mid-string insertion emits only the inserted run`() {
+        // "horld" -> "hlowrld": common prefix "h", common suffix "rld",
+        // so the changed interior is "o" replaced by "low".
+        assertEquals("low" to 1, diffImeCommit("horld", "hlowrld"))
+    }
+
+    @Test
+    fun `vtermKeyToKeySym and handleVncToolbarBytes translate toolbar keys`() {
+        assertEquals(0xff52, vtermKeyToKeySym(5)) // XK_UP
+        assertEquals(0xffff, vtermKeyToKeySym(10)) // XK_DELETE
+        assertEquals(0xffbe, vtermKeyToKeySym(257)) // XK_F1
+        assertEquals(0xffc9, vtermKeyToKeySym(268)) // XK_F12
+
+        val events = mutableListOf<String>()
+        var released = 0
+        handleVncToolbarBytes(
+            bytes = "\u001b[Z".toByteArray(),
+            ctrlActive = false,
+            altActive = false,
+            shiftActive = false,
+            onKeyDown = { events.add("down:${it.toString(16)}") },
+            onKeyUp = { events.add("up:${it.toString(16)}") },
+            onTypeChar = { events.add("char:$it") },
+            onTypeText = { events.add("text:$it") },
+            releaseModifiers = { released++ },
+        )
+        assertEquals(listOf("down:ffe1", "down:ff09", "up:ff09", "up:ffe1"), events)
+        assertEquals(1, released)
+    }
+
+    /**
+     * #774: Physical hardware keyboards dispatch through `handleHardwareKey`
+     * while the canvas holds focus (`fieldFocused == false`). Printable keys
+     * must resolve to their X11 KeySym via `unicodeChar` (and fallback key map)
+     * instead of returning `null`.
+     */
+    @Test
+    fun `hardwareKeyEventToKeySym maps printable ASCII, shifted symbols, and Unicode`() {
+        // Printable ASCII via KeyEvent.getUnicodeChar
+        assertEquals('a'.code, hardwareKeyEventToKeySym(Key.A, 'a'.code, shiftHeld = false))
+        assertEquals('A'.code, hardwareKeyEventToKeySym(Key.A, 'A'.code, shiftHeld = true))
+        assertEquals('1'.code, hardwareKeyEventToKeySym(Key.One, '1'.code, shiftHeld = false))
+        assertEquals('!'.code, hardwareKeyEventToKeySym(Key.One, '!'.code, shiftHeld = true))
+        assertEquals(':'.code, hardwareKeyEventToKeySym(Key.Semicolon, ':'.code, shiftHeld = true))
+        assertEquals(' '.code, hardwareKeyEventToKeySym(Key.Spacebar, ' '.code, shiftHeld = false))
+
+        // Fallback when getUnicodeChar returns 0
+        assertEquals('z'.code, hardwareKeyEventToKeySym(Key.Z, 0, shiftHeld = false))
+        assertEquals('Z'.code, hardwareKeyEventToKeySym(Key.Z, 0, shiftHeld = true))
+        assertEquals('@'.code, hardwareKeyEventToKeySym(Key.Two, 0, shiftHeld = true))
+        assertEquals('_'.code, hardwareKeyEventToKeySym(Key.Minus, 0, shiftHeld = true))
+
+        // Special keys still map to X11 special KeySyms even when getUnicodeChar is non-zero
+        assertEquals(0xff0d, hardwareKeyEventToKeySym(Key.Enter, '\n'.code, shiftHeld = false))
+        assertEquals(0xff0d, hardwareKeyEventToKeySym(Key.NumPadEnter, '\n'.code, shiftHeld = false))
+        assertEquals(0xff09, hardwareKeyEventToKeySym(Key.Tab, '\t'.code, shiftHeld = false))
+        assertEquals(0xff08, hardwareKeyEventToKeySym(Key.Backspace, 0, shiftHeld = false))
+
+        // Latin-1 and BMP Unicode characters
+        assertEquals(0x00e9, unicodeToKeySym(0x00e9)) // 'é'
+        assertEquals(0x010020ac, unicodeToKeySym(0x20ac)) // '€'
+        assertNull(unicodeToKeySym(0))
+        assertNull(unicodeToKeySym(0x03)) // ETX control char
+    }
+
+    @Test
+    fun `androidKeyToKeySym distinguishes left and right modifiers and lock keys`() {
+        assertEquals(0xffe1, hardwareKeyEventToKeySym(Key.ShiftLeft, 0))
+        assertEquals(0xffe2, hardwareKeyEventToKeySym(Key.ShiftRight, 0))
+        assertEquals(0xffe3, hardwareKeyEventToKeySym(Key.CtrlLeft, 0))
+        assertEquals(0xffe4, hardwareKeyEventToKeySym(Key.CtrlRight, 0))
+        assertEquals(0xffe9, hardwareKeyEventToKeySym(Key.AltLeft, 0))
+        assertEquals(0xffea, hardwareKeyEventToKeySym(Key.AltRight, 0))
+        assertEquals(0xffeb, hardwareKeyEventToKeySym(Key.MetaLeft, 0))
+        assertEquals(0xffec, hardwareKeyEventToKeySym(Key.MetaRight, 0))
+        assertEquals(0xffe5, hardwareKeyEventToKeySym(Key.CapsLock, 0))
+        assertEquals(0xff7f, hardwareKeyEventToKeySym(Key.NumLock, 0))
+        assertEquals(0xff14, hardwareKeyEventToKeySym(Key.ScrollLock, 0))
+        assertEquals(0xff61, hardwareKeyEventToKeySym(Key.PrintScreen, 0))
+        assertEquals(0xff13, hardwareKeyEventToKeySym(Key.Break, 0))
+        assertEquals(0xff67, hardwareKeyEventToKeySym(Key.Menu, 0))
+
+        assertTrue(isModifierKeySym(0xffe1))
+        assertTrue(isModifierKeySym(0xffe2))
+        assertTrue(isModifierKeySym(0xffe3))
+        assertTrue(isModifierKeySym(0xffe4))
+        assertTrue(isModifierKeySym(0xffe9))
+        assertTrue(isModifierKeySym(0xffea))
+        assertTrue(isModifierKeySym(0xffeb))
+        assertTrue(isModifierKeySym(0xffec))
+        assertFalse(isModifierKeySym('a'.code))
+        assertFalse(isModifierKeySym(0xff0d))
+    }
+
+    @Test
+    fun `isHardwareMouseGesture and resolveHardwareMouseButton handle mouse and SOURCE_MOUSE trackpad`() {
+        assertFalse(
+            isHardwareMouseGesture(
+                pointerType = PointerType.Touch,
+                buttons = PointerButtons(0),
+                motionSource = InputDevice.SOURCE_TOUCHSCREEN,
+            ),
+        )
+        assertTrue(
+            isHardwareMouseGesture(
+                pointerType = PointerType.Mouse,
+                buttons = PointerButtons(0),
+                motionSource = 0,
+            ),
+        )
+        assertTrue(
+            isHardwareMouseGesture(
+                pointerType = PointerType.Touch,
+                buttons = PointerButtons(0),
+                motionSource = InputDevice.SOURCE_MOUSE,
+            ),
+        )
+        assertEquals(0, resolveHardwareMouseButton(PointerButtons(0), 0))
+        assertEquals(1, resolveHardwareMouseButton(PointerButtons(MotionEvent.BUTTON_PRIMARY), 0))
+        assertEquals(2, resolveHardwareMouseButton(PointerButtons(MotionEvent.BUTTON_TERTIARY), 0))
+        assertEquals(3, resolveHardwareMouseButton(PointerButtons(MotionEvent.BUTTON_SECONDARY), 0))
+
+        val wheel = VncWheelNotchAccumulator()
+        assertEquals(0, wheel.feed(-0.5f))
+        assertEquals(1, wheel.feed(-0.6f))
+        assertEquals(-1, wheel.feed(1.2f))
+    }
+}

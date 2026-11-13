@@ -1,0 +1,2 @@
+- MCP: local agents (over loopback / adb forward) now connect and call tools without pairing or per-request approval prompts by default — Wi-Fi/LAN and WireGuard clients still prompt. Toggle under Settings → Agent endpoint → Trust local clients. (#214)
+- MCP: write_guest_file can stream large files in ordered chunks (append/final), so big writes no longer come through fragmented. (#214)

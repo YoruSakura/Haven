@@ -1,0 +1,3 @@
+Terminal tabs no longer go blank after reconnecting.
+
+• Fixed: after the connection dropped and recovered (e.g. roaming between networks), a tmux / zellij / screen tab could come back blank until you manually resized it or opened a new tab. Haven now forces the reattached session to repaint as soon as it reconnects, so your terminal returns intact.

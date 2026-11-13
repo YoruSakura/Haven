@@ -1,0 +1,3 @@
+📱 Fixed the instant crash on Xiaomi HyperOS / Android 16 when returning to a backgrounded SSH session with the keyboard open — the terminal input view no longer holds focus while the app is frozen, so the warm-return teardown can't trip over it.
+
+🚀 Pack-installed apps now launch with their saved app-window configuration instead of a generic broken variant when both appear in Installed Apps. (#470)

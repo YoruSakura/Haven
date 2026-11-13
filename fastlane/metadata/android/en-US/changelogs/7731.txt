@@ -1,0 +1,2 @@
+- A locked Ctrl or Alt now stays on until you tap it off — it no longer dies after one keypress while still showing as locked.
+- The "delete key?" title now shows the count in Bengali, French, Hindi and Portuguese instead of assuming "one" means exactly one.

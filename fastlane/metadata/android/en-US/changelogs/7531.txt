@@ -1,0 +1,9 @@
+🎞️ The slow remote desktops: the biggest cost is gone from where it was. A reporter's logs showed where a frame's quarter-second went on a 1920x1080 H.264 session — the phone's video decoder 9-25ms (the real work), converting its output to screen colours 27-109ms, handing the finished frame from Java to the native side 87-112ms, drawing it 1-3ms. About 25ms of a ~250ms frame was doing anything useful.
+
+The two biggest items shrink for the same reason, so this is one change: the colour conversion now happens natively, and what crosses between the two sides is the video decoder's own output rather than the finished picture — 3.11 MB instead of 8.29 MB per frame, 2.67x less to allocate and copy.
+
+The drawing step is untouched. At 1-3ms it was the other suspect, and measuring it is what ruled it out. The bar was identical pixels, not similar ones, so the new conversion is checked against output captured from the old.
+
+What is NOT established: whether this makes it faster on a phone. It cannot be measured here. The per-frame report now breaks the conversion out separately, so the next log will say plainly whether it paid off. (#466, #477)
+
+🔌 A USB drive that fails instantly no longer claims it waited seven minutes. A reporter got "the VM didn't reach a login prompt in 420s" 1.7 seconds after plugging a drive in, which sent them looking for a slow boot instead of a crash. The wait ends for two unrelated reasons — the deadline passing or the helper VM dying — and reported the deadline either way, while the VM's own output was captured and shown to nobody. It now says which happened, how long it took, and quotes the VM's last words. This does not fix the failure; it makes the next report able to say what it is. (#506)

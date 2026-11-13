@@ -1,0 +1,3 @@
+Terminal no longer scrolls to the bottom when you dismiss the keyboard
+
+Hiding the soft keyboard no longer resizes the terminal, so shells with a multi-line or themed prompt (zsh, fish, …) stop repainting and pushing the visible output up into the scrollback. The view stays put and the cursor stays visible just above the keyboard. (#206)

@@ -1,0 +1,3 @@
+🖥️ The RDP engine is updated to the current IronRDP release. Frame rate measured unchanged before and after, and checked against three RDP servers.
+
+🔎 A remote desktop that drops the connection now says why, instead of reporting a bare "decode error".

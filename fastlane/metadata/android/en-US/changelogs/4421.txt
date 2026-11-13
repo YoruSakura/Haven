@@ -1,0 +1,4 @@
+Reliability and parity for desktop-over-SSH connections.
+
+- The Retry button on a lost-connection desktop now reliably reconnects from the desktop view itself, and RDP gets the same inline Retry/Close buttons VNC already had.
+- Opening a VNC/RDP desktop — whether by the Retry button or the agent's connect tool — now works no matter which screen you're on; previously it could silently fail to open the desktop tab unless you were on the Connections screen.

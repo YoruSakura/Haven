@@ -1,0 +1,3 @@
+Smarter touch gestures in TUI mouse mode (#186)
+
+In zellij/tmux/vim with mouse mode on, a one-finger swipe now scrolls the pane, and a long-press-then-drag starts the multiplexer's own copy-mode selection (pane-aware). The separate "Drag-to-select in TUI mouse mode" setting is gone — the long-press is what tells the two apart, so a one-finger swipe is always a scroll. Two-finger swipe still scrolls Haven's local buffer; tap-and-hold selects text in plain shells.

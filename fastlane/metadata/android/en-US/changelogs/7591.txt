@@ -1,0 +1,17 @@
+🔒 **Your Windows account name and your server's address are out of the remote-desktop logs.** A reporter has now redacted his own account name by hand from three separate log attachments, and asked for the address and port to go too. Haven had been redacting the username since v5.86.46 — at its own log lines. The ones that kept leaking belong to the RDP library underneath, which prints whole protocol messages when logging is turned up, and two of those messages carry the logon name and the server address verbatim.
+
+Redacting each place a name might appear is a game you lose eventually, so this does it at the other end: every line the RDP engine writes now passes through a filter that removes the values Haven already knows — your username, domain, password, the host you typed, any proxy host, and the address it resolved to. Anything the library starts printing later is covered without anyone having to notice it.
+
+What survives is shape rather than substance: `<ipv4>` or `<hostname>`, and a port only as "non-default". That is deliberate — a name that had to resolve versus an address that did not is the difference between a DNS failure and a routing one, and that distinction is what these logs are read for.
+
+The reporter's log is the test. The two lines he flagged are now fixtures in the test suite, and removing the filter makes them fail. His remaining 8,407 lines were swept for anything else identifying and came back clean.
+
+Still in the clear, and worth saying rather than leaving to be found: non-RDP connections log their host and port unredacted. Same leak, different part of the app.
+
+🔍 **A remote-desktop log line that read like a measurement when nothing had been measured.** The performance probe added last release printed `alloc+copy of 0KB took 0us` when it had not run at all — which reads as "copying is free", the exact opposite of what it means. Against a Windows 11 server it never runs, because Windows sends ordinary desktop updates as progressive images rather than H.264 even with AVC420 switched on.
+
+It now omits the clause instead of printing zeros. The test that was supposed to catch this only checked the path where the probe *does* fire, so it could never have failed — that is fixed too.
+
+🔊 **Guest audio latency is now measured rather than argued about.** A reporter proposed three progressively larger rewrites of the audio path to cut delay. Before building any of them, this release logs the two numbers that decide which one is even worth building: the size of the playback buffer in milliseconds, and whether the loop spends its time waiting for the guest to produce audio or waiting for the phone to play it.
+
+Reading the code first already turned up one number worth knowing: the playback buffer's floor is 341 ms at CD-quality stereo. No change of transport can get underneath that. No behaviour changes here — this is the measurement that picks the fix.

@@ -1,0 +1,1 @@
+🔍 The get_app_info MCP tool now reports whether the native Wayland desktop library actually loaded, with the failure reason when it did not — remote diagnostics for the cage desktop crash. (#469)

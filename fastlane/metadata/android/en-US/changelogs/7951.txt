@@ -1,0 +1,2 @@
+- Tapping a wrapped URL now opens the whole URL. A link long enough to wrap across nine rows of a narrow terminal used to open truncated on most rows, and open nothing at all on the last few.
+- Dialogs in the desktop manager no longer lose what you typed when the screen rotates — a half-filled rootfs import, an app-window definition, custom mounts, a desktop's setup password and port all survive now. The drive-unlock dialog deliberately still forgets a half-typed passphrase.

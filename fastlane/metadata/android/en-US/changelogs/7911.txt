@@ -1,0 +1,3 @@
+- Fixed SPICE connections: release builds' code shrinking was mangling the SPICE bindings, failing every connection before it reached the server (#549). Likely broken for months — debug builds were unaffected.
+- SPICE failures now log the real exception and stack trace to the connection log.
+- For old VMs (Windows 9x era), SPICE's relative-pointer mode is now the recommended path over VNC (#543).

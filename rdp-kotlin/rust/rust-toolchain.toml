@@ -1,0 +1,16 @@
+[toolchain]
+# Pinned (not "stable") so the compiler that builds the shipped RDP .so is
+# deterministic. A directory-scoped rust-toolchain.toml overrides the global
+# `rustup default`, so "stable" here would float per-runner/per-day.
+#
+# 1.94.1 is not a preference, it is the floor: the IronRDP crates are pinned to
+# git (see Cargo.toml) and upstream raised its workspace `rust-version` to 1.94
+# in Devolutions/IronRDP#1495. Cargo refuses to build them on anything older,
+# and the fix we are pinning for — the out-of-bounds bitmap panic, #1521 —
+# landed after that bump, so there is no commit with the fix and the old floor.
+# Previously 1.89.0, which was itself the floor for ironrdp-graphics 0.7.0's
+# `integer_sign_cast`.
+#
+# Keep CI's `rustup default` (setup-toolchain) on the same version.
+channel = "1.94.1"
+targets = ["aarch64-linux-android", "x86_64-linux-android", "armv7-linux-androideabi"]

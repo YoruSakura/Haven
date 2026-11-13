@@ -1,0 +1,2 @@
+- If Haven closes unexpectedly, the crash report is now waiting for you in Settings → Connection log.
+- Fixed a crash that a remote program could trigger just by setting a window title.

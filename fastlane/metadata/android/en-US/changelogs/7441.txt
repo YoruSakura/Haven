@@ -1,0 +1,3 @@
+App windows on a Debian 13 guest stop crashing. The cause was wayvnc 0.9.1, which Debian 13 pins and upstream will not fix; Haven now builds 0.10.1 from source inside the guest when it finds the installed one too old. Existing desktops keep the old version until reinstalled. (#473)
+
+The agent endpoint now repairs itself on a timer instead of only when you switch back to Haven — which an AI app on the same phone could never trigger. An approval given after the agent timed out is also no longer wasted on its retry. (#494)

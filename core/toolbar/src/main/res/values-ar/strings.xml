@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">إضافة مفتاح مخصص</string>
+    <string name="toolbar_toggle_keyboard">إظهار/إخفاء لوحة المفاتيح</string>
+    <string name="toolbar_reorder_keys">إعادة ترتيب مفاتيح الشريط</string>
+    <string name="toolbar_done_reordering">انتهت إعادة الترتيب</string>
+    <string name="toolbar_vnc_desktop">سطح مكتب VNC</string>
+    <string name="toolbar_settings">إعدادات شريط الأدوات</string>
+    <string name="toolbar_custom_key_dialog_title">إضافة مفتاح مخصص</string>
+    <string name="toolbar_custom_key_label">التسمية</string>
+    <string name="toolbar_custom_key_sequence">التسلسل</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">إلغاء</string>
+    <string name="toolbar_snippet_add">إضافة مقتطف</string>
+    <string name="toolbar_snippet_search">بحث في المقتطفات…</string>
+    <string name="toolbar_snippet_delete">حذف</string>
+    <string name="toolbar_snippet_dialog_title">إضافة مقتطف</string>
+    <string name="toolbar_snippet_label">التسمية</string>
+    <string name="toolbar_snippet_command">الأمر</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="toolbar_snippet_title">المقتطفات</string>
+    <string name="toolbar_snippet_empty">لا توجد مقتطفات بعد. أضِف مفاتيح مخصصة إلى شريط الأدوات، أو اضغط + أعلاه.</string>
+    <string name="toolbar_snippet_empty_filtered">لا توجد مقتطفات مطابقة.</string>
+    <string name="toolbar_snippet_label_placeholder">مثال: نشر، إعادة تشغيل</string>
+    <string name="toolbar_keyboard_standard_desc">لوحة مفاتيح قياسية (الإدخال الصوتي والاقتراحات والتصحيح التلقائي مفعّلة)</string>
+    <string name="toolbar_keyboard_secure_desc">لوحة مفاتيح آمنة (بدون اقتراحات، بدون تصحيح تلقائي)</string>
+    <string name="toolbar_attach_desc">إرفاق ملف للإرسال إلى الجهاز البعيد</string>
+    <string name="toolbar_presets_label">الإعدادات المسبقة</string>
+    <string name="toolbar_custom_key_label_placeholder">مثال: ^C, Paste</string>
+    <string name="toolbar_text_input_desc">فتح إدخال النص العائم</string>
+    <string name="toolbar_dictate_desc">إملاء: بدء الإدخال الصوتي</string>
+</resources>

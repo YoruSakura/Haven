@@ -1,0 +1,7 @@
+🖥️ Windows remote desktops look right at last. With H.264 off, Windows sends each part of the picture roughly first and then sharpens it; Haven was throwing every sharpening pass away, which is what put a dark halo around all text. Now decoded by default, verified against a real Windows 11 desktop. (#496, #418)
+
+⌨️ Haven no longer silently discards characters a server won't accept. VirtualBox takes only ordinary key presses, so accented letters and emoji were vanishing with no trace. Normal typing was never affected. (#422)
+
+🔎 Measurement groundwork for slow remote desktops: on a laggy 1080p link the cost is decoding each frame (120-240ms), not drawing it (under 3ms). (#466, #477)
+
+🖥️ Linux desktop GPU acceleration survives a guest system update instead of going quietly stale. (#441)

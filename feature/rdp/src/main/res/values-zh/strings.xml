@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- i18n sweep #210 -->
+    <string name="rdp_status_connecting">连接中…</string>
+    <string name="rdp_status_connecting_hint">握手进行中。如果卡住，请在设置中启用详细连接日志并重试以查看底层错误。</string>
+    <string name="rdp_status_waiting_for_frame">已连接——等待首帧…</string>
+    <string name="rdp_status_connection_failed">连接失败</string>
+    <string name="rdp_action_close">关闭</string>
+    <string name="rdp_action_cancel">取消</string>
+    <string name="rdp_action_retry">重试</string>
+    <string name="rdp_cd_disconnect">断开</string>
+    <string name="rdp_cd_toggle_keyboard">切换键盘</string>
+    <string name="rdp_cd_reset_zoom">重置缩放</string>
+    <string name="rdp_cd_fullscreen">全屏</string>
+    <string name="rdp_cd_session_menu">会话菜单</string>
+    <string name="rdp_cd_exit_fullscreen">退出全屏</string>
+    <string name="rdp_cd_input_mode_trackpad_on">触控板模式已开启（点击切换为直接触摸）</string>
+    <string name="rdp_cd_input_mode_direct">直接触摸模式（点击切换为触控板）</string>
+    <string name="rdp_cd_input_mode_touchscreen_on">原生触屏模式已开启（点击切换为直接鼠标）</string>
+    <string name="rdp_cd_trackpad_sensitivity">触控板灵敏度</string>
+    <string name="rdp_orientation_landscape_desc">锁定横屏（点击切换为竖屏）</string>
+    <string name="rdp_orientation_portrait_desc">锁定竖屏（点击切换为自动）</string>
+    <string name="rdp_orientation_auto_desc">自动旋转（点击切换为横屏）</string>
+
+    <!-- i18n sweep #210 (follow-up batch) -->
+    <string name="rdp_hint_legacy_rdp_title">服务器正在使用过时的未加密 RDP</string>
+    <string name="rdp_hint_legacy_rdp_body">Haven 仅支持 TLS 加密的 RDP。你的服务器（Linux 上通常是 xrdp）协商了已弃用的 STANDARD_RDP_SECURITY 协议——通常是因为服务器的 TLS 证书缺失或无法读取。请在服务器上重新生成 /etc/xrdp/cert.pem 和 /etc/xrdp/key.pem，然后重启 xrdp。</string>
+    <string name="rdp_hint_legacy_rdp_link">服务器端修复说明</string>
+    <string name="rdp_hint_nla_internal_error_title">服务器在 NLA 期间拒绝了 TLS 会话</string>
+    <string name="rdp_hint_nla_internal_error_body">这曾经是已在 v5.24.37 中修复的 Haven 缺陷的症状——如果你使用的是更新的版本却仍看到此问题，服务器可能根本不支持 CredSSP。请尝试在连接配置中取消勾选 Network Level Authentication 并重新连接。</string>
+    <string name="rdp_hint_logon_failure_title">用户名或密码错误</string>
+    <string name="rdp_hint_logon_failure_body">服务器已干净地完成 CredSSP 并拒绝了你的凭据。请检查用户名（如果账户已加入域，请尝试 DOMAIN\\User）和密码。</string>
+    <string name="rdp_hint_pubkey_hash_title">服务器拒绝了 CredSSP 公钥哈希</string>
+    <string name="rdp_hint_pubkey_hash_body">Linux 的 gnome-remote-desktop 和某些 xrdp 版本计算 CredSSP pub_key_auth 哈希的方式与 Haven 的 ironrdp/sspi-rs 不同——TLS 握手成功，但 NLA 在上一层失败。\n\n变通方法：编辑此连接的配置并取消勾选 \"Network Level Authentication (NLA)\"。RDP 将回退为在通道建立后进行身份验证，从而绕过不匹配的哈希。</string>
+    <string name="rdp_hint_pubkey_hash_link">问题跟踪器</string>
+    <string name="rdp_hint_time_skew_title">设备时钟与服务器不一致</string>
+    <string name="rdp_hint_time_skew_body">当设备时钟与服务器相差超过几分钟时，CredSSP 会拒绝会话。请检查设置 → 日期和时间 → 自动设置，然后重新连接。</string>
+    <string name="rdp_hint_tls_ciphers_title">服务器要求 Haven 不支持的 TLS 加密套件</string>
+    <string name="rdp_hint_tls_ciphers_body">Haven 使用 rustls/ring TLS 栈，其加密套件覆盖范围比 Microsoft 的 RDP 客户端（SChannel）或 OpenSSL 更窄。兼容性最好的服务器端设置是基于 TLS 1.2 或 1.3 的 ECDHE-RSA + AES-GCM。</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="rdp_cd_two_finger_viewport">双指平移视图（点按切换为滚动远程端）</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_off">视图导航已关闭（点按以缩放或平移视图）</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_on">视图导航已开启（点按以恢复触屏输入）</string>
+    <string name="rdp_cd_two_finger_scroll_on">双指滚动远程端（点按切换为平移视图）</string>
+    <string name="rdp_hint_nla_required_title">服务器要求网络级别身份验证 (NLA)</string>
+    <string name="rdp_hint_nla_required_body">服务器配置为仅接受使用 NLA 认证的客户端，而此连接配置中未勾选 NLA。请在配置中勾选“Network Level Authentication (NLA)”，或在电脑上放宽此要求：设置 → 系统 → 远程桌面 → 高级设置 → 取消勾选“Require devices to use Network Level Authentication”。</string>
+    <string name="rdp_hint_mixed_username_title">NLA 无法使用这种格式的用户名</string>
+    <string name="rdp_hint_mixed_username_body">NLA 会拒绝把域前缀和电子邮件地址组合在一起的用户名（例如 MicrosoftAccount\\you@example.com），而对于纯电子邮件地址，它会截断 @ 之后的全部内容——这是上游 sspi 库针对 Microsoft 账户的限制。\n\n对于使用 Microsoft 账户的电脑：在此配置中取消勾选“Network Level Authentication (NLA)”，在电脑上允许非 NLA 连接（远程桌面 → 高级设置），并使用 MicrosoftAccount\\you@example.com 或直接使用 you@example.com 作为用户名。</string>
+    <string name="rdp_hint_mixed_username_link">问题追踪器</string>
+</resources>

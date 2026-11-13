@@ -1,0 +1,2 @@
+- Attach → "Send a file" now reliably pastes the uploaded path at the terminal cursor (#535, thanks kanazawahere). The upload itself always worked, but the path injection raced the navigation back to the terminal screen and usually lost; it now rides the same injection channel the QR-scan paste uses, bracket-paste wrapped when the shell has it enabled.
+- If no terminal tab is active when a paste lands (file path or QR scan), Haven now says so in a toast instead of silently dropping the payload.

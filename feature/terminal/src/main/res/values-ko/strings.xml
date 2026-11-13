@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">취소</string>
+    <string name="common_save">저장</string>
+    <string name="common_done">완료</string>
+    <string name="common_close">닫기</string>
+    <string name="common_ok">확인</string>
+    <string name="common_delete">삭제</string>
+    <string name="common_edit">편집</string>
+    <string name="common_rename">이름 변경</string>
+    <string name="common_create">생성</string>
+    <string name="common_connect">연결</string>
+    <string name="common_disconnect">연결 해제</string>
+    <string name="common_copy">복사</string>
+    <string name="common_paste">붙여넣기</string>
+    <string name="common_label">라벨</string>
+    <string name="common_password">비밀번호</string>
+    <string name="common_port">포트</string>
+    <string name="common_host">호스트</string>
+    <string name="common_username">사용자 이름</string>
+    <string name="common_install">설치</string>
+    <string name="common_reset">재설정</string>
+    <string name="common_allow">허용</string>
+    <string name="common_not_now">나중에</string>
+    <string name="common_import">가져오기</string>
+    <string name="common_add">추가</string>
+    <string name="common_download">다운로드</string>
+    <string name="common_unlock">잠금 해제</string>
+
+    <!-- Tab bar -->
+    <string name="terminal_reconnecting">다시 연결 중</string>
+    <string name="terminal_no_contact">서버 응답 없음(%1$d초) — 재시도 중</string>
+    <string name="terminal_attach_notice_unavailable">세션 관리자 %1$s(이)가 시작되지 않았습니다 — 일반 셸에 있습니다. 호스트에 설치되어 있는지 확인하거나 연결 편집기(고급)에서 세션 명령을 설정하세요.</string>
+    <string name="terminal_attach_notice_missing">%1$s 세션 "%2$s"에 연결되지 않았습니다 — 일반 셸에 있습니다. 시작 명령을 확인하거나 연결 편집기(고급)에서 세션 명령을 설정하세요.</string>
+    <string name="terminal_attach_notice_dismiss">닫기</string>
+    <string name="terminal_sessions">세션</string>
+    <string name="terminal_move_left">왼쪽으로 이동</string>
+    <string name="terminal_move_right">오른쪽으로 이동</string>
+    <string name="terminal_close">닫기</string>
+    <string name="terminal_switch_tab">탭 전환</string>
+    <string name="terminal_copy_last_output">마지막 출력 복사</string>
+    <string name="terminal_copied_output">출력 복사됨(%d자)</string>
+    <string name="terminal_no_command_output">명령 출력이 없습니다(셸 통합 필요)</string>
+    <string name="terminal_paste_no_active_tab">붙여넣을 활성 탭이 없습니다</string>
+    <string name="terminal_search">검색</string>
+
+    <!-- New tab errors -->
+    <string name="terminal_new_tab_no_active">복제할 활성 세션이 없습니다</string>
+    <string name="terminal_new_tab_no_config">연결 설정을 찾을 수 없습니다 — 먼저 다시 연결해 보세요</string>
+    <string name="terminal_new_tab_host_key_changed">%s의 호스트 키가 변경됨 — 보안을 위해 연결이 거부되었습니다</string>
+    <string name="terminal_new_tab_connection_failed">연결할 수 없음: %s</string>
+    <string name="terminal_new_tab_shell_failed">셸을 열지 못함: %s</string>
+    <string name="terminal_new_tab_reticulum_no_session">복제할 활성 Reticulum 세션이 없습니다</string>
+    <string name="terminal_new_tab_connecting">연결 중…</string>
+
+    <!-- EmptyTerminalState -->
+    <string name="terminal_connect_prompt">세션을 시작하려면 서버에 연결하세요.</string>
+
+    <!-- NewTabSessionPickerDialog -->
+    <string name="terminal_sessions_title">%s 세션</string>
+    <string name="terminal_rename_session">세션 이름 변경</string>
+    <string name="terminal_kill_session">세션 종료</string>
+    <string name="terminal_new_session_create">생성</string>
+
+    <!-- VncSettingsDialog -->
+    <string name="terminal_vnc_desktop">VNC 데스크톱</string>
+    <string name="terminal_connect_to_host">%s에 연결</string>
+    <string name="terminal_port">포트</string>
+    <string name="terminal_password">비밀번호</string>
+    <string name="terminal_tunnel_through_ssh">SSH를 통해 터널링</string>
+    <string name="terminal_save_for_connection">이 연결에 저장</string>
+    <string name="terminal_connect">연결</string>
+
+    <!-- RenameSessionDialog -->
+    <string name="terminal_rename_session_title">세션 이름 변경</string>
+    <string name="terminal_name">이름</string>
+    <string name="terminal_rename">이름 변경</string>
+    <string name="terminal_rename_exists">이 서버에 \"%1$s\"이라는 세션이 이미 있습니다</string>
+    <string name="terminal_enter_fullscreen">전체 화면 시작</string>
+    <string name="terminal_exit_fullscreen">전체 화면 종료</string>
+    <string name="terminal_open_plain_shell">기본 셸 열기</string>
+
+    <string name="terminal_vnc_color_depth">색 농도</string>
+    <string name="terminal_vnc_username_label">사용자 이름 (선택 사항 — VeNCrypt 전용)</string>
+    <string name="terminal_vnc_username_placeholder">기본 VncAuth는 비워 두세요</string>
+
+    <!-- #210 i18n sweep -->
+    <string name="terminal_link_open_failed">이 링크를 열 수 있는 앱이 없습니다</string>
+    <string name="terminal_link_scheme_blocked">차단된 링크 (지원되지 않는 스킴)</string>
+    <string name="terminal_local_vnc_failed">로컬 데스크톱을 시작할 수 없습니다</string>
+    <string name="terminal_attach_title">첨부</string>
+    <string name="terminal_attach_send_file">파일 보내기</string>
+    <string name="terminal_attach_send_file_desc">원격으로 업로드하고 경로를 붙여넣습니다</string>
+    <string name="terminal_attach_take_photo">사진 촬영</string>
+    <string name="terminal_attach_take_photo_desc">사진을 찍어 파일처럼 보냅니다</string>
+    <string name="terminal_attach_scan_camera">코드 스캔 (카메라)</string>
+    <string name="terminal_attach_scan_camera_desc">QR 코드나 바코드를 촬영하여 내용을 붙여넣습니다</string>
+    <string name="terminal_attach_scan_gallery">코드 스캔 (사진)</string>
+    <string name="terminal_attach_scan_gallery_desc">QR 코드나 바코드가 있는 사진을 선택하여 내용을 붙여넣습니다</string>
+    <string name="terminal_attach_ocr_camera">텍스트 인식 (카메라)</string>
+    <string name="terminal_attach_ocr_camera_desc">인쇄된 텍스트를 촬영하여 인식된 내용을 붙여넣습니다</string>
+    <string name="terminal_attach_ocr_gallery">텍스트 인식 (사진)</string>
+    <string name="terminal_attach_ocr_gallery_desc">인쇄된 텍스트가 있는 사진을 선택하여 인식된 내용을 붙여넣습니다</string>
+    <string name="terminal_scan_no_code">이미지에서 코드를 감지하지 못했습니다</string>
+    <string name="terminal_scan_no_text">이미지에서 텍스트를 감지하지 못했습니다</string>
+    <string name="terminal_scan_failed">스캔 실패: %s</string>
+    <string name="terminal_scan_no_camera">사용 가능한 카메라 앱이 없습니다</string>
+    <string name="terminal_selection_copy">복사</string>
+    <string name="terminal_selection_paste">붙여넣기</string>
+    <string name="terminal_selection_open">열기</string>
+    <string name="terminal_selection_macros">매크로</string>
+    <string name="terminal_selection_copied">복사됨</string>
+    <string name="terminal_selection_copy_one_line">한 줄로 복사</string>
+    <string name="terminal_selection_no_url">URL이 감지되지 않았습니다</string>
+    <string name="terminal_selection_anchor_start">시작</string>
+    <string name="terminal_selection_anchor_end">끝</string>
+    <string name="terminal_selection_up">위</string>
+    <string name="terminal_selection_down">아래</string>
+    <string name="terminal_selection_left">왼쪽</string>
+    <string name="terminal_selection_right">오른쪽</string>
+    <string name="terminal_selection_cancel">취소</string>
+    <string name="terminal_vnc_depth_24bit">24비트 색상 (최고 품질)</string>
+    <string name="terminal_vnc_depth_16bit">16비트 색상 (더 빠름)</string>
+    <string name="terminal_vnc_depth_256">256색 (최소 대역폭)</string>
+    <string name="terminal_new_tab_host_key_unknown">%s의 알 수 없는 호스트 키 — 먼저 이 연결을 열어 확인하고 신뢰하세요</string>
+    <string name="terminal_text_input_title">텍스트 입력</string>
+    <string name="terminal_text_input_placeholder">보낼 텍스트 입력\u2026</string>
+    <string name="terminal_text_input_send">보내기</string>
+    <string name="terminal_text_input_expand">크게</string>
+    <string name="terminal_text_input_shrink">작게</string>
+    <string name="terminal_text_input_move_up">위로 이동</string>
+    <string name="terminal_text_input_move_down">아래로 이동</string>
+    <string name="terminal_text_input_move_left">왼쪽으로 이동</string>
+    <string name="terminal_text_input_move_right">오른쪽으로 이동</string>
+    <string name="terminal_text_input_resize_handle">텍스트 입력 창 크기 조절</string>
+    <string name="terminal_save_connection">연결 저장</string>
+    <string name="terminal_save_connection_title">연결 저장</string>
+    <string name="terminal_save_connection_name_label">이름</string>
+    <string name="terminal_save_connection_name_hint">연결 목록에 표시됩니다</string>
+    <string name="terminal_save_connection_id">프로필 ID</string>
+    <string name="terminal_save_connection_id_hint">저장된 연결을 식별합니다. 세션 이름이 아닙니다</string>
+    <string name="terminal_save_connection_context">연결: %1$s\n전송: %2$s\n고정할 세션: %3$s</string>
+    <string name="terminal_save_connection_mismatch">이 연결은 세션 \"%1$s\"에 고정되어 있지만 현재 \"%2$s\"에 있습니다. 저장하면 현재 세션으로 다시 고정됩니다.</string>
+    <string name="terminal_save_connection_update">고정 업데이트</string>
+    <string name="terminal_save_connection_saved">연결 \"%1$s\"을(를) 저장했습니다</string>
+    <string name="terminal_save_connection_updated">연결 \"%1$s\"을(를) 업데이트했습니다</string>
+    <string name="terminal_save_connection_need_session">이 탭의 세션 이름을 감지할 수 없습니다. 이름이 있는 tmux/zellij/screen 세션을 열거나 프로필에 원격 명령을 설정한 뒤 다시 시도하세요.</string>
+    <string name="terminal_details">세부 정보</string>
+    <string name="terminal_details_title">여기가 어디인가요?</string>
+    <string name="terminal_details_door">문 (연결 카드)</string>
+    <string name="terminal_details_path">경로 (전송)</string>
+    <string name="terminal_details_room">방 (tmux / 세션)</string>
+    <string name="terminal_details_room_unknown">\u2014 알 수 없음 \u2014</string>
+    <string name="terminal_details_room_pin">카드 고정: %1$s</string>
+    <string name="terminal_details_room_no_pin">\u2014 없음 \u2014</string>
+    <string name="terminal_details_room_mismatch">현재 방이 카드 고정과 다릅니다 \u2014 다른 문으로 들어왔거나 자동 생성된 세션에 들어갔을 수 있습니다.</string>
+    <string name="terminal_details_copy">복사</string>
+    <string name="terminal_details_copied">위치를 복사했습니다</string>
+    <string name="terminal_details_unavailable">이 탭의 연결 정보를 읽을 수 없습니다.</string>
+    <string name="terminal_mouse_requested_but_disabled">이 앱이 마우스를 요청합니다. 사용하려면 설정 → 터미널에서 “TUI 앱의 마우스 입력”을 켜세요.</string>
+    <string name="terminal_dictate_unavailable">이 기기에는 사용할 수 있는 음성 입력 앱이 없습니다</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="terminal_inline_image_title">인라인 이미지</string>
+    <string name="terminal_inline_image_question">이 터미널이 인라인 이미지를 표시하려고 합니다.</string>
+    <string name="terminal_inline_image_protocol_kitty">Kitty 그래픽 프로토콜</string>
+    <string name="terminal_inline_image_protocol_iterm2">iTerm2 프로토콜</string>
+    <string name="terminal_inline_image_name">파일: %1$s</string>
+    <string name="terminal_inline_image_dimensions">크기: %1$d × %2$d px</string>
+    <string name="terminal_inline_image_deny">거부</string>
+    <string name="terminal_inline_image_always_tab">이 탭에서 항상 허용</string>
+    <string name="terminal_bell_notification_title">터미널</string>
+    <string name="terminal_bell_notification_body">터미널 프로그램이 벨을 울렸습니다</string>
+    <string name="terminal_sudo_prompt_detected">sudo 비밀번호 요청됨</string>
+    <string name="terminal_sudo_prompt_subtitle">Android Keystore • 생체인증 잠금 해제 • 입력을 탭할 때만 전송됨</string>
+    <string name="terminal_sudo_fill_action">입력</string>
+    <string name="terminal_sudo_turn_off_action">끄기</string>
+    <string name="terminal_sudo_disabled_toast">sudo 프롬프트 감지가 꺼졌습니다 (설정 → 보안 및 개인정보 보호)</string>
+    <string name="terminal_sudo_entry_title">%1$s의 sudo 비밀번호</string>
+    <string name="terminal_sudo_entry_hint">이 연결에 아직 저장된 비밀번호가 없습니다. 한 번 입력하면 SSH를 통해 이 터미널로 직접 전송됩니다. 저장하면 이 기기의 Android Keystore에 암호화되어 보관되며, 사용할 때마다 생체인증 잠금 해제가 필요하고 AI/MCP 도구에 절대 노출되지 않습니다.</string>
+    <string name="terminal_sudo_turn_off_detection">sudo 프롬프트 감지 끄기</string>
+    <string name="terminal_sudo_send_action">전송</string>
+</resources>

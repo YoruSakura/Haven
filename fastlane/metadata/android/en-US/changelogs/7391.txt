@@ -1,0 +1,7 @@
+🗝️ SSH keys can now live in OpenKeychain — including OpenPGP auth subkeys on a YubiKey. It signs on Haven's behalf; the private key never reaches Haven. (#487)
+
+🖱️ A remote desktop should no longer give up when a large mouse pointer arrives split across two messages — Haven judged each half on its own and ended the session. (#422)
+
+🔒 Connections stay put while you scroll: moving one now needs a brief press and hold. (#489)
+
+📁 Groups can be reordered — Move up/down in a group's menu, connections come along. (#490)

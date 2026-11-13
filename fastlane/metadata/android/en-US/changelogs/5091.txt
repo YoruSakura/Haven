@@ -1,0 +1,1 @@
+Terminal shell integration (OSC 133): the "copy last output" setup hooks now work inside tmux too. They wrap the prompt markers in tmux's passthrough when you're in a tmux session, so "copy last output" finds the command output instead of reporting none. Keep "set -g allow-passthrough on" in ~/.tmux.conf on older tmux.

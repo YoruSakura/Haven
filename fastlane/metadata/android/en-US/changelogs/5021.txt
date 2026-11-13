@@ -1,0 +1,5 @@
+Mail: delete emails — a trash button in the reader, plus long-press to multi-select / select-all and bulk-delete, with a "Move deleted to Bin" option (recoverable; uses IMAP MOVE so it works on Gmail).
+
+Connections: the agent robot now lights up blue with glowing red eyes while the MCP agent is active, and each connection the agent operates on shows a per-connection robot you can tap to disable MCP access for that connection.
+
+New (power users / agents): inbound-email automation rules — when a message matching your criteria arrives, run actions (save attachment to any filesystem, mark/move/delete, notify, run a command, or invoke any Haven tool). Off by default; configured over the agent endpoint.

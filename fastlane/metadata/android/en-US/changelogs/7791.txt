@@ -1,0 +1,2 @@
+- A USB device that stops responding — a flaky card reader, or one drawing more power than the phone's port can supply — no longer freezes Haven when you plug it in or unplug it. The stuck device is now handled off the UI thread, so the app stays responsive even while the device itself has wedged.
+- Physically unplugging an open USB drive now tears down its background VM and export on its own, instead of leaving them running until you close the drive by hand.

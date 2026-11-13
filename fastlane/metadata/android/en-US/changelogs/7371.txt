@@ -1,0 +1,1 @@
+🖥️ You can now tell Haven what screen size to ask a remote desktop for, under Settings → Desktop. It always asked for 1920×1080 with no way to change it — and anything a server drew outside that was quietly thrown away, which looks like a screen that stops refreshing. VirtualBox defaults to 2560×1600. (#422)

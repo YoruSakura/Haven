@@ -1,0 +1,5 @@
+Terminal toolbar: tidier, more compact keys.
+
+- Keys now size to their content instead of a fixed minimum width, so more fit per row and the two rows line up in neat columns.
+- New "Minimum key width" setting (Settings → Keyboard toolbar) if you prefer wider, easier-to-tap keys; live-previews as you drag the slider.
+- Key-edit (reorder) mode now mirrors the live toolbar: icon keys show icons, Enter shows ⏎, and the columns stay aligned while you rearrange.

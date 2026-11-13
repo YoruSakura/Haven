@@ -1,0 +1,3 @@
+🖱️ Remote mouse movement now reaches the server smoothly instead of in jumps. (#477)
+
+📄 Importing an rclone.conf now reports failures instead of silently doing nothing, and lets you paste the file without reopening the dialog. (#468)

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rdp_status_connecting">연결 중…</string>
+    <string name="rdp_status_connecting_hint">핸드셰이크 진행 중. 멈추면 설정에서 자세한 연결 로깅을 켜고 재시도하여 오류를 확인하세요.</string>
+    <string name="rdp_status_waiting_for_frame">연결됨 — 첫 번째 프레임 대기 중…</string>
+    <string name="rdp_status_connection_failed">연결 실패</string>
+    <string name="rdp_action_close">닫기</string>
+    <string name="rdp_action_cancel">취소</string>
+    <string name="rdp_action_retry">재시도</string>
+    <string name="rdp_cd_disconnect">연결 해제</string>
+    <string name="rdp_cd_toggle_keyboard">키보드 전환</string>
+    <string name="rdp_cd_reset_zoom">확대/축소 초기화</string>
+    <string name="rdp_cd_fullscreen">전체 화면</string>
+    <string name="rdp_cd_session_menu">세션 메뉴</string>
+    <string name="rdp_cd_exit_fullscreen">전체 화면 종료</string>
+    <string name="rdp_cd_input_mode_trackpad_on">트랙패드 모드 켜짐 (직접 터치로 전환하려면 탭)</string>
+    <string name="rdp_cd_input_mode_direct">직접 터치 모드 (트랙패드로 전환하려면 탭)</string>
+    <string name="rdp_cd_input_mode_touchscreen_on">네이티브 터치스크린 모드 켜짐 (직접 마우스로 전환하려면 탭)</string>
+    <string name="rdp_cd_trackpad_sensitivity">트랙패드 감도</string>
+    <string name="rdp_orientation_landscape_desc">가로 고정 (세로로 전환하려면 탭)</string>
+    <string name="rdp_orientation_portrait_desc">세로 고정 (자동으로 전환하려면 탭)</string>
+    <string name="rdp_orientation_auto_desc">자동 회전 (가로로 전환하려면 탭)</string>
+
+    <!-- i18n sweep #210 (follow-up batch) -->
+    <string name="rdp_hint_legacy_rdp_title">서버가 암호화되지 않은 구형 RDP를 사용 중입니다</string>
+    <string name="rdp_hint_legacy_rdp_body">Haven은 TLS로 암호화된 RDP만 지원합니다. 서버(Linux에서는 보통 xrdp)가 더 이상 사용되지 않는 STANDARD_RDP_SECURITY 프로토콜을 협상했습니다. 대개 서버의 TLS 인증서가 없거나 읽을 수 없기 때문입니다. 서버에서 /etc/xrdp/cert.pem과 /etc/xrdp/key.pem을 다시 생성한 다음 xrdp를 재시작하세요.</string>
+    <string name="rdp_hint_legacy_rdp_link">서버 측 해결 방법 안내</string>
+    <string name="rdp_hint_nla_internal_error_title">NLA 중 서버가 TLS 세션을 거부했습니다</string>
+    <string name="rdp_hint_nla_internal_error_body">이는 예전에 v5.24.37에서 수정된 Haven 버그의 증상이었습니다. 더 새로운 빌드를 사용 중인데도 이 메시지가 보인다면, 서버가 CredSSP를 전혀 지원하지 않을 수 있습니다. 연결 프로필에서 Network Level Authentication 체크를 해제하고 다시 연결해 보세요.</string>
+    <string name="rdp_hint_logon_failure_title">잘못된 사용자 이름 또는 비밀번호</string>
+    <string name="rdp_hint_logon_failure_body">서버가 CredSSP를 정상적으로 완료하고 자격 증명을 거부했습니다. 사용자 이름(계정이 도메인에 가입되어 있다면 DOMAIN\\User 시도)과 비밀번호를 확인하세요.</string>
+    <string name="rdp_hint_pubkey_hash_title">서버가 CredSSP 공개 키 해시를 거부했습니다</string>
+    <string name="rdp_hint_pubkey_hash_body">Linux gnome-remote-desktop과 일부 xrdp 빌드는 CredSSP pub_key_auth 해시를 Haven의 ironrdp/sspi-rs와 다르게 계산합니다. TLS 핸드셰이크는 성공하지만 한 계층 위에서 NLA가 실패합니다.\n\n해결 방법: 이 연결의 프로필을 편집하고 \"Network Level Authentication (NLA)\"의 체크를 해제하세요. 그러면 RDP는 채널 설정 후에 인증하는 방식으로 대체되어, 일치하지 않는 해시를 거치지 않습니다.</string>
+    <string name="rdp_hint_pubkey_hash_link">이슈 트래커</string>
+    <string name="rdp_hint_time_skew_title">기기 시계가 서버와 다릅니다</string>
+    <string name="rdp_hint_time_skew_body">기기 시계가 서버와 몇 분 이상 차이 나면 CredSSP가 세션을 거부합니다. 설정 → 날짜 및 시간 → 자동 설정을 확인하고 다시 연결하세요.</string>
+    <string name="rdp_hint_tls_ciphers_title">서버가 Haven이 지원하지 않는 TLS 암호를 요구합니다</string>
+    <string name="rdp_hint_tls_ciphers_body">Haven은 rustls/ring TLS 스택을 사용하며, Microsoft의 RDP 클라이언트(SChannel)나 OpenSSL보다 지원하는 암호 범위가 좁습니다. 가장 호환성이 좋은 서버 측 설정은 TLS 1.2 또는 1.3에서의 ECDHE-RSA + AES-GCM입니다.</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="rdp_cd_two_finger_viewport">두 손가락으로 화면 이동 (원격 스크롤로 전환하려면 탭)</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_off">화면 탐색 꺼짐 (화면을 확대하거나 이동하려면 탭)</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_on">화면 탐색 켜짐 (터치스크린 입력을 다시 사용하려면 탭)</string>
+    <string name="rdp_cd_two_finger_scroll_on">두 손가락으로 원격 스크롤 (화면 이동으로 전환하려면 탭)</string>
+    <string name="rdp_hint_nla_required_title">서버가 네트워크 수준 인증(NLA)을 요구합니다</string>
+    <string name="rdp_hint_nla_required_body">서버는 NLA로 인증하는 클라이언트만 허용하도록 설정되어 있지만, 이 연결 프로필에서는 NLA가 꺼져 있습니다. 프로필에서 “Network Level Authentication (NLA)”을 켜거나, PC에서 요구 사항을 완화하세요: 설정 → 시스템 → 원격 데스크톱 → 고급 설정 → “Require devices to use Network Level Authentication” 체크 해제.</string>
+    <string name="rdp_hint_mixed_username_title">NLA는 이 형식의 사용자 이름을 사용할 수 없습니다</string>
+    <string name="rdp_hint_mixed_username_body">NLA는 도메인 접두사와 이메일 주소를 결합한 사용자 이름(예: MicrosoftAccount\\you@example.com)을 거부하며, 이메일만 입력하면 @ 뒤를 모두 잘라냅니다 — Microsoft 계정에 대한 상위 sspi 라이브러리의 제약입니다.\n\nMicrosoft 계정 PC의 경우: 이 프로필에서 “Network Level Authentication (NLA)” 체크를 해제하고, PC에서 NLA 없는 연결을 허용한 뒤(원격 데스크톱 → 고급 설정), 사용자 이름으로 MicrosoftAccount\\you@example.com 또는 you@example.com을 사용하세요.</string>
+    <string name="rdp_hint_mixed_username_link">이슈 트래커</string>
+</resources>

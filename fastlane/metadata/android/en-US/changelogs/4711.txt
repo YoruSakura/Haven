@@ -1,0 +1,4 @@
+Localization and backup fixes.
+
+• Many newer screens — Settings, the MCP/Agent endpoint, file tools, RDP/VNC controls — were stuck in English regardless of your device language. They're now translated across all 12 supported languages, including Chinese (#210).
+• Restore an encrypted backup straight from a cloud-synced folder (e.g. a NextCloud directory) — this previously failed, and you had to copy the file to local storage first (#145).

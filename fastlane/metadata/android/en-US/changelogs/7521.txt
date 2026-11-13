@@ -1,0 +1,7 @@
+🖥️ A remote desktop stops throwing away part of the picture. Haven refused any screen update whose image was taller than the area it had to fill, while accepting one that was wider. One VirtualBox session was discarding 53915 updates — 51% of everything the server sent — which is enough for a window to sit there looking frozen while the clock beside it keeps ticking.
+
+Nothing justified the difference. The code behind that check already handled a taller image correctly, taking only the rows the destination needs; it was ready to do the right thing and was stopped at the door. FreeRDP checks neither dimension. Verified against a real VirtualBox desktop: same 941551 pixels painted before and after, zero discards.
+
+Whether this is what that reporter was hitting is not established — their exact geometry has never been captured, and it could still be one of the other two rules. What is fixed is a rejection that was wrong on its own terms. (#422)
+
+🤖 Two things an AI agent could not see about Haven, it now can: which desktop an install is working on, and the switch for the per-session transport tracing that fills the connection log. The second mattered more than it sounds — the decode breakdown, negotiated graphics capabilities and discarded-update detail behind three open remote-desktop investigations exist only in that log, and an agent could read the log but not turn on the thing that writes it. (#502, #466, #477, #422)

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">カスタムキーを追加</string>
+    <string name="toolbar_toggle_keyboard">キーボードの表示切り替え</string>
+    <string name="toolbar_reorder_keys">ツールバーのキーを並べ替える</string>
+    <string name="toolbar_done_reordering">並べ替えを完了</string>
+    <string name="toolbar_vnc_desktop">VNC デスクトップ</string>
+    <string name="toolbar_settings">ツールバー設定</string>
+    <string name="toolbar_custom_key_dialog_title">カスタムキーを追加</string>
+    <string name="toolbar_custom_key_label">ラベル</string>
+    <string name="toolbar_custom_key_sequence">シーケンス</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">キャンセル</string>
+    <string name="toolbar_snippet_add">スニペットを追加</string>
+    <string name="toolbar_snippet_search">スニペットを検索…</string>
+    <string name="toolbar_snippet_delete">削除</string>
+    <string name="toolbar_snippet_dialog_title">スニペットを追加</string>
+    <string name="toolbar_snippet_label">ラベル</string>
+    <string name="toolbar_snippet_command">コマンド</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="toolbar_snippet_title">スニペット</string>
+    <string name="toolbar_snippet_empty">スニペットはまだありません。ツールバーにカスタムキーを追加するか、上の + をタップしてください。</string>
+    <string name="toolbar_snippet_empty_filtered">一致するスニペットがありません。</string>
+    <string name="toolbar_snippet_label_placeholder">例: Deploy, Restart</string>
+    <string name="toolbar_keyboard_standard_desc">標準キーボード（音声入力・候補・自動修正 オン）</string>
+    <string name="toolbar_keyboard_secure_desc">セキュアキーボード（候補なし、自動修正なし）</string>
+    <string name="toolbar_attach_desc">ファイルをリモートに送信するために添付</string>
+    <string name="toolbar_presets_label">プリセット</string>
+    <string name="toolbar_custom_key_label_placeholder">例: ^C, Paste</string>
+    <string name="toolbar_text_input_desc">フローティング テキスト入力を開く</string>
+    <string name="toolbar_dictate_desc">音声入力: ディクテーション開始</string>
+</resources>

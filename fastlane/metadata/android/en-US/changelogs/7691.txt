@@ -1,0 +1,3 @@
+- The status bar now matches the terminal instead of clashing with it — no more white strip above a dark terminal.
+- Fixed a stray "%" in the background-opacity help text.
+- Groundwork for the keyboard-closing-on-return bug: Haven now records why, so a log can say which cause it is.

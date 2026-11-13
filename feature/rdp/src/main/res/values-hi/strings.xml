@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- i18n sweep #210 -->
+    <string name="rdp_status_connecting">कनेक्ट हो रहा है…</string>
+    <string name="rdp_status_connecting_hint">Handshake जारी है। अगर यह रुका रहे, तो Settings में verbose connection logging चालू करें और अंदरूनी त्रुटि देखने के लिए पुनः प्रयास करें।</string>
+    <string name="rdp_status_waiting_for_frame">कनेक्टेड — पहले frame की प्रतीक्षा…</string>
+    <string name="rdp_status_connection_failed">कनेक्शन विफल</string>
+    <string name="rdp_action_close">बंद करें</string>
+    <string name="rdp_action_cancel">रद्द करें</string>
+    <string name="rdp_action_retry">पुनः प्रयास करें</string>
+    <string name="rdp_cd_disconnect">डिस्कनेक्ट करें</string>
+    <string name="rdp_cd_toggle_keyboard">कीबोर्ड टॉगल करें</string>
+    <string name="rdp_cd_reset_zoom">ज़ूम रीसेट करें</string>
+    <string name="rdp_cd_fullscreen">फ़ुलस्क्रीन</string>
+    <string name="rdp_cd_session_menu">Session मेनू</string>
+    <string name="rdp_cd_exit_fullscreen">फ़ुलस्क्रीन से बाहर निकलें</string>
+    <string name="rdp_cd_input_mode_trackpad_on">Trackpad mode चालू (सीधे touch के लिए टैप करें)</string>
+    <string name="rdp_cd_input_mode_direct">Direct touch mode (trackpad के लिए टैप करें)</string>
+    <string name="rdp_cd_input_mode_touchscreen_on">Native touchscreen mode चालू (सीधे माउस के लिए टैप करें)</string>
+    <string name="rdp_cd_trackpad_sensitivity">Trackpad संवेदनशीलता</string>
+    <string name="rdp_orientation_landscape_desc">Landscape लॉक (portrait पर स्विच करने के लिए टैप करें)</string>
+    <string name="rdp_orientation_portrait_desc">Portrait लॉक (auto पर स्विच करने के लिए टैप करें)</string>
+    <string name="rdp_orientation_auto_desc">Auto rotate (landscape पर स्विच करने के लिए टैप करें)</string>
+
+    <!-- i18n sweep #210 (follow-up batch) -->
+    <string name="rdp_hint_legacy_rdp_title">सर्वर पुराने, बिना एन्क्रिप्शन वाले RDP का उपयोग कर रहा है</string>
+    <string name="rdp_hint_legacy_rdp_body">Haven केवल TLS-एन्क्रिप्टेड RDP का समर्थन करता है। आपके सर्वर (Linux पर आमतौर पर xrdp) ने अप्रचलित STANDARD_RDP_SECURITY प्रोटोकॉल पर बातचीत की — आमतौर पर इसलिए कि सर्वर का TLS सर्टिफिकेट गायब है या पढ़ा नहीं जा सकता। सर्वर पर /etc/xrdp/cert.pem और /etc/xrdp/key.pem फिर से जनरेट करें, फिर xrdp को रीस्टार्ट करें।</string>
+    <string name="rdp_hint_legacy_rdp_link">सर्वर-साइड फिक्स निर्देश</string>
+    <string name="rdp_hint_nla_internal_error_title">सर्वर ने NLA के दौरान TLS सेशन अस्वीकार किया</string>
+    <string name="rdp_hint_nla_internal_error_body">यह पहले v5.24.37 में ठीक किए गए एक Haven बग का लक्षण था — अगर आप नए बिल्ड पर हैं और फिर भी यह दिख रहा है, तो हो सकता है सर्वर CredSSP बिल्कुल न समझता हो। कनेक्शन प्रोफ़ाइल में Network Level Authentication को अनटिक करके फिर से कनेक्ट करने का प्रयास करें।</string>
+    <string name="rdp_hint_logon_failure_title">गलत उपयोगकर्ता नाम या पासवर्ड</string>
+    <string name="rdp_hint_logon_failure_body">सर्वर ने CredSSP साफ-सुथरे ढंग से पूरा किया और आपके credentials अस्वीकार कर दिए। उपयोगकर्ता नाम (यदि खाता domain-joined है तो DOMAIN\\User आज़माएँ) और पासवर्ड जाँचें।</string>
+    <string name="rdp_hint_pubkey_hash_title">सर्वर ने CredSSP public-key hash अस्वीकार किया</string>
+    <string name="rdp_hint_pubkey_hash_body">Linux gnome-remote-desktop और कुछ xrdp बिल्ड CredSSP pub_key_auth hash को Haven के ironrdp/sspi-rs से अलग तरीके से गणना करते हैं — TLS handshake सफल होता है लेकिन एक परत ऊपर NLA विफल हो जाता है।\n\nWorkaround: इस कनेक्शन की प्रोफ़ाइल संपादित करें और \"Network Level Authentication (NLA)\" को अनचेक करें। तब RDP चैनल सेटअप के बाद authenticate करने पर वापस आ जाएगा, जो mismatched hash से नहीं गुज़रता।</string>
+    <string name="rdp_hint_pubkey_hash_link">Issue tracker</string>
+    <string name="rdp_hint_time_skew_title">डिवाइस की घड़ी सर्वर से भिन्न है</string>
+    <string name="rdp_hint_time_skew_body">जब डिवाइस की घड़ी सर्वर से कुछ मिनट से अधिक भिन्न होती है, तो CredSSP सेशन अस्वीकार कर देता है। Settings → Date &amp; time → Set automatically जाँचें और फिर से कनेक्ट करें।</string>
+    <string name="rdp_hint_tls_ciphers_title">सर्वर को ऐसे TLS ciphers चाहिए जिन्हें Haven समर्थित नहीं करता</string>
+    <string name="rdp_hint_tls_ciphers_body">Haven rustls/ring TLS स्टैक का उपयोग करता है, जिसका cipher कवरेज Microsoft के RDP क्लाइंट (SChannel) या OpenSSL से संकीर्ण है। सबसे अधिक संगत सर्वर-साइड सेटिंग TLS 1.2 या 1.3 पर ECDHE-RSA + AES-GCM है।</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="rdp_cd_two_finger_viewport">दो उँगलियाँ व्यू पैन करती हैं (रिमोट स्क्रॉल करने के लिए टैप करें)</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_off">व्यूपोर्ट नेविगेशन बंद (व्यू ज़ूम या पैन करने के लिए टैप करें)</string>
+    <string name="rdp_cd_touchscreen_viewport_nav_on">व्यूपोर्ट नेविगेशन चालू (टचस्क्रीन इनपुट फिर से शुरू करने के लिए टैप करें)</string>
+    <string name="rdp_cd_two_finger_scroll_on">दो उँगलियाँ रिमोट स्क्रॉल करती हैं (व्यू पैन करने के लिए टैप करें)</string>
+    <string name="rdp_hint_nla_required_title">सर्वर को नेटवर्क लेवल ऑथेंटिकेशन चाहिए</string>
+    <string name="rdp_hint_nla_required_body">सर्वर केवल उन क्लाइंट को स्वीकार करने के लिए कॉन्फ़िगर है जो NLA से प्रमाणीकरण करते हैं, और इस कनेक्शन प्रोफ़ाइल में NLA अनटिक है। या तो प्रोफ़ाइल में “Network Level Authentication (NLA)” टिक करें, या PC पर आवश्यकता ढीली करें: Settings → System → Remote Desktop → Advanced settings → “Require devices to use Network Level Authentication” अनटिक करें।</string>
+    <string name="rdp_hint_mixed_username_title">NLA इस रूप का उपयोगकर्ता नाम नहीं ले सकता</string>
+    <string name="rdp_hint_mixed_username_body">NLA ऐसा उपयोगकर्ता नाम अस्वीकार करता है जो डोमेन उपसर्ग और ईमेल पते को जोड़ता हो (जैसे MicrosoftAccount\\you@example.com), और सादे ईमेल के लिए वह @ के बाद सब कुछ काट देता है — Microsoft खातों के लिए यह अपस्ट्रीम sspi लाइब्रेरी की सीमा है।\n\nMicrosoft खाते वाले PC के लिए: इस प्रोफ़ाइल में “Network Level Authentication (NLA)” अनटिक करें, PC पर बिना NLA के कनेक्शन की अनुमति दें (Remote Desktop → Advanced settings), और उपयोगकर्ता नाम के रूप में MicrosoftAccount\\you@example.com या केवल you@example.com उपयोग करें।</string>
+    <string name="rdp_hint_mixed_username_link">इश्यू ट्रैकर</string>
+</resources>

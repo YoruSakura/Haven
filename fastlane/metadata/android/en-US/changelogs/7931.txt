@@ -1,0 +1,5 @@
+Mail-rule approvals: queued actions now raise ONE "N actions awaiting approval" notification (was one tap-dead card each); tapping opens the approval queue, which gained Approve all / Reject all with a progress bar.
+
+Zellij: removed the injected Ctrl+L on keyboard hide — no more ^L echoed into running commands or screen "reloads" on background/foreground cycles (#554).
+
+RDP: every slow-path keyboard event is now logged on the wire — the diagnostic build for #504.

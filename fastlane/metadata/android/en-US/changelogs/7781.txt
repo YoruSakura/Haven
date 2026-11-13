@@ -1,0 +1,2 @@
+- RDP now tells the server your keyboard layout (from the phone's language) instead of always claiming US English — Windows, xrdp and KRDP set the session layout from it. VirtualBox-style servers ignore it either way.
+- RDP video decoding now asks the phone's chipset for its vendor low-latency mode — on chipsets that honour it, this can cut the per-frame wait substantially. An experiment in the open #477 investigation; the frame numbers in your logs will say whether your chip is one of them.

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">Ajouter une touche personnalisée</string>
+    <string name="toolbar_toggle_keyboard">Toggle keyboard</string>
+    <string name="toolbar_reorder_keys">Réorganiser les touches de la barre</string>
+    <string name="toolbar_done_reordering">Done reordering</string>
+    <string name="toolbar_vnc_desktop">VNC Desktop</string>
+    <string name="toolbar_settings">Toolbar settings</string>
+    <string name="toolbar_custom_key_dialog_title">Ajouter une touche personnalisée</string>
+    <string name="toolbar_custom_key_label">Label</string>
+    <string name="toolbar_custom_key_sequence">Sequence</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">Cancel</string>
+    <string name="toolbar_snippet_add">Add snippet</string>
+    <string name="toolbar_snippet_search">Search snippets…</string>
+    <string name="toolbar_snippet_delete">Delete</string>
+    <string name="toolbar_snippet_dialog_title">Add snippet</string>
+    <string name="toolbar_snippet_label">Label</string>
+    <string name="toolbar_snippet_command">Command</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="toolbar_snippet_title">Extraits</string>
+    <string name="toolbar_snippet_empty">Aucun extrait. Ajoutez des touches personnalisées à la barre ou appuyez sur + ci-dessus.</string>
+    <string name="toolbar_snippet_empty_filtered">Aucun extrait correspondant.</string>
+    <string name="toolbar_snippet_label_placeholder">ex. Déployer, Redémarrer</string>
+    <string name="toolbar_keyboard_standard_desc">Clavier standard (voix, suggestions, correction automatique activés)</string>
+    <string name="toolbar_keyboard_secure_desc">Clavier sécurisé (sans suggestions, sans correction automatique)</string>
+    <string name="toolbar_attach_desc">Joindre un fichier à envoyer au serveur distant</string>
+    <string name="toolbar_presets_label">Modèles</string>
+    <string name="toolbar_custom_key_label_placeholder">ex. ^C, Coller</string>
+    <string name="toolbar_text_input_desc">Ouvrir la saisie de texte flottante</string>
+    <string name="toolbar_dictate_desc">Dictée : lancer la saisie vocale</string>
+</resources>

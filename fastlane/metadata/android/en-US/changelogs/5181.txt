@@ -1,0 +1,3 @@
+USB/IP device forwarding — forward a phone-attached USB device (e.g. a YubiKey) to a remote SSH host. Pick it in a connection's settings and Haven exports it over USB/IP and attaches it on the host on connect, so it shows up there as a real device node with the touch on the phone. Use it for ssh-keygen -t ed25519-sk / FIDO on a server with no key of its own. With a small sudoers rule on the host the attach is fully hands-off.
+
+Docs: the website is now split into per-feature pages.

@@ -1,0 +1,1 @@
+- Fixes SSH connections failing with a NullPointerException on the alternative sshlib engine.

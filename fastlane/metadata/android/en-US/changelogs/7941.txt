@@ -1,0 +1,4 @@
+- Fixed the F-Droid build, broken at clone time since 2026-08-16, which left this channel stuck on v5.87.22 (#525, thanks connesc). A submodule was pinned to a commit only a personal mirror had.
+- System VMs can now boot arm64 guests, not just x86_64 (#326). Pick the architecture when importing — a disk image doesn't record it, and the wrong target never boots.
+- Haven now probes /dev/kvm and says why a VM is emulated.
+- The import dialog no longer loses what you typed on rotation.

@@ -1,0 +1,1 @@
+- The fullscreen menu button moved to the top centre, so it no longer covers the remote's own minimise/restore/close buttons — and it fades out when you're not using it.

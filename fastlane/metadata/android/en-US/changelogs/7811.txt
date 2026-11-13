@@ -1,0 +1,2 @@
+- The Swipe key's arrows now follow your finger literally: swipe up sends ↑ (walks command history back), swipe down sends ↓ — reversed from v5.87.14, where the mapping came from scrolling conventions and felt inverted (#524). The automatic swipe-to-arrows behaviour inside full-screen apps like vim and less is unchanged.
+- Each arrow now takes a deliberate ~9mm of swipe travel in that mode (4× the scrolling quantum), so history steps one entry at a time instead of flashing past (#524).

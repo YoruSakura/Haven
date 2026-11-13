@@ -1,0 +1,4 @@
+- Fixed the crash where Haven closes itself a second or two after connecting, or when a full-screen program starts.
+- Your keystrokes are no longer written to the system log — including anything typed into a `sudo` prompt.
+- Clipboard contents are no longer written to the system log either.
+- Crash reports now say what actually went wrong, instead of arriving empty or corrupted.

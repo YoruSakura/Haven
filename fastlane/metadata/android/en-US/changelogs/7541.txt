@@ -1,0 +1,11 @@
+🖥️ Windows remote desktops stop looking pixelated — and the honest version is that v5.86.43 caused it.
+
+That release stopped Windows hanging up on the modern graphics pipeline, and it worked: one reporter's session went from 24201 old-style updates to none. But the modern pipeline had two defects nothing could reach while every Windows session was falling back to the old one. Both are fixed, and both were found in his logs rather than here.
+
+Part of the picture was being thrown away. Windows sends some regions as a difference against the previous version of that region — 137500 of them in one session. Haven skipped those, leaving the older, coarser version on screen. They are now decoded.
+
+Cached tiles were being discarded. When Windows reconfigures the display mid-session, Haven threw away its cache of tiles the server still believed it had; the server then asked for 221 of them and nothing was drawn. Worth noting how that one was found: I suspected it a day earlier and could not confirm it — my own Windows machine only reconfigures at session start, before the cache holds anything. It needed a second reconfiguration mid-session, which his log had and mine never did.
+
+Difference decoding is checked against real Windows output, the only place it exists — the open-source server everything else is tested against never produces it. The decoded frame matches a fresh full repaint to within rounding; the only larger differences are the taskbar clock and weather widget, which genuinely changed between captures. It has NOT been compared pixel-for-pixel against another decoder. (#477)
+
+🔁 A single network blip no longer kills a release build. The last release died fetching one pinned source archive with a TLS handshake error, with a retry already configured on that download, having retried zero times — curl's retry option does not cover TLS failures. Measured: the old flags give up in 0 seconds, the new ones take 4. Applied to all three places Haven downloads pinned sources.

@@ -1,0 +1,2 @@
+- The download is 9.3 MB smaller — 84.4 MB to 75.0 MB on arm64.
+- Release notes now start with a summary like this one, so there is something short to read.

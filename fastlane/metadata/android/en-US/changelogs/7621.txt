@@ -1,0 +1,2 @@
+- Haven no longer offers connection types a build can't actually run, and reports what it supports honestly.
+- GitHub now also carries a lighter 55 MB build without the desktop and media features. F-Droid keeps the full one, so nothing changes here.

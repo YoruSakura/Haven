@@ -1,0 +1,2 @@
+- Toolbar Swipe mode now repeats: hold a swipe and the arrow key repeats until you let go; reverse mid-hold without lifting. Tab-switch gestures are suppressed while latched, so horizontal always means ←/→ (#524).
+- RDP types Polish accented characters (ą ć ę ł ń ó ś ź ż) on scancode-only servers like VirtualBox VRDP by synthesising real AltGr sequences (#504). QWERTZ/AZERTY remapped layouts are a tracked follow-up.

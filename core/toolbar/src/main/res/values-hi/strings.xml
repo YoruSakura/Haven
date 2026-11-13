@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">कस्टम कुंजी जोड़ें</string>
+    <string name="toolbar_toggle_keyboard">कीबोर्ड दिखाएँ/छिपाएँ</string>
+    <string name="toolbar_reorder_keys">टूलबार कुंजियाँ पुनः क्रमित करें</string>
+    <string name="toolbar_done_reordering">क्रम बदलना पूर्ण</string>
+    <string name="toolbar_vnc_desktop">VNC डेस्कटॉप</string>
+    <string name="toolbar_settings">टूलबार सेटिंग्स</string>
+    <string name="toolbar_custom_key_dialog_title">कस्टम कुंजी जोड़ें</string>
+    <string name="toolbar_custom_key_label">लेबल</string>
+    <string name="toolbar_custom_key_sequence">अनुक्रम</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">रद्द करें</string>
+    <string name="toolbar_snippet_add">स्निपेट जोड़ें</string>
+    <string name="toolbar_snippet_search">स्निपेट खोजें…</string>
+    <string name="toolbar_snippet_delete">हटाएँ</string>
+    <string name="toolbar_snippet_dialog_title">स्निपेट जोड़ें</string>
+    <string name="toolbar_snippet_label">लेबल</string>
+    <string name="toolbar_snippet_command">कमांड</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="toolbar_snippet_title">Snippets</string>
+    <string name="toolbar_snippet_empty">अभी कोई snippet नहीं। टूलबार में कस्टम कुंजियाँ जोड़ें, या ऊपर + दबाएँ।</string>
+    <string name="toolbar_snippet_empty_filtered">कोई मिलता snippet नहीं।</string>
+    <string name="toolbar_snippet_label_placeholder">उदा. Deploy, Restart</string>
+    <string name="toolbar_keyboard_standard_desc">Standard keyboard (voice, सुझाव, autocorrect चालू)</string>
+    <string name="toolbar_keyboard_secure_desc">Secure keyboard (कोई सुझाव नहीं, कोई autocorrect नहीं)</string>
+    <string name="toolbar_attach_desc">रिमोट पर भेजने के लिए फ़ाइल संलग्न करें</string>
+    <string name="toolbar_presets_label">Presets</string>
+    <string name="toolbar_custom_key_label_placeholder">उदा. ^C, Paste</string>
+    <string name="toolbar_text_input_desc">फ़्लोटिंग टेक्स्ट इनपुट खोलें</string>
+    <string name="toolbar_dictate_desc">बोलकर लिखें: वॉइस इनपुट शुरू करें</string>
+</resources>

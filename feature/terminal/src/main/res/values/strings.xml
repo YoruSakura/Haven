@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_done">Done</string>
+    <string name="common_close">Close</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_rename">Rename</string>
+    <string name="common_create">Create</string>
+    <string name="common_connect">Connect</string>
+    <string name="common_disconnect">Disconnect</string>
+    <string name="common_copy">Copy</string>
+    <string name="common_paste">Paste</string>
+    <string name="common_label">Label</string>
+    <string name="common_password">Password</string>
+    <string name="common_port">Port</string>
+    <string name="common_host">Host</string>
+    <string name="terminal_dictate_unavailable">No voice input app is available on this device</string>
+    <string name="common_username">Username</string>
+    <string name="common_install">Install</string>
+    <string name="common_reset">Reset</string>
+    <string name="common_allow">Allow</string>
+    <string name="common_not_now">Not now</string>
+    <string name="common_import">Import</string>
+    <string name="common_add">Add</string>
+    <string name="common_download">Download</string>
+    <string name="common_unlock">Unlock</string>
+
+    <!-- Tab bar -->
+    <string name="terminal_reconnecting">Reconnecting</string>
+    <string name="terminal_no_contact">No server contact for %1$ds — retrying</string>
+    <string name="terminal_attach_notice_unavailable">Session manager %1$s did not start — you are in a plain shell. Check it is installed on the host, or set a Session command in the connection editor (advanced).</string>
+    <string name="terminal_attach_notice_missing">%1$s session "%2$s" did not attach — you are in a plain shell. Check the start command, or set a Session command in the connection editor (advanced).</string>
+    <string name="terminal_attach_notice_dismiss">Dismiss</string>
+    <string name="terminal_sessions">Sessions</string>
+    <string name="terminal_move_left">Move left</string>
+    <string name="terminal_move_right">Move right</string>
+    <string name="terminal_close">Close</string>
+    <string name="terminal_switch_tab">Switch tab</string>
+    <string name="terminal_copy_last_output">Copy last output</string>
+    <string name="terminal_copied_output">Copied output (%d chars)</string>
+    <string name="terminal_no_command_output">No command output found (needs shell integration)</string>
+    <string name="terminal_paste_no_active_tab">No active tab to paste into</string>
+    <string name="terminal_link_open_failed">No app can open this link</string>
+    <string name="terminal_link_scheme_blocked">Blocked link (unsupported scheme)</string>
+    <string name="terminal_local_vnc_failed">Couldn\'t start the local desktop</string>
+    <string name="terminal_search">Search</string>
+
+    <!-- New tab errors -->
+    <string name="terminal_new_tab_no_active">No active session to clone</string>
+    <string name="terminal_new_tab_no_config">Connection config not found — try reconnecting first</string>
+    <string name="terminal_new_tab_host_key_changed">Host key changed for %s — connection refused for security</string>
+    <string name="terminal_new_tab_host_key_unknown">Unknown host key for %s — open this connection first to verify and trust it</string>
+    <string name="terminal_new_tab_connection_failed">Could not connect: %s</string>
+    <string name="terminal_new_tab_shell_failed">Failed to open shell: %s</string>
+    <string name="terminal_new_tab_reticulum_no_session">No active Reticulum session to clone</string>
+    <string name="terminal_new_tab_connecting">Connecting…</string>
+
+    <!-- EmptyTerminalState -->
+    <string name="terminal_connect_prompt">Connect to a server to start a session.</string>
+
+    <!-- NewTabSessionPickerDialog -->
+    <string name="terminal_sessions_title">%s sessions</string>
+    <string name="terminal_rename_session">Rename session</string>
+    <string name="terminal_kill_session">Kill session</string>
+    <string name="terminal_new_session_create">Create</string>
+    <string name="terminal_open_plain_shell">Open plain shell</string>
+
+    <!-- VncSettingsDialog -->
+    <string name="terminal_vnc_desktop">VNC Desktop</string>
+    <string name="terminal_connect_to_host">Connect to %s</string>
+    <string name="terminal_port">Port</string>
+    <string name="terminal_password">Password</string>
+    <string name="terminal_tunnel_through_ssh">Tunnel through SSH</string>
+    <string name="terminal_save_for_connection">Save for this connection</string>
+    <string name="terminal_connect">Connect</string>
+
+    <!-- RenameSessionDialog -->
+    <string name="terminal_rename_session_title">Rename Session</string>
+    <string name="terminal_name">Name</string>
+    <string name="terminal_rename">Rename</string>
+    <string name="terminal_rename_exists">A session named \"%1$s\" already exists on this server</string>
+
+    <!-- Save connection (pin live session onto a profile for one-tap reconnect) -->
+    <string name="terminal_save_connection">Save connection</string>
+    <string name="terminal_save_connection_title">Save connection</string>
+    <string name="terminal_save_connection_id">Profile ID</string>
+    <string name="terminal_save_connection_id_hint">Identifies the saved connection — not the session name</string>
+    <string name="terminal_save_connection_name_label">Name</string>
+    <string name="terminal_save_connection_name_hint">Shown in the Connections list</string>
+    <string name="terminal_save_connection_context">Connection: %1$s\nTransport: %2$s\nSession to pin: %3$s</string>
+    <string name="terminal_save_connection_mismatch">This connection is pinned to session \"%1$s\" but you are in \"%2$s\". Saving will repin it to the current session.</string>
+    <string name="terminal_save_connection_update">Update pin</string>
+    <string name="terminal_save_connection_saved">Saved connection \"%1$s\"</string>
+    <string name="terminal_save_connection_updated">Updated connection \"%1$s\"</string>
+    <string name="terminal_save_connection_need_session">Couldn\'t detect a session name for this tab. Open a named tmux/zellij/screen session, or set Remote command on the profile, then try Save connection again.</string>
+
+    <!-- Details / where am I (door · path · room) -->
+    <string name="terminal_details">Details</string>
+    <string name="terminal_details_title">Where am I?</string>
+    <string name="terminal_details_door">Door (connection card)</string>
+    <string name="terminal_details_path">Path (transport)</string>
+    <string name="terminal_details_room">Room (tmux / session)</string>
+    <string name="terminal_details_room_unknown">— unknown —</string>
+    <string name="terminal_details_room_pin">Card pin: %1$s</string>
+    <string name="terminal_details_room_no_pin">— none —</string>
+    <string name="terminal_details_room_mismatch">Live room differs from the card pin — you may have entered through a different door or landed in an auto-created session.</string>
+    <string name="terminal_details_copy">Copy</string>
+    <string name="terminal_details_copied">Copied whereabouts</string>
+    <string name="terminal_details_unavailable">Couldn\'t read connection details for this tab.</string>
+    <string name="terminal_enter_fullscreen">Enter fullscreen</string>
+    <string name="terminal_exit_fullscreen">Exit fullscreen</string>
+    <string name="terminal_vnc_username_label">Username (optional — VeNCrypt only)</string>
+    <string name="terminal_vnc_username_placeholder">Leave blank for classic VncAuth</string>
+    <string name="terminal_vnc_color_depth">Colour depth</string>
+
+    <!-- AttachOptionsSheet — paperclip key on the keyboard toolbar -->
+    <string name="terminal_attach_title">Attach</string>
+    <string name="terminal_attach_send_file">Send a file</string>
+    <string name="terminal_attach_send_file_desc">Upload to the remote and paste its path</string>
+    <string name="terminal_attach_take_photo">Take photo</string>
+    <string name="terminal_attach_take_photo_desc">Capture a photo and send it like a file</string>
+    <string name="terminal_attach_scan_camera">Scan code (Camera)</string>
+    <string name="terminal_attach_scan_camera_desc">Photograph a QR or barcode and paste its contents</string>
+    <string name="terminal_attach_scan_gallery">Scan code (Photos)</string>
+    <string name="terminal_attach_scan_gallery_desc">Pick a photo of a QR or barcode and paste its contents</string>
+    <string name="terminal_attach_ocr_camera">Recognise text (Camera)</string>
+    <string name="terminal_attach_ocr_camera_desc">Photograph printed text and paste what is detected</string>
+    <string name="terminal_attach_ocr_gallery">Recognise text (Photos)</string>
+    <string name="terminal_attach_ocr_gallery_desc">Pick a photo of printed text and paste what is detected</string>
+    <string name="terminal_scan_no_code">No code detected in the image</string>
+    <string name="terminal_scan_no_text">No text detected in the image</string>
+    <string name="terminal_scan_failed">Scan failed: %s</string>
+    <string name="terminal_scan_no_camera">No camera app available</string>
+
+    <!-- FloatingTextInputDialog — floating text-entry key on the keyboard toolbar.
+         Base locale only; other locales are translation debt for the normal
+         i18n process (do not hand-translate here). -->
+    <string name="terminal_text_input_title">Text input</string>
+    <string name="terminal_text_input_placeholder">Type text to send…</string>
+    <string name="terminal_text_input_send">Send</string>
+    <string name="terminal_text_input_resize_handle">Resize text input window</string>
+    <string name="terminal_text_input_move_up">Move up</string>
+    <string name="terminal_text_input_move_down">Move down</string>
+    <string name="terminal_text_input_move_left">Move left</string>
+    <string name="terminal_text_input_move_right">Move right</string>
+    <string name="terminal_text_input_expand">Make larger</string>
+    <string name="terminal_text_input_shrink">Make smaller</string>
+
+    <!-- SelectionToolbar button labels and toasts -->
+    <string name="terminal_selection_copy">Copy</string>
+    <string name="terminal_selection_paste">Paste</string>
+    <string name="terminal_selection_open">Open</string>
+    <string name="terminal_selection_macros">Macros</string>
+    <string name="terminal_selection_copied">Copied</string>
+    <string name="terminal_selection_copy_one_line">Copy as one line</string>
+    <string name="terminal_selection_no_url">No URL detected</string>
+    <string name="terminal_selection_anchor_start">Start</string>
+    <string name="terminal_selection_anchor_end">End</string>
+    <string name="terminal_selection_up">Up</string>
+    <string name="terminal_selection_down">Down</string>
+    <string name="terminal_selection_left">Left</string>
+    <string name="terminal_selection_right">Right</string>
+    <string name="terminal_selection_cancel">Cancel</string>
+
+    <!-- VncSettingsDialog colour depth options -->
+    <string name="terminal_vnc_depth_24bit">24-bit colour (best quality)</string>
+    <string name="terminal_vnc_depth_16bit">16-bit colour (faster)</string>
+    <string name="terminal_vnc_depth_256">256 colours (lowest bandwidth)</string>
+    <string name="terminal_mouse_requested_but_disabled">This app is asking for the mouse. Turn on “Mouse input in TUI apps” in Settings → Terminal to use it.</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="terminal_inline_image_title">Inline image</string>
+    <string name="terminal_inline_image_question">This terminal wants to display an image inline.</string>
+    <string name="terminal_inline_image_protocol_kitty">Kitty graphics protocol</string>
+    <string name="terminal_inline_image_protocol_iterm2">iTerm2 protocol</string>
+    <string name="terminal_inline_image_name">File: %1$s</string>
+    <string name="terminal_inline_image_dimensions">Size: %1$d × %2$d px</string>
+    <string name="terminal_inline_image_deny">Deny</string>
+    <string name="terminal_inline_image_always_tab">Always in this tab</string>
+    <string name="terminal_bell_notification_title">Terminal</string>
+    <string name="terminal_bell_notification_body">A terminal program rang the bell</string>
+
+    <!-- Sudo password autofill -->
+    <string name="terminal_sudo_prompt_detected">Sudo password requested</string>
+    <string name="terminal_sudo_prompt_subtitle">Android Keystore • Biometric unlock • Sent only on Fill</string>
+    <string name="terminal_sudo_fill_action">Fill</string>
+    <string name="terminal_sudo_turn_off_action">Turn off</string>
+    <string name="terminal_sudo_disabled_toast">Sudo prompt detection turned off (Settings → Security &amp; Privacy)</string>
+    <string name="terminal_sudo_entry_title">Sudo password for %1$s</string>
+    <string name="terminal_sudo_entry_hint">No password is saved on this connection yet. Enter it once to send directly over SSH to this terminal. If saved, it stays encrypted in the Android Keystore on this device, requires per-use biometric unlock, and is never exposed to AI/MCP tools.</string>
+    <string name="terminal_sudo_turn_off_detection">Turn off sudo prompt detection</string>
+    <string name="terminal_sudo_send_action">Send</string>
+</resources>

@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: gradle
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    ignore:
+      # termlib is vendored with the client's terminal fixes:
+      # settings.gradle.kts includeBuild substitutes org.connectbot:termlib
+      # with the local build, so a version bump here changes nothing built
+      # and upstream releases don't track the fork.
+      - dependency-name: "org.connectbot:termlib"
+
+  - package-ecosystem: cargo
+    directory: /rdp-kotlin/rust
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  - package-ecosystem: gomod
+    directory: /rclone-android/go
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

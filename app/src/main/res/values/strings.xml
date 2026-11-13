@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Haven</string>
+
+    <!-- Navigation labels live in :core:ui strings.xml so all locales
+         share one source. The previous `nav_connections = "Connections"`
+         override here shadowed :core:ui's shorter "Connect" and wrapped
+         to two lines in the bottom nav on narrower devices (#78). -->
+
+    <!-- Common strings shared across modules -->
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="common_done">Done</string>
+    <string name="common_close">Close</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_rename">Rename</string>
+    <string name="common_create">Create</string>
+    <string name="common_connect">Connect</string>
+    <string name="common_disconnect">Disconnect</string>
+    <string name="common_copy">Copy</string>
+    <string name="common_paste">Paste</string>
+    <string name="common_label">Label</string>
+    <string name="common_password">Password</string>
+    <string name="common_port">Port</string>
+    <string name="common_host">Host</string>
+    <string name="common_username">Username</string>
+    <string name="common_install">Install</string>
+    <string name="common_reset">Reset</string>
+    <string name="common_allow">Allow</string>
+    <string name="common_not_now">Not now</string>
+    <string name="common_import">Import</string>
+    <string name="common_add">Add</string>
+    <string name="common_download">Download</string>
+    <string name="common_github">GitHub</string>
+    <string name="common_support">Support</string>
+    <string name="common_unlock">Unlock</string>
+
+    <!-- Battery optimization -->
+    <string name="battery_title">Keep connections alive?</string>
+    <string name="battery_message">Android may close background SSH connections to save battery. Disabling battery optimization for Haven prevents this.</string>
+
+    <!-- Workspace profiles -->
+    <string name="workspace_section_title">Workspaces</string>
+    <string name="workspace_save_current">Save current…</string>
+    <string name="workspace_empty_hint">Open the sessions you want bundled together, then tap Save current. One tap will reopen them all next time.</string>
+    <string name="workspace_save_dialog_title">Save as workspace</string>
+    <string name="workspace_save_dialog_name_label">Name</string>
+    <string name="workspace_save_dialog_items_label">Items to include</string>
+    <string name="workspace_save_dialog_no_items">Nothing to save — connect a session, open Wayland, or browse a share first.</string>
+    <string name="workspace_save_action">Save</string>
+    <string name="workspace_card_kind_terminal">Terminal</string>
+    <string name="workspace_card_kind_file_browser">Files</string>
+    <string name="workspace_card_kind_desktop">Desktop</string>
+    <string name="workspace_card_kind_wayland">Wayland</string>
+    <string name="workspace_card_kind_count">%1$s × %2$d</string>
+    <string name="workspace_card_no_items">empty</string>
+    <string name="workspace_long_press_delete">Delete</string>
+    <string name="workspace_delete_confirm_title">Delete workspace?</string>
+    <string name="workspace_delete_confirm_message">\"%1$s\" will be removed. The connections it references stay.</string>
+    <string name="workspace_launch_progress">Opening %1$s — %2$d / %3$d</string>
+    <string name="workspace_launch_completed">Opened %1$s</string>
+    <string name="workspace_launch_partial">%1$s — %2$d of %3$d items opened</string>
+    <string name="workspace_launch_cancelled">Cancelled %1$s</string>
+    <string name="workspace_launch_failed">Failed: %1$s</string>
+    <string name="workspace_launch_cancel">Cancel</string>
+    <string name="workspace_launch_dismiss">Dismiss</string>
+    <string name="biometric_screen_lock_icon">Screen lock</string>
+    <string name="desktop_screen_title">Desktop</string>
+    <string name="agent_deny">Deny</string>
+
+    <!-- Biometric lock screen -->
+    <string name="app_biometric_locked_title">Haven is locked</string>
+    <string name="app_biometric_authenticate_prompt">Authenticate to continue</string>
+    <string name="app_biometric_open_device_settings">Open device settings</string>
+    <string name="app_biometric_blocked_no_activity_title">Haven is locked</string>
+    <string name="app_biometric_blocked_no_activity_body">Cannot show authentication prompt in this context.</string>
+    <string name="app_biometric_not_enrolled_title">Set up a screen lock</string>
+    <string name="app_biometric_not_enrolled_body">Haven app-lock is enabled, but this device has no screen lock or biometric enrolled. Set one up in device Settings to unlock.</string>
+    <string name="app_biometric_no_hardware_title">Authentication unavailable</string>
+    <string name="app_biometric_no_hardware_body">This device cannot authenticate (no biometric hardware and no device credential). Set up a PIN or password in Settings to unlock.</string>
+
+    <!-- Desktop manager: header / intro -->
+    <string name="app_desktop_manager_title">Full Linux (proot)</string>
+
+    <!-- Desktop manager: primary "start a desktop" hero action -->
+    <string name="app_desktop_primary_title">Linux desktop</string>
+    <string name="app_desktop_primary_subline_quick">Ready in about 4 seconds · Alpine apps · one desktop at a time</string>
+    <string name="app_desktop_primary_subline_full">Any distro · 6 desktops · runs alongside your other apps</string>
+    <string name="app_desktop_primary_start_quick">Start · Quick (UML)</string>
+    <string name="app_desktop_primary_start_full">Start · Full (proot)</string>
+    <string name="app_desktop_primary_switch_to_full">Use Full Linux instead</string>
+    <string name="app_desktop_primary_switch_to_quick">Use the quick desktop instead</string>
+    <string name="app_desktop_primary_running">Running</string>
+    <string name="app_desktop_primary_chip_quick">Quick · %1$s</string>
+    <string name="app_desktop_primary_chip_full">Full · %1$s</string>
+    <string name="app_desktop_compositor_title">Compositor</string>
+    <string name="app_desktop_manager_description">Run a full Linux desktop inside Haven. Pick a distro, install a desktop environment (Xfce4, Openbox, or Sway), then Launch — no separate server or connection needed.</string>
+    <!-- Desktop manager: package mirror (#263) -->
+    <string name="app_desktop_mirror_title">Package mirror</string>
+    <string name="app_desktop_mirror_description">Where distro packages are downloaded from. Pick a region closer to you for faster, more reliable installs. Default uses each distro\'s own CDN.</string>
+    <string name="app_desktop_mirror_default">Default (CDN)</string>
+    <string name="app_desktop_mirror_europe">Europe</string>
+    <string name="app_desktop_mirror_asia">Asia</string>
+    <string name="app_desktop_mirror_americas">Americas</string>
+    <string name="app_desktop_remap_ports_title">Remap low ports</string>
+    <string name="app_desktop_remap_ports_description">Lets guest services listen on privileged ports (&lt;1024): a service on port N becomes reachable at N+2000 (e.g. 80 → 2080). Android blocks the app from binding low ports directly. Off by default; affects every privileged port, including a guest sshd.</string>
+    <string name="app_desktop_share_storage_title">Share device storage with guest</string>
+    <string name="app_desktop_share_storage_description">Mounts your shared storage into the guest at /storage and /sdcard so it can reach your files. Turn off to keep your photos and downloads hidden from the local Linux environment.</string>
+    <!-- Guest DNS (#446): the hardcoded public resolvers failed silently on
+         networks that only allow their own resolver. -->
+    <string name="app_desktop_dns_title">Guest DNS</string>
+    <string name="app_desktop_dns_description">Which name servers the local Linux guest uses. If package installs hang on this network, it may block public DNS \u2014 use the network\'s own resolver.</string>
+    <string name="app_desktop_dns_mode_system">Network (DHCP)</string>
+    <string name="app_desktop_dns_mode_public">Public (Google + Cloudflare)</string>
+    <string name="app_desktop_dns_mode_custom">Custom</string>
+    <string name="app_desktop_dns_custom_label">Name servers</string>
+    <string name="app_desktop_dns_custom_hint">e.g. 10.0.0.53, 1.1.1.1</string>
+    <string name="app_desktop_guest_user_title">Guest user</string>
+    <string name="app_desktop_guest_user_description">Run shells and X11 desktops as a normal user (uid 1000) with passwordless sudo instead of root. Leave blank or set to root for root mode.</string>
+    <string name="app_desktop_guest_user_label">Username</string>
+    <string name="app_desktop_guest_user_hint">root (or e.g. user)</string>
+    <string name="app_desktop_bind_android_system_title">Expose Android system to guest</string>
+    <string name="app_desktop_bind_android_system_description">Mounts Android\'s read-only /system, /vendor, /apex and related partitions into the guest so it can run Android\'s own native binaries (e.g. getprop, toybox). Off by default: this exposes device and vendor internals to the local Linux environment.</string>
+    <!-- Desktop manager: custom bind mounts (#301) -->
+    <string name="app_desktop_custom_binds_title">Custom mounts (%1$d)</string>
+    <string name="app_desktop_custom_binds_description">Expose extra Android paths inside this distro\'s guest, on top of the system mounts. Mounts are read-write.</string>
+    <string name="app_desktop_custom_binds_dialog_title">Custom mounts — %1$s</string>
+    <string name="app_desktop_custom_binds_host_hint">Android path (e.g. /storage/emulated/0/Sync)</string>
+    <string name="app_desktop_custom_binds_guest_hint">Guest path (optional — defaults to the same path)</string>
+    <string name="app_desktop_custom_binds_add">Add mount</string>
+    <string name="app_desktop_custom_binds_empty">No custom mounts. Add one to expose an Android path in the guest.</string>
+    <string name="app_desktop_custom_binds_remove_cd">Remove mount</string>
+    <string name="app_desktop_custom_binds_takes_effect">Applies on the next shell, command, or desktop start for this distro.</string>
+    <string name="app_desktop_custom_binds_stale">%1$d custom mount points at a path that no longer exists — it is skipped when the guest starts.</string>
+    <string name="app_desktop_custom_binds_stale_row">This path no longer exists on the device — the mount is skipped when the guest starts.</string>
+    <!-- Desktop manager: import custom rootfs (#284) -->
+    <string name="app_desktop_import_rootfs">Import rootfs…</string>
+    <string name="app_desktop_export_rootfs">Export rootfs…</string>
+    <string name="app_desktop_options_section">Options &amp; mounts</string>
+    <string name="app_desktop_open_usb_drive">Open USB drive…</string>
+    <string name="app_desktop_open_usb_drive_writable">Open USB drive (writable)…</string>
+    <string name="app_desktop_open_usb_drive_writable_confirm_title">Mount read-write?</string>
+    <string name="app_desktop_open_usb_drive_writable_confirm_body">This mounts the drive read-write. If the VM loses power mid-write (killed, crash, battery pull), the filesystem can be corrupted. Read-only is the safer default.</string>
+    <string name="app_desktop_eject_usb_drive">Eject USB drive</string>
+    <!-- Live USB card route: the raw card is served to the fast UML recovery
+         guest over NBD (ddrescue work), not mounted by a helper VM. -->
+    <string name="app_desktop_open_usb_live">Open USB card directly (rescue console)…</string>
+    <string name="app_desktop_open_usb_live_writable">Open USB card directly (writable)…</string>
+    <string name="app_desktop_usb_live_ready">Raw card attached in the rescue guest — open the “%1$s” connection</string>
+    <string name="app_desktop_usb_live_readonly_note">Raw card over NBD · read-only · %1$s</string>
+    <string name="app_desktop_usb_live_writable_note">Raw card over NBD · WRITABLE · %1$s</string>
+    <string name="app_desktop_usb_live_close">Close live session</string>
+    <string name="app_desktop_delete_usb_appliance">Delete USB helper Linux</string>
+    <string name="app_desktop_usb_drive_progress">USB drive: %1$s</string>
+    <string name="app_desktop_usb_drive_locked">%1$s is locked (LUKS)</string>
+    <string name="app_desktop_usb_drive_unlock">Unlock…</string>
+    <string name="app_desktop_usb_drive_unlock_title">Unlock %1$s</string>
+    <string name="app_desktop_usb_drive_unlock_passphrase">Passphrase</string>
+    <string name="app_desktop_import_dialog_title">Import a rootfs</string>
+    <string name="app_desktop_import_description">Bring your own rootfs tarball (.tar.gz or .tar.xz) — a proot-distro image, a Docker export, or a second copy of a distro you already have. It is used as-is (no packages installed).</string>
+    <string name="app_desktop_import_id_hint">Distro id (slug, e.g. ubuntu-test)</string>
+    <string name="app_desktop_import_label_hint">Label (e.g. Ubuntu 26.04 imported)</string>
+    <string name="app_desktop_import_source_hint">Tarball URL (https://…)</string>
+    <string name="app_desktop_import_family">Package family</string>
+    <string name="app_desktop_import_confirm">Import</string>
+    <string name="app_desktop_cancel">Cancel</string>
+    <string name="app_desktop_save">Save</string>
+    <!-- Desktop manager: app windows -->
+    <string name="app_desktop_app_windows_title">Application windows</string>
+    <string name="app_desktop_app_windows_description">Launch a single application in a floating window over the current screen. Apps run in the active Linux distro and must be installed there.</string>
+    <string name="app_desktop_app_windows_empty">No application windows yet. Add one to launch an app in a floating window.</string>
+    <string name="app_desktop_app_window_launch_cd">Launch %1$s</string>
+    <string name="app_desktop_app_window_edit_cd">Edit %1$s</string>
+    <string name="app_desktop_app_window_delete_cd">Delete %1$s</string>
+    <string name="app_desktop_app_window_pin_home_cd">Add %1$s to home screen</string>
+    <string name="app_desktop_add_app_window">Add app window</string>
+    <string name="app_desktop_edit_app_window_title">Edit app window</string>
+    <string name="app_desktop_add_app_window_title">Add app window</string>
+    <string name="app_desktop_app_window_label_placeholder">e.g. Image viewer</string>
+    <string name="app_desktop_app_window_command_label">Command</string>
+    <string name="app_desktop_app_window_command_placeholder">e.g. imv /root/board.png</string>
+
+    <!-- Desktop manager: open a terminal joined to a running desktop's session (#285) -->
+    <string name="app_desktop_open_terminal_cd">Open terminal in %1$s</string>
+
+    <!-- Desktop manager: installed-apps launcher (xfce4-style menu) -->
+    <string name="app_desktop_browse_installed_apps">Browse installed apps</string>
+    <string name="app_desktop_installed_apps_title">Installed apps</string>
+    <string name="app_desktop_installed_apps_search">Search apps</string>
+    <string name="app_desktop_installed_apps_count">%1$d apps · %2$d with icons</string>
+    <string name="app_desktop_installed_apps_empty">No GUI applications found in the active distro.</string>
+    <string name="app_desktop_installed_apps_close_cd">Close</string>
+    <string name="app_desktop_installed_app_icon_cd">%1$s icon</string>
+    <string name="app_desktop_installed_app_launch_cd">Launch %1$s</string>
+    <string name="app_desktop_installed_app_fullscreen_on_cd">%1$s opens fullscreen — tap for windowed</string>
+    <string name="app_desktop_installed_app_fullscreen_off_cd">%1$s opens windowed — tap for fullscreen</string>
+
+    <!-- App-window resolution + scaling -->
+    <string name="app_desktop_app_window_fullscreen">Open fullscreen</string>
+    <string name="app_desktop_app_window_run_as_root">Run as root</string>
+    <string name="app_desktop_app_window_run_as_root_hint">For package managers and system tools (installs fakeroot)</string>
+    <string name="app_desktop_app_window_resolution">Resolution</string>
+    <string name="app_desktop_app_window_scale">Scale</string>
+    <string name="app_desktop_opt_default">Default</string>
+    <string name="app_desktop_res_auto">Auto</string>
+    <string name="app_desktop_res_landscape">Landscape</string>
+    <string name="app_desktop_res_custom">Custom</string>
+    <string name="app_desktop_res_custom_hint">Width×Height, e.g. 1024x600</string>
+    <string name="app_desktop_app_window_defaults">Default display (all app windows)</string>
+
+    <!-- Desktop manager: system VM (#326) -->
+    <string name="app_system_vm_title">System VM</string>
+    <string name="app_system_vm_description">Boot a full x86_64/arm64 Linux VM (QEMU in the active distro) and view it over VNC. One at a time, and emulated — so slow. Needs a VNC-capable QEMU (Debian\'s has it; Alpine\'s does not).</string>
+    <string name="app_system_vm_empty">No images yet. Import a bootable disk image (.qcow2, .img, .iso) to start.</string>
+    <string name="app_system_vm_import">Import image…</string>
+    <string name="app_system_vm_running">Running · VNC 127.0.0.1:%1$d</string>
+    <string name="app_system_vm_starting">Starting…</string>
+    <string name="app_system_vm_stop">Stop</string>
+    <string name="app_system_vm_start_cd">Start %1$s</string>
+    <string name="app_system_vm_delete_cd">Delete %1$s</string>
+    <string name="app_system_vm_import_title">Import system-VM image</string>
+    <string name="app_system_vm_import_label">Name</string>
+    <string name="app_system_vm_import_source">Image URL or on-device path</string>
+    <string name="app_system_vm_import_arch">Guest architecture</string>
+    <string name="app_system_vm_import_arch_hint">Must match the image — the wrong target doesn\'t error, it just never boots.</string>
+
+    <!-- Desktop manager: desktops inside the UML guest (docs/plans/uml-dm.md) -->
+    <string name="app_uml_desktop_title">UML guest desktop</string>
+    <string name="app_uml_desktop_description">Desktops running inside the UML guest\'s own kernel, viewed over VNC. One at a time (each is a full kernel); installing packages takes a few minutes.</string>
+    <string name="app_uml_desktop_install">Install</string>
+    <string name="app_uml_desktop_installed">Installed</string>
+    <string name="app_uml_desktop_not_installed">Not installed</string>
+    <string name="app_uml_desktop_installing">Installing packages…</string>
+    <string name="app_uml_desktop_starting">Starting on port %1$d…</string>
+    <string name="app_uml_desktop_running">Running · VNC 127.0.0.1:%1$d</string>
+    <string name="app_uml_desktop_failed">Failed</string>
+    <string name="app_uml_desktop_start_cd">Start %1$s desktop</string>
+
+    <!-- Desktop manager: distro / rootfs -->
+    <string name="app_desktop_open_shell_cd">Open shell in %1$s</string>
+    <string name="app_desktop_delete_distro_cd">Delete %1$s</string>
+    <string name="app_desktop_delete_distro_confirm_title">Delete %1$s?</string>
+    <string name="app_desktop_delete_distro_confirm_body">This erases the rootfs and reclaims its disk space. Packages you installed and files in this distro are lost. It re-provisions the next time you open it.</string>
+    <string name="app_desktop_add_distro">+ %1$s  (~%2$d MB)</string>
+    <string name="app_desktop_add_foreign_distro">+ %1$s %2$s — emulated, slower  (~%3$d MB)</string>
+    <string name="app_desktop_add_distro_confirm_title">Download %1$s?</string>
+    <string name="app_desktop_add_distro_confirm_body">This downloads and extracts the rootfs, about %1$d MB. It can take a while on a slow connection.</string>
+    <string name="app_desktop_add_foreign_distro_confirm_body">This downloads and extracts the %1$s rootfs for emulated use, about %2$d MB. It can take a while on a slow connection.</string>
+    <string name="app_desktop_usb_drive_picker_title">Open which USB drive?</string>
+    <string name="app_desktop_usb_route_title">Open %1$s how?</string>
+    <string name="app_desktop_usb_route_body">Android mounted this drive as “%1$s”. Browse it directly (fast), or open it in a small Linux VM — slower to start, but it reads filesystems Android can\'t, like ext4/GPT partitions and LUKS.</string>
+    <string name="app_desktop_usb_route_browse">Browse directly</string>
+    <string name="app_desktop_usb_route_vm">Open in Linux VM</string>
+    <string name="app_desktop_usb_route_readonly_hint">Direct browsing is read-only until All-files access is granted in Settings.</string>
+    <string name="app_desktop_rootfs_downloading">Downloading rootfs… %1$d%%</string>
+    <string name="app_desktop_rootfs_extracting">Extracting rootfs…</string>
+    <string name="app_desktop_rootfs_initializing">Setting up rootfs… (%1$s)</string>
+    <string name="app_desktop_phase_download">Download</string>
+    <string name="app_desktop_phase_extract">Extract</string>
+    <string name="app_desktop_phase_bootstrap_hook">Bootstrap hook</string>
+    <string name="app_desktop_phase_baseline">Baseline packages</string>
+    <string name="app_desktop_setup_failed_phase">Failed: %1$s</string>
+    <string name="app_desktop_proot_log_hint">Full per-phase history: Settings → View PRoot install log.</string>
+    <string name="app_desktop_retry_wipe">Wipe &amp; retry</string>
+    <string name="app_desktop_retry_step">Retry this step</string>
+
+    <!-- Desktop manager: DE rows -->
+    <string name="app_desktop_experimental">experimental</string>
+    <string name="app_desktop_vnc_running">VNC :%1$d (port %2$d)</string>
+    <string name="app_desktop_error">Error</string>
+    <string name="app_desktop_install_distro_first">" · install distro first"</string>
+    <string name="app_desktop_vnc_port_stored">VNC port %1$d</string>
+
+    <!-- Custom (X11) desktop command (#361) -->
+    <string name="app_desktop_custom_cmd_unset">Set the session command to start</string>
+    <string name="app_desktop_custom_cmd_edit">Edit session command</string>
+    <string name="app_desktop_custom_cmd_title">Custom session command</string>
+    <string name="app_desktop_custom_cmd_description">Runs against Haven\'s X server inside the active distro — the termux-x11 pattern, e.g. dbus-launch startxfce4. Install the desktop\'s packages in the distro first. X11 desktops render in software: desktops that require a GL compositor (GNOME Shell, KWin) won\'t start.</string>
+    <string name="app_desktop_custom_cmd_label">Session command</string>
+    <string name="app_desktop_custom_cmd_save_start">Save &amp; start</string>
+
+    <!-- Desktop setup dialog -->
+    <string name="app_desktop_de_with_size">%1$s (%2$s)</string>
+    <string name="app_desktop_experimental_on">Experimental on %1$s</string>
+    <string name="app_desktop_vnc_port_label">VNC port</string>
+    <string name="app_desktop_vnc_display">Display :%1$d</string>
+    <string name="app_desktop_vnc_port_range">Range 5901–5999</string>
+    <string name="app_desktop_phase_packages">Packages</string>
+    <string name="app_desktop_phase_vnc_config">VNC config</string>
+    <string name="app_desktop_phase_marker">Marker file</string>
+    <string name="app_desktop_addon_with_size">%1$s (%2$s)</string>
+
+    <!-- Desktop sessions screen -->
+    <string name="app_desktop_sessions_cd">Sessions</string>
+    <string name="app_desktop_manage_cd">Manage desktops</string>
+    <string name="app_desktop_view_only_cd">View only</string>
+    <string name="app_desktop_empty_hint">Connect via VNC or RDP from the Connections tab</string>
+    <string name="app_desktop_tab_label">%1$s %2$s</string>
+    <string name="app_desktop_move_tab_left_cd">Move left</string>
+    <string name="app_desktop_move_tab_right_cd">Move right</string>
+
+    <!-- Agent consent sheet -->
+    <string name="app_agent_pair_title">Pair MCP client?</string>
+    <string name="app_agent_action_requested">Agent action requested</string>
+    <string name="app_agent_from_client">From: %1$s</string>
+    <string name="app_agent_tool">Tool: %1$s</string>
+    <string name="app_agent_bypass_label">Allow all MCP requests from \'%1$s\' until Haven restarts</string>
+    <string name="app_agent_bypass_description">Includes destructive operations (terminal input, file write/delete, APK install). Cleared on app kill.</string>
+    <string name="app_agent_auto_allow_window">Auto-allow window:</string>
+    <string name="app_agent_minutes">%1$dm</string>
+    <string name="app_agent_allow_for_minutes">Allow for %1$dm</string>
+    <string name="app_agent_pair">Pair</string>
+    <string name="app_agent_block_client">Block</string>
+
+    <!-- Agent presentation sheet -->
+    <string name="app_present_app_missing_details">App window is missing its connection details.</string>
+    <string name="app_window_scale_saved">Saved as this app\'s default size</string>
+    <string name="app_present_dismiss">Dismiss</string>
+    <string name="app_present_image_shared_cd">Image shared by agent</string>
+    <string name="app_present_pause">Pause</string>
+    <string name="app_present_play">Play</string>
+    <string name="app_present_preparing_audio">Preparing audio…</string>
+    <string name="app_present_minimize">Minimize</string>
+    <string name="app_present_pip">Picture-in-picture</string>
+
+    <!-- Agent Activity log — result summaries shown under each MCP call (#239). Tool names stay in English. -->
+    <string name="agent_summary_ok">ok</string>
+    <string name="agent_summary_entries_at">%1$d entries at %2$s:%3$s</string>
+    <string name="agent_summary_entries_via">%1$d entries via %2$s at %3$s</string>
+    <string name="agent_summary_version">version %1$s</string>
+    <string name="agent_summary_dispatched">dispatched %1$s</string>
+    <string name="agent_summary_bytes">%1$d bytes</string>
+    <string name="agent_summary_disconnected">disconnected</string>
+    <string name="agent_summary_pf_saved">saved</string>
+    <string name="agent_summary_pf_saved_activated">saved, activated</string>
+    <string name="agent_summary_pf_bound">%1$s, port %2$d</string>
+    <string name="agent_summary_pf_removed">removed</string>
+    <string name="agent_summary_pf_removed_deactivated">removed and deactivated</string>
+    <string name="agent_summary_uploaded_bytes">uploaded %1$d bytes</string>
+    <string name="agent_summary_served_bytes">served %1$d bytes from %2$s</string>
+    <string name="agent_summary_deleted">deleted</string>
+    <string name="agent_summary_uploaded_bytes_via">uploaded %1$d bytes via %2$s</string>
+    <string name="agent_summary_deleted_via">deleted via %1$s</string>
+    <string name="agent_summary_bytes_typed">%1$d bytes typed</string>
+    <string name="agent_summary_converted">%1$d KiB in %2$d ms</string>
+    <string name="agent_summary_kib_installed">%1$d KiB installed</string>
+    <string name="agent_summary_reused_existing">reused existing</string>
+    <string name="agent_summary_opened">opened</string>
+    <string name="agent_summary_mib_installed">%1$d MiB installed</string>
+    <string name="agent_summary_enabled_at">enabled at %1$s:%2$d</string>
+    <string name="agent_summary_enabled">enabled</string>
+    <string name="app_present_fullscreen">Fullscreen</string>
+    <string name="app_present_exit_fullscreen">Exit fullscreen</string>
+
+    <!-- Tasker/MacroDroid plugin (#367) -->
+    <string name="tasker_plugin_name">Run command on a Haven server</string>
+    <string name="tasker_edit_title">Run a shell command on a saved Haven SSH connection.</string>
+    <string name="tasker_loading">Loading connections…</string>
+    <string name="tasker_no_ssh_profiles">No SSH connections saved. Add one in Haven first.</string>
+    <string name="tasker_field_server">Haven server</string>
+    <string name="tasker_field_command">Command</string>
+    <string name="tasker_field_command_help">Runs in the login shell. Tasker/MacroDroid variables are substituted before it runs.</string>
+    <string name="tasker_insert_variable">Insert variable</string>
+    <string name="tasker_toggle_overlay">Show the command in a live terminal</string>
+    <string name="tasker_toggle_block">Wait until the command finishes</string>
+    <string name="tasker_blurb" translatable="false">%1$s: %2$s</string>
+    <string name="tasker_channel_name">Command results</string>
+    <string name="tasker_watch_title">Watch %1$s</string>
+    <string name="tasker_watch_text">Tap to run %1$s in a live terminal</string>
+    <string name="tasker_result_exit">%1$s — exit %2$d</string>
+    <string name="tasker_result_timed_out">%1$s — timed out</string>
+    <string name="tasker_result_failed">%1$s — failed</string>
+
+    <!-- App shortcuts -->
+    <string name="shortcut_pull_backup_label">Pull Backup Now</string>
+    <!-- Backup pull worker: notification, Toast and channel text (#458). Counts are
+         phrased as "label: N" rather than "N items" so no language needs plurals. -->
+    <string name="backup_sync_channel_name">Backup sync</string>
+    <string name="backup_pull_restored_count">Items restored: %1$d</string>
+    <string name="backup_pull_errors_suffix"> (errors: %1$d)</string>
+    <string name="backup_pull_notify_success_title">Backup restored</string>
+    <string name="backup_pull_notify_failure_title">Backup restore failed</string>
+    <string name="backup_pull_toast_success">Backup restored</string>
+    <string name="backup_pull_toast_failure">Backup pull failed: %1$s</string>
+    <string name="backup_pull_started">Pulling backup in background…</string>
+    <string name="backup_pull_no_password">No password saved. Opening Haven…</string>
+    <plurals name="app_agent_more_pending">
+        <item quantity="one">＋%1$d more request waiting behind this one — you’ll see it after this</item>
+        <item quantity="other">＋%1$d more requests waiting behind this one — you’ll see them after this</item>
+    </plurals>
+    <plurals name="agent_summary_connections">
+        <item quantity="one">%1$d connection</item>
+        <item quantity="other">%1$d connections</item>
+    </plurals>
+    <plurals name="agent_summary_sessions">
+        <item quantity="one">%1$d session</item>
+        <item quantity="other">%1$d sessions</item>
+    </plurals>
+    <plurals name="agent_summary_remotes">
+        <item quantity="one">%1$d remote</item>
+        <item quantity="other">%1$d remotes</item>
+    </plurals>
+    <string name="update_notification_channel">App updates</string>
+    <string name="update_notification_title">Haven %1$s is available</string>
+    <string name="update_notification_text">Tap to open the release page.</string>
+</resources>

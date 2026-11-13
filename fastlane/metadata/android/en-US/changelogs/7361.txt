@@ -1,0 +1,5 @@
+🖵️ Remote desktops are markedly faster — frame rate over a 1080p session roughly doubled in testing (6.6 → 9.6-11.4 fps). Frames were copied three times on the way to the screen; the decoded picture now goes straight into the displayed image, once. (#466)
+
+🏷️ Terminal tab names are back, lost in v5.86.24 once you had enough tabs. (#479)
+
+Used v5.86.23-25 with tmux and your terminal looks short? Run `tmux set -g window-size latest` on that host.

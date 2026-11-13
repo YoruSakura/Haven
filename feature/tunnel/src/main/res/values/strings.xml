@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Tunnels list -->
+    <string name="tunnel_add">Add tunnel</string>
+    <string name="tunnel_empty_title">No tunnels configured yet</string>
+    <string name="tunnel_empty_subtitle">Add a WireGuard config to route individual connection profiles through it — no system-wide VPN required.</string>
+    <!-- %1$s = tunnel type (e.g. WireGuard), %2$s = date added -->
+    <string name="tunnel_row_subtitle">%1$s · added %2$s</string>
+    <string name="tunnel_type_unknown">unknown</string>
+    <string name="tunnel_cf_sign_in_again">Sign in again</string>
+    <string name="tunnel_delete_content_desc">Delete tunnel</string>
+
+    <!-- Delete confirmation -->
+    <string name="tunnel_delete_title">Delete tunnel?</string>
+    <!-- %1$s = tunnel label -->
+    <string name="tunnel_delete_message">Remove \"%1$s\". Profiles referencing this tunnel will fail to connect until you pick another one.</string>
+    <string name="tunnel_delete_confirm">Delete</string>
+    <string name="tunnel_cancel">Cancel</string>
+
+    <!-- Add tunnel dialog -->
+    <string name="tunnel_type_label">Tunnel type</string>
+    <string name="tunnel_label">Label</string>
+    <string name="tunnel_save">Save</string>
+    <string name="tunnel_edit">Edit tunnel</string>
+    <string name="tunnel_wireguard_help">Paste a wg-quick style config or load a .conf file. Only [Interface] and [Peer] fields are read; unknown keys (PostUp, Table, MTU) are ignored. Hostname endpoints and DNS names are resolved at tunnel start.</string>
+    <string name="tunnel_load_from_file">Load from file…</string>
+    <string name="tunnel_wireguard_config">WireGuard config</string>
+    <string name="tunnel_tailscale_help">Generate an authkey in the Tailscale admin console (Settings → Keys), or in your Headscale CLI (`headscale preauthkeys create`). Haven joins your tailnet on first use and reuses the node state after that, so a one-time key is fine. Reusable keys let you reconnect after reinstall.</string>
+    <string name="tunnel_tailscale_authkey_label">Auth key (tskey-auth-…)</string>
+    <string name="tunnel_tailscale_control_url_label">Control plane URL (optional)</string>
+    <string name="tunnel_tailscale_control_url_help">Leave blank for Tailscale\'s hosted controlplane. Set to a Headscale URL for a self-hosted coordination server.</string>
+    <string name="tunnel_netbird_help">Generate a setup key in the NetBird dashboard (Setup Keys → Add setup key). Haven joins your network on first use and reuses the peer state after that, so a one-time key is fine. Reusable keys let you reconnect after reinstall.</string>
+    <string name="tunnel_netbird_setup_key_label">Setup key</string>
+    <string name="tunnel_netbird_management_url_label">Management URL (optional)</string>
+    <string name="tunnel_netbird_management_url_help">Leave blank for NetBird\'s hosted management. Set to your server\'s URL for a self-hosted management service.</string>
+    <string name="tunnel_openvpn_help">Paste an .ovpn profile or load a file. If the profile uses auth-user-pass without an inline credentials file, enter a username and password below.</string>
+    <string name="tunnel_openvpn_config_label">OpenVPN profile (.ovpn)</string>
+    <string name="tunnel_openvpn_username_label">Username (optional)</string>
+    <string name="tunnel_openvpn_password_label">Password (optional)</string>
+
+    <!-- Cloudflare Access inline fields (SSH-over-Cloudflare-Tunnel transport) -->
+    <string name="cf_experimental_banner">Experimental — Haven implements the same WebSocket wire protocol as `cloudflared access ssh`. Tested against a small set of tenants; please report mismatches via GitHub #154.</string>
+    <string name="cf_intro_blurb">Route SSH through a Cloudflare Tunnel published hostname — the in-app equivalent of `cloudflared access ssh --hostname &lt;host&gt;`. Public Tunnel routes need only a hostname. Access-protected routes additionally require a JWT — tap Sign in to capture one via your team\'s IdP.</string>
+    <string name="cf_field_hostname">Hostname (e.g. ssh.example.com)</string>
+    <string name="cf_jwt_none">No JWT — only works for unprotected Tunnel routes</string>
+    <string name="cf_jwt_expired">JWT expired — sign in again</string>
+    <!-- %1$d = hours until the captured Access JWT expires -->
+    <string name="cf_jwt_expires_hours">Signed in · expires in ~%1$dh</string>
+    <string name="cf_jwt_expires_soon">Signed in · expires in &lt;1h</string>
+    <string name="cf_jwt_signed_in">Signed in</string>
+    <string name="cf_test_running">Testing…</string>
+    <string name="cf_test_connection">Test connection</string>
+    <string name="cf_advanced_hide">Hide advanced</string>
+    <string name="cf_advanced_show">Advanced (Access auth, bastion, paste JWT)</string>
+    <string name="cf_sign_in">Sign in via Cloudflare Access</string>
+    <string name="cf_reauthenticate">Re-authenticate</string>
+    <string name="cf_field_team_domain">Team domain (optional)</string>
+    <string name="cf_team_domain_help">Only needed for Access-protected routes; lets us capture the team-domain cookie as a fallback if the per-app one is missing.</string>
+    <string name="cf_field_jump_destination">Jump destination (optional)</string>
+    <string name="cf_jump_destination_help">Bastion-mode multi-target tunnels: forwarded as `Cf-Access-Jump-Destination`. Leave blank for one-target routes.</string>
+    <string name="cf_jwt_paste_help">For headless setups: run `cloudflared access token --app https://&lt;hostname&gt;` on another machine and paste the JWT here. Expiry is parsed from the token automatically.</string>
+    <string name="cf_field_jwt">Cloudflare Access JWT (optional)</string>
+    <string name="tunnel_anyconnect_help">Connect through a Cisco AnyConnect or ocserv (OpenConnect) VPN without the Cisco app. Only profiles that route through this tunnel use it; the rest of your phone does not. Username/password, auth groups and TOTP or push second factors are supported; SAML/SSO and client certificates are not.</string>
+    <string name="tunnel_anyconnect_server_label">Server</string>
+    <string name="tunnel_anyconnect_server_help">Gateway host as you would type it into Cisco\'s app, optionally with :port or a group path.</string>
+    <string name="tunnel_anyconnect_username_label">Username</string>
+    <string name="tunnel_anyconnect_password_label">Password</string>
+    <string name="tunnel_anyconnect_group_label">Auth group (optional)</string>
+    <string name="tunnel_anyconnect_group_help">The group or profile to choose from the server\'s list. Leave blank for the default.</string>
+    <string name="tunnel_anyconnect_otp_label">OTP secret (optional)</string>
+    <string name="tunnel_anyconnect_otp_help">Base32 secret or otpauth:// link from your authenticator setup. Haven answers the code prompt itself, which lets the tunnel reconnect unattended.</string>
+    <string name="tunnel_anyconnect_secondary_label">Second-factor answer (optional)</string>
+    <string name="tunnel_anyconnect_secondary_help">A fixed answer to the second prompt, e.g. push for Duo. Used only when no OTP secret is set.</string>
+    <string name="tunnel_anyconnect_cert_label">Server certificate (optional)</string>
+    <string name="tunnel_anyconnect_cert_help">Only for self-signed gateways: a pin-sha256:… value. If the certificate is not trusted, the connection error shows the value to paste here.</string>
+    <string name="tunnel_status_connected">Connected</string>
+    <string name="tunnel_status_connecting">Connecting…</string>
+    <string name="tunnel_connect">Connect tunnel</string>
+    <string name="tunnel_disconnect">Disconnect tunnel</string>
+    <string name="tunnel_sign_out">Sign out</string>
+    <string name="tunnel_port_forwards">Port forwards</string>
+    <string name="tunnel_port_forwards_title">Port forwards · %1$s</string>
+    <string name="tunnel_port_forwards_help">Forward a local TCP or UDP port on 127.0.0.1 (reachable at 10.0.2.2 inside QEMU VMs) directly to a remote host:port through this tunnel — no SSH, RDP, or Mosh required.</string>
+    <string name="tunnel_port_forward_local_port">Local port</string>
+    <string name="tunnel_port_forward_remote_host">Remote host or IP</string>
+    <string name="tunnel_port_forward_remote_port">Remote port</string>
+    <string name="tunnel_port_forward_add">Add forward</string>
+    <string name="tunnel_port_forward_empty">No port forwards configured for this tunnel.</string>
+    <string name="tunnel_auto_proxy_title">Auto-proxy local Linux through tunnel</string>
+    <string name="tunnel_auto_proxy_subtitle">Export ALL_PROXY / HTTP(S)_PROXY to the active tunnel\'s SOCKS5 listener in PRoot shells and desktops (or use `with-tunnel &lt;cmd&gt;` on demand; in QEMU use 10.0.2.2:&lt;port&gt;).</string>
+    <string name="tunnel_close">Close</string>
+    <string name="tunnel_anyconnect_password_help">Leave empty to be asked when signing in.</string>
+    <string name="tunnel_anyconnect_prompt_help">Codes sent by SMS or e-mail: leave the OTP secret and second-factor answer empty, and Haven asks for the code when you sign in.</string>
+    <string name="tunnel_anyconnect_stay_connected_label">Stay connected</string>
+    <string name="tunnel_anyconnect_stay_connected_help">Keep the VPN up after your last connection closes, like Cisco\'s app. Off: it disconnects, and reconnecting soon after resumes the session without a new code.</string>
+</resources>

@@ -1,0 +1,5 @@
+🗂️ Connections can be dragged past a collapsed folder, and into one. A collapsed folder used to be a wall that nothing below it could cross.
+
+🔗 A link the terminal split across two lines now opens in full, when the break falls inside a filename.
+
+🖥️ RDP picture updates that fail to decode are now reported in the connection log instead of being skipped silently.

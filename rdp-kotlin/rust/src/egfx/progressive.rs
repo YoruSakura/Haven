@@ -1,0 +1,1918 @@
+//! RemoteFX Progressive (MS-RDPRFX 2.2.4 — 2.2.7) decoder.
+//!
+//! Progressive is what Windows uses for photographic / smoothly-varying
+//! desktop tiles that ClearCodec doesn't handle (cmd window backgrounds,
+//! image previews, anti-aliased graphics under high-DPI). Without this
+//! decoder our EGFX surface paints those regions as black.
+//!
+//! Wire structure: a stream of WBT_* blocks, each with a `u16 type` +
+//! `u32 length` header. The interesting top-level blocks are:
+//!
+//! ```text
+//!   WBT_SYNC          (0xCCC0)  magic 0xCACCACCA + version 0x0100
+//!   WBT_CONTEXT       (0xCCC3)  ctxId u8 + tileSize u16 + flags u8
+//!                                flags & 0x01 = RFX_SUBBAND_DIFFING
+//!   WBT_FRAME_BEGIN   (0xCCC1)  frameIndex u32 + regionCount u16
+//!   WBT_REGION        (0xCCC4)  see [`parse_region`]
+//!   WBT_FRAME_END     (0xCCC2)  empty
+//! ```
+//!
+//! WBT_REGION carries the actual tile data inline as nested
+//! WBT_TILE_SIMPLE / WBT_TILE_FIRST / WBT_TILE_UPGRADE blocks. SIMPLE and
+//! FIRST share the same decode pipeline (FIRST has an extra `quality`
+//! byte; SIMPLE pretends quality=0xFF). UPGRADE is a refinement pass on
+//! top of a previously-decoded FIRST tile and requires per-tile state
+//! (sign + current buffers) to survive across PDUs — we currently log
+//! and skip it. Static UI tiles arrive as FIRST/SIMPLE so this covers
+//! the ~99% case.
+//!
+//! Per-tile pipeline (FIRST/SIMPLE):
+//!
+//! 1. RLGR1-decode the Y / Cb / Cr encoded buffers (via
+//!    `ironrdp_graphics::rlgr::decode`) into 4096-element i16 subband
+//!    buffers (one per plane).
+//! 2. Apply per-subband left-shift by `quant + progQuant - 1` for each
+//!    of HL1..HH3 + LL3. The shift values come from the per-tile quant
+//!    indices into the region's quant table.
+//! 3. Inverse DWT — extrapolate-mode (when region.flags &
+//!    RFX_DWT_REDUCE_EXTRAPOLATE) with asymmetric L/H subband counts,
+//!    or classic-mode (matches `ironrdp_graphics::dwt::decode`).
+//! 4. Convert the 64×64 i16 YCbCr planes into RGBA8888.
+//!
+//! Reference: FreeRDP 3.16 `libfreerdp/codec/progressive.c` (Apache 2.0).
+//! Algorithm ported, code is original.
+
+use std::io;
+
+use ironrdp_graphics::rlgr;
+use ironrdp_pdu::codecs::rfx::EntropyAlgorithm;
+use log::{debug, info, warn};
+
+// Block type constants (MS-RDPRFX 2.2.4.1).
+const WBT_SYNC: u16 = 0xCCC0;
+const WBT_FRAME_BEGIN: u16 = 0xCCC1;
+const WBT_FRAME_END: u16 = 0xCCC2;
+const WBT_CONTEXT: u16 = 0xCCC3;
+const WBT_REGION: u16 = 0xCCC4;
+const WBT_TILE_SIMPLE: u16 = 0xCCC5;
+const WBT_TILE_FIRST: u16 = 0xCCC6;
+const WBT_TILE_UPGRADE: u16 = 0xCCC7;
+
+const SYNC_MAGIC: u32 = 0xCACC_ACCA;
+const SYNC_VERSION: u16 = 0x0100;
+
+// Region/context/tile flag bits (all happen to be 0x01 but apply to
+// different blocks).
+const RFX_DWT_REDUCE_EXTRAPOLATE: u8 = 0x01;
+const RFX_TILE_DIFFERENCE: u8 = 0x01;
+
+// Subband buffer is always 4096 i16 values regardless of mode (the per-
+// band element counts differ between extrapolate/non-extrapolate but
+// always sum to 4096). 64×64 = 4096 final pixels per plane.
+const SUBBAND_LEN: usize = 4096;
+
+/// Per-channel quantisation table entry. Five wire bytes pack ten
+/// 4-bit fields (LL3..HH1) per `progressive_component_codec_quant_read`.
+#[derive(Debug, Default, Clone, Copy)]
+struct Quant {
+    ll3: u8,
+    hl3: u8,
+    lh3: u8,
+    hh3: u8,
+    hl2: u8,
+    lh2: u8,
+    hh2: u8,
+    hl1: u8,
+    lh1: u8,
+    hh1: u8,
+}
+
+impl Quant {
+    fn read(b: [u8; 5]) -> Self {
+        Self {
+            ll3: b[0] & 0x0F,
+            hl3: (b[0] >> 4) & 0x0F,
+            lh3: b[1] & 0x0F,
+            hh3: (b[1] >> 4) & 0x0F,
+            hl2: b[2] & 0x0F,
+            lh2: (b[2] >> 4) & 0x0F,
+            hh2: b[3] & 0x0F,
+            hl1: (b[3] >> 4) & 0x0F,
+            lh1: b[4] & 0x0F,
+            hh1: (b[4] >> 4) & 0x0F,
+        }
+    }
+
+    /// Sum two quant tables component-wise.
+    fn add(&self, other: &Quant) -> Quant {
+        Quant {
+            ll3: self.ll3 + other.ll3,
+            hl3: self.hl3 + other.hl3,
+            lh3: self.lh3 + other.lh3,
+            hh3: self.hh3 + other.hh3,
+            hl2: self.hl2 + other.hl2,
+            lh2: self.lh2 + other.lh2,
+            hh2: self.hh2 + other.hh2,
+            hl1: self.hl1 + other.hl1,
+            lh1: self.lh1 + other.lh1,
+            hh1: self.hh1 + other.hh1,
+        }
+    }
+
+    /// Component-wise `self - other` (saturating). Used to derive the number
+    /// of refinement bits an upgrade pass carries: `oldBitPos - newBitPos`.
+    fn sub(&self, other: &Quant) -> Quant {
+        Quant {
+            ll3: self.ll3.saturating_sub(other.ll3),
+            hl3: self.hl3.saturating_sub(other.hl3),
+            lh3: self.lh3.saturating_sub(other.lh3),
+            hh3: self.hh3.saturating_sub(other.hh3),
+            hl2: self.hl2.saturating_sub(other.hl2),
+            lh2: self.lh2.saturating_sub(other.lh2),
+            hh2: self.hh2.saturating_sub(other.hh2),
+            hl1: self.hl1.saturating_sub(other.hl1),
+            lh1: self.lh1.saturating_sub(other.lh1),
+            hh1: self.hh1.saturating_sub(other.hh1),
+        }
+    }
+
+    /// Component-wise `self - 1` (saturating) — FreeRDP `progressive_rfx_quant_lsub`.
+    /// Turns a bit-position table into the per-band left-shift table.
+    fn lsub1(&self) -> Quant {
+        Quant {
+            ll3: self.ll3.saturating_sub(1),
+            hl3: self.hl3.saturating_sub(1),
+            lh3: self.lh3.saturating_sub(1),
+            hh3: self.hh3.saturating_sub(1),
+            hl2: self.hl2.saturating_sub(1),
+            lh2: self.lh2.saturating_sub(1),
+            hh2: self.hh2.saturating_sub(1),
+            hl1: self.hl1.saturating_sub(1),
+            lh1: self.lh1.saturating_sub(1),
+            hh1: self.hh1.saturating_sub(1),
+        }
+    }
+}
+
+#[derive(Debug, Default)]
+struct ProgQuant {
+    quality: u8,
+    y: Quant,
+    cb: Quant,
+    cr: Quant,
+}
+
+/// One decoded 64×64 RGBA tile, ready to blit into a surface.
+pub struct DecodedTile {
+    #[allow(dead_code)]
+    pub surface_id: u16,
+    /// Surface-local pixel coords of the tile's top-left.
+    pub x: u16,
+    pub y: u16,
+    /// 64*64*4 = 16384 bytes RGBA8888.
+    pub rgba: Vec<u8>,
+}
+
+#[derive(Debug)]
+pub enum ProgressiveError {
+    Io(io::Error),
+    BadBlock(String),
+    Rlgr(rlgr::RlgrError),
+    BadRegion(String),
+}
+
+impl std::fmt::Display for ProgressiveError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Io(e) => write!(f, "io error: {e}"),
+            Self::BadBlock(s) => write!(f, "bad block: {s}"),
+            Self::Rlgr(e) => write!(f, "rlgr error: {e:?}"),
+            Self::BadRegion(s) => write!(f, "bad region: {s}"),
+        }
+    }
+}
+
+impl std::error::Error for ProgressiveError {}
+
+impl From<io::Error> for ProgressiveError {
+    fn from(e: io::Error) -> Self {
+        Self::Io(e)
+    }
+}
+impl From<rlgr::RlgrError> for ProgressiveError {
+    fn from(e: rlgr::RlgrError) -> Self {
+        Self::Rlgr(e)
+    }
+}
+
+/// Per-tile persistent state for progressive refinement (FreeRDP
+/// `RFX_PROGRESSIVE_TILE`). A FIRST/SIMPLE tile fills `current` (the shifted
+/// DWT coefficients) and `sign` (the FIRST-pass raw coefficient signs); later
+/// WBT_TILE_UPGRADE passes refine them. `bitpos` is the cumulative per-band
+/// bit position reached so far. Indexed [0]=Y, [1]=Cb, [2]=Cr.
+struct TileState {
+    current: [Box<[i16; SUBBAND_LEN]>; 3],
+    sign: [Box<[i16; SUBBAND_LEN]>; 3],
+    bitpos: [Quant; 3],
+}
+
+impl TileState {
+    fn new() -> Self {
+        Self {
+            current: [
+                Box::new([0; SUBBAND_LEN]),
+                Box::new([0; SUBBAND_LEN]),
+                Box::new([0; SUBBAND_LEN]),
+            ],
+            sign: [
+                Box::new([0; SUBBAND_LEN]),
+                Box::new([0; SUBBAND_LEN]),
+                Box::new([0; SUBBAND_LEN]),
+            ],
+            bitpos: [Quant::default(); 3],
+        }
+    }
+}
+
+/// MS-RDPRFX Progressive decoder. Per-channel state lives here:
+/// SYNC seen, CONTEXT flags, scratch buffers used during tile decode.
+pub struct ProgressiveDecoder {
+    sync_seen: bool,
+    context_flags: Option<u8>,
+    /// Scratch i16 buffers for one tile's three planes. Boxed so we
+    /// don't blow the stack in `decode`.
+    work_y: Box<[i16; SUBBAND_LEN]>,
+    work_cb: Box<[i16; SUBBAND_LEN]>,
+    work_cr: Box<[i16; SUBBAND_LEN]>,
+    /// IDWT temporary buffer.
+    work_tmp: Box<[i16; SUBBAND_LEN]>,
+    /// #418/#496: WBT_TILE_UPGRADE refinement support. **ON by default since
+    /// v5.86.40**, verified against a real Windows 11 24H2 stream rather than
+    /// assumed: an idle desktop sends 500+ refinement tiles per 15s, dropping
+    /// them leaves visible wavelet ringing around every glyph, and decoding
+    /// them produced zero errors and clean output. The old comment feared a
+    /// mis-decode painting garbage; measurement said otherwise.
+    upgrade_enabled: bool,
+    /// Per-tile refinement state, keyed by (surface_id, xIdx, yIdx). Populated
+    /// on FIRST/SIMPLE only when `upgrade_enabled`.
+    tile_states: std::collections::HashMap<(u16, u16, u16), Box<TileState>>,
+    /// Tiles dropped because refinement is gated off (#462).
+    upgrades_skipped: u64,
+    /// Tiles dropped for carrying delta coefficients we cannot apply (#462).
+    diff_tiles_skipped: u64,
+    /// Delta-coded tiles successfully decoded (#477). Counted so a report can
+    /// tell "decoded them" from "never saw one".
+    diff_tiles_decoded: u64,
+}
+
+/// Whether this occurrence should be logged.
+///
+/// A frame can carry hundreds of tiles, so logging each one would bury the
+/// session. The first is always reported — that is the one a bug report needs
+/// — and then every 500th, which keeps a persistent problem visible without
+/// flooding.
+fn should_report(count: u64) -> bool {
+    // `count > 0` guards the modulo: 0 % 500 == 0 would otherwise report
+    // a drop that has not happened.
+    count > 0 && (count == 1 || count % 500 == 0)
+}
+
+impl ProgressiveDecoder {
+    pub fn new() -> Self {
+        Self {
+            sync_seen: false,
+            context_flags: None,
+            work_y: Box::new([0; SUBBAND_LEN]),
+            work_cb: Box::new([0; SUBBAND_LEN]),
+            work_cr: Box::new([0; SUBBAND_LEN]),
+            work_tmp: Box::new([0; SUBBAND_LEN]),
+            upgrade_enabled: true,
+            tile_states: std::collections::HashMap::new(),
+            upgrades_skipped: 0,
+            diff_tiles_skipped: 0,
+            diff_tiles_decoded: 0,
+        }
+    }
+
+    /// Enable or disable WBT_TILE_UPGRADE refinement decoding (#418).
+    ///
+    /// **Default is ON** since v5.86.40 — see
+    /// [`ProgressiveDecoder::upgrade_enabled`] for the measurement that
+    /// discharged the gate. This setter now exists to turn it *off*, which is
+    /// only useful for reproducing the pre-v5.86.40 behaviour when diagnosing a
+    /// report against an older build.
+    ///
+    /// (This doc said "Default off" until 2026-08-09, two releases after the
+    /// default flipped. Stale by exactly the amount that would send someone
+    /// looking for a toggle that no longer needs touching.)
+    #[allow(dead_code)]
+    pub fn set_upgrade_enabled(&mut self, enabled: bool) {
+        self.upgrade_enabled = enabled;
+    }
+
+    /// Drop the refinement state for a surface the server has deleted (#496).
+    ///
+    /// ★ Each entry is ~48 KB (3 components × current+sign × 4096 × i16), and
+    /// there is one per 64×64 tile — about 12 MB of state for a 1280×800
+    /// surface, 25 MB at 1080p. Nothing else evicts them, so a server that
+    /// creates and deletes surfaces across a session (Windows does, on
+    /// resolution changes and reconnects) would leave every abandoned
+    /// surface's worth behind for the life of the connection.
+    ///
+    /// Harmless while refinement decoding was off, because nothing populated
+    /// the map at all — which is exactly why turning it on has to bring this
+    /// with it rather than after it.
+    pub fn forget_surface(&mut self, surface_id: u16) {
+        let before = self.tile_states.len();
+        self.tile_states.retain(|(sid, _, _), _| *sid != surface_id);
+        let dropped = before - self.tile_states.len();
+        if dropped > 0 {
+            debug!("Progressive: dropped {dropped} tile state(s) for deleted surface {surface_id}");
+        }
+    }
+
+    /// Drop all refinement state — the graphics context is being rebuilt.
+    pub fn forget_all(&mut self) {
+        if !self.tile_states.is_empty() {
+            debug!(
+                "Progressive: dropped {} tile state(s) on graphics reset",
+                self.tile_states.len()
+            );
+            self.tile_states.clear();
+        }
+    }
+
+    /// Decode one Progressive PDU's bitmap_data, appending all decoded
+    /// tiles to `out_tiles`. The same channel can carry many PDUs; state
+    /// (sync_seen, context_flags) persists across calls.
+    pub fn decode(
+        &mut self,
+        surface_id: u16,
+        bitmap_data: &[u8],
+        out_tiles: &mut Vec<DecodedTile>,
+    ) -> Result<(), ProgressiveError> {
+        let mut pos = 0usize;
+        while pos + 6 <= bitmap_data.len() {
+            let bt = u16_le(&bitmap_data[pos..]);
+            let bl = u32_le(&bitmap_data[pos + 2..]) as usize;
+            if bl < 6 || pos + bl > bitmap_data.len() {
+                return Err(ProgressiveError::BadBlock(format!(
+                    "block 0x{bt:04x} len={bl} overflows at offset {pos}, total {} bytes",
+                    bitmap_data.len()
+                )));
+            }
+            let payload = &bitmap_data[pos + 6..pos + bl];
+            match bt {
+                WBT_SYNC => self.parse_sync(payload)?,
+                WBT_CONTEXT => self.parse_context(payload)?,
+                WBT_FRAME_BEGIN => self.parse_frame_begin(payload)?,
+                WBT_FRAME_END => debug!("Progressive: WBT_FRAME_END"),
+                WBT_REGION => self.parse_region(surface_id, payload, out_tiles)?,
+                other => warn!(
+                    "Progressive: unexpected top-level block 0x{other:04x} ({} byte payload)",
+                    payload.len()
+                ),
+            }
+            pos += bl;
+        }
+        if pos != bitmap_data.len() {
+            warn!(
+                "Progressive: {} trailing bytes after blocks",
+                bitmap_data.len() - pos
+            );
+        }
+        Ok(())
+    }
+
+    fn parse_sync(&mut self, payload: &[u8]) -> Result<(), ProgressiveError> {
+        if payload.len() < 6 {
+            return Err(ProgressiveError::BadBlock(format!(
+                "WBT_SYNC payload {} bytes < 6",
+                payload.len()
+            )));
+        }
+        let magic = u32_le(&payload[0..]);
+        let ver = u16_le(&payload[4..]);
+        if magic != SYNC_MAGIC {
+            return Err(ProgressiveError::BadBlock(format!(
+                "WBT_SYNC bad magic 0x{magic:08x} (want 0x{SYNC_MAGIC:08x})"
+            )));
+        }
+        if ver != SYNC_VERSION {
+            warn!("Progressive: SYNC version 0x{ver:04x} (expected 0x{SYNC_VERSION:04x})");
+        }
+        self.sync_seen = true;
+        debug!("Progressive: SYNC ok");
+        Ok(())
+    }
+
+    fn parse_context(&mut self, payload: &[u8]) -> Result<(), ProgressiveError> {
+        if payload.len() < 4 {
+            return Err(ProgressiveError::BadBlock(format!(
+                "WBT_CONTEXT payload {} < 4",
+                payload.len()
+            )));
+        }
+        let ctx_id = payload[0];
+        let tile_size = u16_le(&payload[1..]);
+        let flags = payload[3];
+        if tile_size != 64 {
+            return Err(ProgressiveError::BadBlock(format!(
+                "WBT_CONTEXT tileSize {tile_size} != 64"
+            )));
+        }
+        self.context_flags = Some(flags);
+        debug!("Progressive: CONTEXT ctxId={ctx_id} tileSize={tile_size} flags=0x{flags:02x}");
+        Ok(())
+    }
+
+    fn parse_frame_begin(&mut self, payload: &[u8]) -> Result<(), ProgressiveError> {
+        if payload.len() < 6 {
+            return Err(ProgressiveError::BadBlock(format!(
+                "WBT_FRAME_BEGIN payload {} < 6",
+                payload.len()
+            )));
+        }
+        let frame_idx = u32_le(&payload[0..]);
+        let region_count = u16_le(&payload[4..]);
+        debug!("Progressive: FRAME_BEGIN idx={frame_idx} regions={region_count}");
+        Ok(())
+    }
+
+    fn parse_region(
+        &mut self,
+        surface_id: u16,
+        payload: &[u8],
+        out_tiles: &mut Vec<DecodedTile>,
+    ) -> Result<(), ProgressiveError> {
+        // 12-byte fixed header.
+        if payload.len() < 12 {
+            return Err(ProgressiveError::BadRegion(format!(
+                "REGION header {} < 12",
+                payload.len()
+            )));
+        }
+        let tile_size = payload[0];
+        let num_rects = u16_le(&payload[1..]);
+        let num_quant = payload[3];
+        let num_prog_quant = payload[4];
+        let flags = payload[5];
+        let _num_tiles = u16_le(&payload[6..]);
+        let tile_data_size = u32_le(&payload[8..]) as usize;
+        if tile_size != 64 {
+            return Err(ProgressiveError::BadRegion(format!(
+                "REGION tileSize {tile_size} != 64"
+            )));
+        }
+        let extrapolate = (flags & RFX_DWT_REDUCE_EXTRAPOLATE) != 0;
+
+        // Parse variable-length arrays after the fixed header.
+        let mut p = 12usize;
+        // rects: numRects * 8 (we don't actually need them for tile
+        // decode — tile xIdx/yIdx + tile flags carry placement).
+        let rects_len = num_rects as usize * 8;
+        if p + rects_len > payload.len() {
+            return Err(ProgressiveError::BadRegion(format!(
+                "REGION short for {num_rects} rects"
+            )));
+        }
+        p += rects_len;
+
+        // quants: numQuant * 5 bytes
+        let quants_len = num_quant as usize * 5;
+        if p + quants_len > payload.len() {
+            return Err(ProgressiveError::BadRegion(format!(
+                "REGION short for {num_quant} quants"
+            )));
+        }
+        let mut quants: Vec<Quant> = Vec::with_capacity(num_quant as usize);
+        for _ in 0..num_quant {
+            let mut b = [0u8; 5];
+            b.copy_from_slice(&payload[p..p + 5]);
+            quants.push(Quant::read(b));
+            p += 5;
+        }
+
+        // progQuants: numProgQuant * (1 + 3*5) = 16 bytes
+        let pq_len = num_prog_quant as usize * 16;
+        if p + pq_len > payload.len() {
+            return Err(ProgressiveError::BadRegion(format!(
+                "REGION short for {num_prog_quant} progQuants"
+            )));
+        }
+        let mut prog_quants: Vec<ProgQuant> = Vec::with_capacity(num_prog_quant as usize);
+        for _ in 0..num_prog_quant {
+            let quality = payload[p];
+            let mut yb = [0u8; 5];
+            yb.copy_from_slice(&payload[p + 1..p + 6]);
+            let mut cbb = [0u8; 5];
+            cbb.copy_from_slice(&payload[p + 6..p + 11]);
+            let mut crb = [0u8; 5];
+            crb.copy_from_slice(&payload[p + 11..p + 16]);
+            prog_quants.push(ProgQuant {
+                quality,
+                y: Quant::read(yb),
+                cb: Quant::read(cbb),
+                cr: Quant::read(crb),
+            });
+            p += 16;
+        }
+
+        // Tile blocks
+        if p + tile_data_size > payload.len() {
+            return Err(ProgressiveError::BadRegion(format!(
+                "REGION short for tileData (need {tile_data_size}, have {})",
+                payload.len() - p
+            )));
+        }
+        let tiles_end = p + tile_data_size;
+        debug!(
+            "Progressive: REGION extrapolate={extrapolate} numQuant={num_quant} numProgQuant={num_prog_quant} tileData={tile_data_size}"
+        );
+        while p + 6 <= tiles_end {
+            let tt = u16_le(&payload[p..]);
+            let tl = u32_le(&payload[p + 2..]) as usize;
+            if tl < 6 || p + tl > tiles_end {
+                return Err(ProgressiveError::BadRegion(format!(
+                    "tile block 0x{tt:04x} len={tl} overflows at offset {p}/{tiles_end}"
+                )));
+            }
+            let tpayload = &payload[p + 6..p + tl];
+            match tt {
+                WBT_TILE_SIMPLE | WBT_TILE_FIRST => {
+                    self.decode_tile_first_or_simple(
+                        surface_id,
+                        tt == WBT_TILE_SIMPLE,
+                        tpayload,
+                        &quants,
+                        &prog_quants,
+                        extrapolate,
+                        out_tiles,
+                    )?;
+                }
+                WBT_TILE_UPGRADE => {
+                    if self.upgrade_enabled {
+                        self.decode_tile_upgrade(
+                            surface_id,
+                            tpayload,
+                            &quants,
+                            &prog_quants,
+                            extrapolate,
+                            out_tiles,
+                        )?;
+                    } else {
+                        // Warn, not debug: a dropped refinement pass leaves
+                        // that tile at its coarse first-pass approximation —
+                        // a smooth, over-saturated block amid correct content
+                        // — and at debug level this never reached a bug
+                        // report, which is what made #462 guesswork (#462).
+                        self.upgrades_skipped += 1;
+                        if should_report(self.upgrades_skipped) {
+                            warn!(
+                                "Progressive: dropped {} refinement tile(s) so far — those areas \
+                                 stay at coarse quality, which looks like haloing around text. \
+                                 Refinement decoding is ON by default; something has turned it off \
+                                 (Settings → Diagnostics → 'RDP: decode progressive refinement \
+                                 tiles') (#496).",
+                                self.upgrades_skipped
+                            );
+                        }
+                    }
+                }
+                other => warn!("Progressive: unknown tile block 0x{other:04x}"),
+            }
+            p += tl;
+        }
+        Ok(())
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn decode_tile_first_or_simple(
+        &mut self,
+        surface_id: u16,
+        simple: bool,
+        payload: &[u8],
+        quants: &[Quant],
+        prog_quants: &[ProgQuant],
+        extrapolate: bool,
+        out_tiles: &mut Vec<DecodedTile>,
+    ) -> Result<(), ProgressiveError> {
+        // SIMPLE header: 16 bytes; FIRST: 17 bytes (extra `quality`).
+        let hdr = if simple { 16 } else { 17 };
+        if payload.len() < hdr {
+            return Err(ProgressiveError::BadBlock(format!(
+                "tile header {} < {hdr}",
+                payload.len()
+            )));
+        }
+        let quant_idx_y = payload[0];
+        let quant_idx_cb = payload[1];
+        let quant_idx_cr = payload[2];
+        let x_idx = u16_le(&payload[3..]);
+        let y_idx = u16_le(&payload[5..]);
+        let tile_flags = payload[7];
+        let (quality, mut p) = if simple {
+            (0xFFu8, 8usize)
+        } else {
+            (payload[8], 9usize)
+        };
+        let y_len = u16_le(&payload[p..]) as usize;
+        let cb_len = u16_le(&payload[p + 2..]) as usize;
+        let cr_len = u16_le(&payload[p + 4..]) as usize;
+        let _tail_len = u16_le(&payload[p + 6..]) as usize;
+        p += 8;
+        if p + y_len + cb_len + cr_len > payload.len() {
+            return Err(ProgressiveError::BadBlock(format!(
+                "tile component sizes overflow: y={y_len} cb={cb_len} cr={cr_len} body={}",
+                payload.len() - p
+            )));
+        }
+        let y_data = &payload[p..p + y_len];
+        let cb_data = &payload[p + y_len..p + y_len + cb_len];
+        let cr_data = &payload[p + y_len + cb_len..p + y_len + cb_len + cr_len];
+
+        // Look up base + progressive quant (per-channel).
+        if quant_idx_y as usize >= quants.len()
+            || quant_idx_cb as usize >= quants.len()
+            || quant_idx_cr as usize >= quants.len()
+        {
+            return Err(ProgressiveError::BadBlock(format!(
+                "tile quantIdx out of range: y={quant_idx_y} cb={quant_idx_cb} cr={quant_idx_cr} numQuant={}",
+                quants.len()
+            )));
+        }
+        let q_y = quants[quant_idx_y as usize];
+        let q_cb = quants[quant_idx_cb as usize];
+        let q_cr = quants[quant_idx_cr as usize];
+
+        // quality = 0xFF means "full quality" (no progressive refinement
+        // overlay). We still compute shift = quant + progQuant - 1, and
+        // for full quality progQuant is the all-zeros entry.
+        let prog: ProgQuant = if quality == 0xFF {
+            ProgQuant::default()
+        } else {
+            let idx = quality as usize;
+            if idx >= prog_quants.len() {
+                return Err(ProgressiveError::BadBlock(format!(
+                    "tile quality {quality} >= numProgQuant {}",
+                    prog_quants.len()
+                )));
+            }
+            ProgQuant {
+                quality: prog_quants[idx].quality,
+                y: prog_quants[idx].y,
+                cb: prog_quants[idx].cb,
+                cr: prog_quants[idx].cr,
+            }
+        };
+
+        // RFX_TILE_DIFFERENCE: the coefficients below are a delta against this
+        // tile's previous ones, not a replacement (#477). Decoding it needs
+        // that tile's retained state, which only exists when coefficient state
+        // is being kept at all — so a difference arriving without it is still
+        // undecodable and still counted, rather than painted as if it were
+        // absolute, which would be wrong pixels instead of stale ones.
+        let coeff_diff = (tile_flags & RFX_TILE_DIFFERENCE) != 0;
+        if coeff_diff && self.upgrade_enabled {
+            // Say so once. Without this, "0 dropped delta-coded tiles" in a
+            // report is ambiguous between "they decoded" and "none arrived" —
+            // which is exactly the question that could not be answered while
+            // verifying this against a real Windows server (#477).
+            self.diff_tiles_decoded += 1;
+            if self.diff_tiles_decoded == 1 {
+                info!("Progressive: decoding delta-coded tiles (RFX_TILE_DIFFERENCE)");
+            }
+        }
+        if coeff_diff && !self.upgrade_enabled {
+            self.diff_tiles_skipped += 1;
+            if should_report(self.diff_tiles_skipped) {
+                warn!(
+                    "Progressive: dropped {} delta-coded tile(s) so far — those rectangles keep \
+                     stale pixels. Most recent at xIdx={x_idx} yIdx={y_idx} flags=0x{tile_flags:02x}. \
+                     Decoding them needs per-tile coefficient state, which is off.",
+                    self.diff_tiles_skipped
+                );
+            }
+            return Ok(());
+        }
+
+        // Compute per-band shift = quant + progQuant. The component
+        // decoder applies (shift - 1) per FreeRDP `lsub(&shift, 1)`. This sum
+        // is also the tile's initial bit position for a later upgrade.
+        let shift_y = q_y.add(&prog.y);
+        let shift_cb = q_cb.add(&prog.cb);
+        let shift_cr = q_cr.add(&prog.cr);
+
+        // #418: when upgrade decoding is enabled, capture this tile's
+        // coefficient + sign state so a later WBT_TILE_UPGRADE can refine it.
+        // When disabled, decode with no capture — the pixel path is untouched,
+        // so FIRST/SIMPLE output is byte-for-byte unchanged.
+        // A difference tile accumulates into the state this grid position
+        // already has; anything else starts fresh. Taking the existing state
+        // out of the map (rather than cloning) keeps the 48 KB per tile from
+        // being duplicated mid-decode.
+        let mut tile = if self.upgrade_enabled {
+            Some(if coeff_diff {
+                self.tile_states
+                    .remove(&(surface_id, x_idx, y_idx))
+                    .unwrap_or_else(|| Box::new(TileState::new()))
+            } else {
+                Box::new(TileState::new())
+            })
+        } else {
+            None
+        };
+
+        if let Some(t) = tile.as_deref_mut() {
+            decode_component(&mut *self.work_y, &mut *self.work_tmp, y_data, &shift_y,
+                extrapolate, Some(&mut *t.sign[0]), Some(&mut *t.current[0]), coeff_diff)?;
+            decode_component(&mut *self.work_cb, &mut *self.work_tmp, cb_data, &shift_cb,
+                extrapolate, Some(&mut *t.sign[1]), Some(&mut *t.current[1]), coeff_diff)?;
+            decode_component(&mut *self.work_cr, &mut *self.work_tmp, cr_data, &shift_cr,
+                extrapolate, Some(&mut *t.sign[2]), Some(&mut *t.current[2]), coeff_diff)?;
+            t.bitpos = [shift_y, shift_cb, shift_cr];
+        } else {
+            decode_component(&mut *self.work_y, &mut *self.work_tmp, y_data, &shift_y,
+                extrapolate, None, None, false)?;
+            decode_component(&mut *self.work_cb, &mut *self.work_tmp, cb_data, &shift_cb,
+                extrapolate, None, None, false)?;
+            decode_component(&mut *self.work_cr, &mut *self.work_tmp, cr_data, &shift_cr,
+                extrapolate, None, None, false)?;
+        }
+
+        // Convert i16 YCbCr -> RGBA8888. The values out of IDWT are in
+        // signed YCbCr space (~ -128..127 for 8-bit content).
+        let mut rgba = vec![0u8; 64 * 64 * 4];
+        ycbcr_i16_to_rgba(&self.work_y, &self.work_cb, &self.work_cr, &mut rgba);
+
+        out_tiles.push(DecodedTile {
+            surface_id,
+            x: x_idx.saturating_mul(64),
+            y: y_idx.saturating_mul(64),
+            rgba,
+        });
+
+        // Retain the refinement state (keyed by tile grid position) for a
+        // later upgrade pass.
+        if let Some(t) = tile {
+            self.tile_states.insert((surface_id, x_idx, y_idx), t);
+        }
+        Ok(())
+    }
+
+    /// Decode a WBT_TILE_UPGRADE block (#418): refine a previously-decoded
+    /// FIRST/SIMPLE tile's coefficients with additional bits, then re-run the
+    /// IDWT and emit the improved tile. Only runs when `upgrade_enabled`.
+    ///
+    /// ⚠ Ported from FreeRDP `progressive_decompress_tile_upgrade`; the wire
+    /// parse + refinement are NOT yet verified against a real Windows stream.
+    #[allow(clippy::too_many_arguments)]
+    fn decode_tile_upgrade(
+        &mut self,
+        surface_id: u16,
+        payload: &[u8],
+        quants: &[Quant],
+        prog_quants: &[ProgQuant],
+        extrapolate: bool,
+        out_tiles: &mut Vec<DecodedTile>,
+    ) -> Result<(), ProgressiveError> {
+        // Upgrade tiles only occur in extrapolate mode (Windows 8+); the
+        // upgrade sub-band offsets are the extrapolate layout.
+        if !extrapolate {
+            debug!("Progressive: WBT_TILE_UPGRADE in non-extrapolate mode, skipping");
+            return Ok(());
+        }
+        // Fixed 20-byte header (MS-RDPRFX 2.2.4.2.1.6): no `flags` byte, and
+        // `quality` sits right after yIdx.
+        if payload.len() < 20 {
+            return Err(ProgressiveError::BadBlock(format!(
+                "TILE_UPGRADE header {} < 20",
+                payload.len()
+            )));
+        }
+        let quant_idx_y = payload[0];
+        let quant_idx_cb = payload[1];
+        let quant_idx_cr = payload[2];
+        let x_idx = u16_le(&payload[3..]);
+        let y_idx = u16_le(&payload[5..]);
+        let quality = payload[7];
+        let y_srl = u16_le(&payload[8..]) as usize;
+        let y_raw = u16_le(&payload[10..]) as usize;
+        let cb_srl = u16_le(&payload[12..]) as usize;
+        let cb_raw = u16_le(&payload[14..]) as usize;
+        let cr_srl = u16_le(&payload[16..]) as usize;
+        let cr_raw = u16_le(&payload[18..]) as usize;
+
+        let mut p = 20usize;
+        let total = y_srl + y_raw + cb_srl + cb_raw + cr_srl + cr_raw;
+        if p + total > payload.len() {
+            return Err(ProgressiveError::BadBlock(format!(
+                "TILE_UPGRADE data overflows: need {total}, have {}",
+                payload.len() - p
+            )));
+        }
+        let y_srl_data = &payload[p..p + y_srl];
+        p += y_srl;
+        let y_raw_data = &payload[p..p + y_raw];
+        p += y_raw;
+        let cb_srl_data = &payload[p..p + cb_srl];
+        p += cb_srl;
+        let cb_raw_data = &payload[p..p + cb_raw];
+        p += cb_raw;
+        let cr_srl_data = &payload[p..p + cr_srl];
+        p += cr_srl;
+        let cr_raw_data = &payload[p..p + cr_raw];
+
+        if quant_idx_y as usize >= quants.len()
+            || quant_idx_cb as usize >= quants.len()
+            || quant_idx_cr as usize >= quants.len()
+        {
+            return Err(ProgressiveError::BadBlock(format!(
+                "TILE_UPGRADE quantIdx out of range: y={quant_idx_y} cb={quant_idx_cb} cr={quant_idx_cr} numQuant={}",
+                quants.len()
+            )));
+        }
+        let q_y = quants[quant_idx_y as usize];
+        let q_cb = quants[quant_idx_cb as usize];
+        let q_cr = quants[quant_idx_cr as usize];
+        let prog: ProgQuant = if quality == 0xFF {
+            ProgQuant::default()
+        } else {
+            let idx = quality as usize;
+            if idx >= prog_quants.len() {
+                return Err(ProgressiveError::BadBlock(format!(
+                    "TILE_UPGRADE quality {quality} >= numProgQuant {}",
+                    prog_quants.len()
+                )));
+            }
+            ProgQuant {
+                quality: prog_quants[idx].quality,
+                y: prog_quants[idx].y,
+                cb: prog_quants[idx].cb,
+                cr: prog_quants[idx].cr,
+            }
+        };
+
+        // New per-band bit position for this pass, the number of refinement
+        // bits it carries (oldBitPos - newBitPos), and the shift (newBitPos-1).
+        let new_bitpos_y = q_y.add(&prog.y);
+        let new_bitpos_cb = q_cb.add(&prog.cb);
+        let new_bitpos_cr = q_cr.add(&prog.cr);
+        let shift_y = new_bitpos_y.lsub1();
+        let shift_cb = new_bitpos_cb.lsub1();
+        let shift_cr = new_bitpos_cr.lsub1();
+
+        // Take the tile state out so we can borrow the decoder's work buffers
+        // for the IDWT without aliasing `self`.
+        let key = (surface_id, x_idx, y_idx);
+        let mut tile = match self.tile_states.remove(&key) {
+            Some(t) => t,
+            None => {
+                // Upgrade for a tile we never got a FIRST for — nothing to
+                // refine, so leave it (don't paint over it).
+                debug!("Progressive: TILE_UPGRADE ({x_idx},{y_idx}) with no prior FIRST, skipping");
+                return Ok(());
+            }
+        };
+
+        let num_bits_y = tile.bitpos[0].sub(&new_bitpos_y);
+        let num_bits_cb = tile.bitpos[1].sub(&new_bitpos_cb);
+        let num_bits_cr = tile.bitpos[2].sub(&new_bitpos_cr);
+
+        upgrade_component(&mut tile.current[0], &mut tile.sign[0], y_srl_data, y_raw_data, &shift_y, &num_bits_y);
+        upgrade_component(&mut tile.current[1], &mut tile.sign[1], cb_srl_data, cb_raw_data, &shift_cb, &num_bits_cb);
+        upgrade_component(&mut tile.current[2], &mut tile.sign[2], cr_srl_data, cr_raw_data, &shift_cr, &num_bits_cr);
+        tile.bitpos = [new_bitpos_y, new_bitpos_cb, new_bitpos_cr];
+
+        // Re-run the IDWT on the refined coefficients (a copy — `current`
+        // stays as coefficients for the next pass), then colour-convert.
+        self.work_y.copy_from_slice(&tile.current[0][..]);
+        idwt_extrapolate(&mut self.work_y, &mut self.work_tmp);
+        self.work_cb.copy_from_slice(&tile.current[1][..]);
+        idwt_extrapolate(&mut self.work_cb, &mut self.work_tmp);
+        self.work_cr.copy_from_slice(&tile.current[2][..]);
+        idwt_extrapolate(&mut self.work_cr, &mut self.work_tmp);
+
+        let mut rgba = vec![0u8; 64 * 64 * 4];
+        ycbcr_i16_to_rgba(&self.work_y, &self.work_cb, &self.work_cr, &mut rgba);
+        out_tiles.push(DecodedTile {
+            surface_id,
+            x: x_idx.saturating_mul(64),
+            y: y_idx.saturating_mul(64),
+            rgba,
+        });
+
+        self.tile_states.insert(key, tile);
+        Ok(())
+    }
+}
+
+impl Default for ProgressiveDecoder {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+// ---- one-plane decode ----
+
+/// Decode one Y/Cb/Cr plane: RLGR1 -> per-band lShift -> IDWT.
+/// `buffer` ends up as 64×64 i16 pixel values stored row-major.
+fn decode_component(
+    buffer: &mut [i16; SUBBAND_LEN],
+    temp: &mut [i16; SUBBAND_LEN],
+    encoded: &[u8],
+    shift: &Quant,
+    extrapolate: bool,
+    // #418 upgrade capture. When Some, `sign` receives the raw RLGR
+    // coefficients (before differential/shift) and `current` the shifted
+    // coefficients (after shift, before IDWT) — the persistent state a later
+    // WBT_TILE_UPGRADE refines. When None (upgrade disabled) the pixel output
+    // in `buffer` is byte-for-byte what it was before, so FIRST is unchanged.
+    sign_out: Option<&mut [i16; SUBBAND_LEN]>,
+    current_out: Option<&mut [i16; SUBBAND_LEN]>,
+    // RFX_TILE_DIFFERENCE: the coefficients just decoded are a delta against
+    // this tile's previous ones rather than a replacement. Only meaningful
+    // with `current_out`, which is the previous ones.
+    coeff_diff: bool,
+) -> Result<(), ProgressiveError> {
+    // Step 1: RLGR1-decode 4096 i16 coefficients.
+    rlgr::decode(EntropyAlgorithm::Rlgr1, encoded, &mut buffer[..])?;
+
+    // Capture the raw coefficients as `sign` BEFORE differential/shift —
+    // FreeRDP `CopyMemory(sign, buffer, 4096*2)` right after rlgr_decode.
+    if let Some(sign) = sign_out {
+        sign.copy_from_slice(&buffer[..]);
+    }
+
+    // Step 2: per-subband left-shift. FreeRDP applies (shift-1):
+    //
+    //     progressive_rfx_quant_lsub(&shift, 1);
+    //
+    // So we shift each subband by max(0, qBand-1).
+    if extrapolate {
+        // Extrapolate band layout (from progressive.c band table):
+        // HL1 0..1023 (31x33), LH1 1023..2046 (33x31), HH1 2046..3007 (31x31),
+        // HL2 3007..3279 (16x17), LH2 3279..3551 (17x16), HH2 3551..3807 (16x16),
+        // HL3 3807..3879 (8x9),  LH3 3879..3951 (9x8),  HH3 3951..4015 (8x8),
+        // LL3 4015..4096 (9x9).
+        // FreeRDP runs differential decode on LL3 first in BOTH modes —
+        // extrapolate on &buffer[4015], 81. Omitting it left LL3 as raw
+        // first-differences (~0 in flat regions), so IDWT dropped the DC
+        // approximation: flat areas collapsed to YCbCr(0,0,0) → RGB(128,
+        // 128,128) mid-gray with only edge detail surviving (embossed
+        // grey desktop, #418 — Windows 8+ always negotiates extrapolate).
+        differential_decode(&mut buffer[4015..4096]);
+        lshift_block(&mut buffer[0..1023], shift.hl1);
+        lshift_block(&mut buffer[1023..2046], shift.lh1);
+        lshift_block(&mut buffer[2046..3007], shift.hh1);
+        lshift_block(&mut buffer[3007..3279], shift.hl2);
+        lshift_block(&mut buffer[3279..3551], shift.lh2);
+        lshift_block(&mut buffer[3551..3807], shift.hh2);
+        lshift_block(&mut buffer[3807..3879], shift.hl3);
+        lshift_block(&mut buffer[3879..3951], shift.lh3);
+        lshift_block(&mut buffer[3951..4015], shift.hh3);
+        lshift_block(&mut buffer[4015..4096], shift.ll3);
+    } else {
+        // Classic non-extrapolate layout (matches classic RFX):
+        // HL1 0..1024, LH1 1024..2048, HH1 2048..3072,
+        // HL2 3072..3328, LH2 3328..3584, HH2 3584..3840,
+        // HL3 3840..3904, LH3 3904..3968, HH3 3968..4032,
+        // LL3 4032..4096.
+        // FreeRDP also runs differential decode on LL3 first.
+        differential_decode(&mut buffer[4032..4096]);
+        lshift_block(&mut buffer[0..1024], shift.hl1);
+        lshift_block(&mut buffer[1024..2048], shift.lh1);
+        lshift_block(&mut buffer[2048..3072], shift.hh1);
+        lshift_block(&mut buffer[3072..3328], shift.hl2);
+        lshift_block(&mut buffer[3328..3584], shift.lh2);
+        lshift_block(&mut buffer[3584..3840], shift.hh2);
+        lshift_block(&mut buffer[3840..3904], shift.hl3);
+        lshift_block(&mut buffer[3904..3968], shift.lh3);
+        lshift_block(&mut buffer[3968..4032], shift.hh3);
+        lshift_block(&mut buffer[4032..4096], shift.ll3);
+    }
+
+    // Combine with the tile's retained coefficients BEFORE the IDWT — the
+    // point at which FreeRDP's dwt_2d_decode does one of two things
+    // (reverse=FALSE):
+    //
+    //     coeffDiff = FALSE  memcpy(current, buffer)
+    //     coeffDiff = TRUE   add_16s_inplace(buffer, current, 4096)
+    //
+    // and `add_16s_inplace` writes the saturating sum to BOTH arrays, so a
+    // difference tile both paints the accumulated coefficients and leaves them
+    // as the base for the next difference. Getting only `buffer` right would
+    // look correct for one frame and drift from the second onwards.
+    if let Some(current) = current_out {
+        combine_with_current(buffer, current, coeff_diff);
+    }
+
+    // Step 3: inverse DWT.
+    if extrapolate {
+        idwt_extrapolate(buffer, temp);
+    } else {
+        idwt_classic(buffer, temp);
+    }
+    Ok(())
+}
+
+/// Combine freshly-decoded coefficients with the tile's retained ones, at the
+/// point FreeRDP's `progressive_rfx_dwt_2d_decode` does it — after
+/// dequantisation, before the IDWT.
+///
+/// ```text
+/// coeffDiff = false   memcpy(current, buffer)
+/// coeffDiff = true    add_16s_inplace(buffer, current, 4096)
+/// ```
+///
+/// `add_16s_inplace` writes the saturating sum to **both** arrays, which is
+/// why this does too: a difference tile has to paint the accumulated
+/// coefficients *and* leave them behind as the base for the next difference.
+fn combine_with_current(
+    buffer: &mut [i16; SUBBAND_LEN],
+    current: &mut [i16; SUBBAND_LEN],
+    coeff_diff: bool,
+) {
+    if !coeff_diff {
+        current.copy_from_slice(&buffer[..]);
+        return;
+    }
+    for (b, c) in buffer.iter_mut().zip(current.iter_mut()) {
+        let v = i32::from(*b) + i32::from(*c);
+        let v = v.clamp(i32::from(i16::MIN), i32::from(i16::MAX)) as i16;
+        *b = v;
+        *c = v;
+    }
+}
+
+/// `lShiftC` from FreeRDP primitives: each i16 in `block` shifted left
+/// by `(qBand - 1)` saturating at 0. Quant values are in [6,15] per
+/// MS-RDPRFX so (qBand - 1) is in [5, 14].
+fn lshift_block(block: &mut [i16], q_band: u8) {
+    let factor = i16::from(q_band).saturating_sub(1);
+    if factor <= 0 {
+        return;
+    }
+    for v in block.iter_mut() {
+        *v = ((*v as i32) << factor) as i16;
+    }
+}
+
+/// Differential decode (running sum) used on classic-mode LL3 only.
+/// FreeRDP `rfx_differential_decode`.
+fn differential_decode(block: &mut [i16]) {
+    for i in 1..block.len() {
+        block[i] = block[i].wrapping_add(block[i - 1]);
+    }
+}
+
+// ---- IDWT, classic mode (non-extrapolate) ----
+//
+// Identical layout to classic RFX. We delegate to ironrdp_graphics::dwt
+// rather than reimplementing.
+
+fn idwt_classic(buffer: &mut [i16; SUBBAND_LEN], temp: &mut [i16; SUBBAND_LEN]) {
+    ironrdp_graphics::dwt::decode(&mut buffer[..], &mut temp[..]);
+}
+
+// ---- IDWT, extrapolate mode ----
+//
+// Asymmetric L/H subband counts:
+//   level 1: nBandL=33, nBandH=31  -> output 64x64
+//   level 2: nBandL=17, nBandH=16  -> output 33x33
+//   level 3: nBandL=9,  nBandH=8   -> output 17x17
+//
+// Buffer layout (per FreeRDP comment):
+//   Level 3 starts at offset 3807: HL3 (72), LH3 (72), HH3 (64), LL3 (81)
+//   Level 2 starts at offset 3007: HL2 (272), LH2 (272), HH2 (256), LL2 (289)
+//   Level 1 starts at offset 0:    HL1 (1023), LH1 (1023), HH1 (961), LL1 (1089)
+//
+// Each level reads its 4 subbands at fixed offsets into a temp area, runs
+// 1-D IDWT in horizontal then vertical, and writes (nBandL+nBandH) ×
+// (nBandL+nBandH) reconstructed values back at the start of its block.
+// The reconstructed image at level n becomes LL of level (n-1).
+
+fn idwt_extrapolate(buffer: &mut [i16; SUBBAND_LEN], temp: &mut [i16; SUBBAND_LEN]) {
+    idwt_extrapolate_level(&mut buffer[3807..], temp, 9, 8);
+    idwt_extrapolate_level(&mut buffer[3007..], temp, 17, 16);
+    idwt_extrapolate_level(&mut buffer[0..], temp, 33, 31);
+}
+
+/// One IDWT level. `buf` is the slice starting at the level's HL band.
+/// Layout (relative to buf[0]):
+///   HL: [0 .. nh*nl)        cols=nh, rows=nl
+///   LH: [nh*nl .. 2*nh*nl)  cols=nl, rows=nh
+///   HH: [2*nh*nl .. 2*nh*nl + nh*nh) cols=nh, rows=nh
+///   LL: [...     .. ...     + nl*nl) cols=nl, rows=nl
+/// Output goes back to buf[0..(nl+nh)*(nl+nh)] row-major.
+fn idwt_extrapolate_level(
+    buf: &mut [i16],
+    temp: &mut [i16; SUBBAND_LEN],
+    n_l: usize,
+    n_h: usize,
+) {
+    let dst_step = n_l + n_h;
+    // Subband offsets.
+    let hl_off = 0usize;
+    let lh_off = n_h * n_l;
+    let hh_off = 2 * n_h * n_l;
+    let ll_off = 2 * n_h * n_l + n_h * n_h;
+
+    // Temp layout: L (nL rows × dst_step cols) then H (nH rows × dst_step cols).
+    // Both written in horizontal pass, consumed in vertical pass.
+    let l_off = 0usize;
+    let h_off = n_l * dst_step;
+    let total_temp = (n_l + n_h) * dst_step;
+    debug_assert!(total_temp <= SUBBAND_LEN);
+    for v in temp[..total_temp].iter_mut() {
+        *v = 0;
+    }
+
+    // Horizontal pass (LL + HL -> L). Iterates dst_count=n_l rows.
+    // Each row reads n_l L samples (from LL) and n_h H samples (from
+    // HL) and writes n_l + n_h reconstructed columns.
+    {
+        let (ll_lo, hl_lo) = (ll_off, hl_off);
+        // Sub-borrow safety: we read from buf[hl_off..ll_off+...] and
+        // write into temp.
+        idwt_horizontal_pass(
+            &buf[ll_lo..ll_lo + n_l * n_l],
+            n_l,
+            &buf[hl_lo..hl_lo + n_h * n_l],
+            n_h,
+            &mut temp[l_off..l_off + n_l * dst_step],
+            dst_step,
+            n_l,
+            n_h,
+            n_l,
+        );
+    }
+    // Horizontal pass (LH + HH -> H). dst_count = n_h rows.
+    {
+        let (lh_lo, hh_lo) = (lh_off, hh_off);
+        idwt_horizontal_pass(
+            &buf[lh_lo..lh_lo + n_l * n_h],
+            n_l,
+            &buf[hh_lo..hh_lo + n_h * n_h],
+            n_h,
+            &mut temp[h_off..h_off + n_h * dst_step],
+            dst_step,
+            n_l,
+            n_h,
+            n_h,
+        );
+    }
+    // Vertical pass (L + H -> reconstruction). Writes back to buf[0..].
+    {
+        // Take a fresh borrow split: we need both halves of temp as immutable.
+        let (l_part, h_part) = temp[..total_temp].split_at(n_l * dst_step);
+        idwt_vertical_pass(
+            l_part,
+            dst_step,
+            h_part,
+            dst_step,
+            &mut buf[..(n_l + n_h) * dst_step],
+            dst_step,
+            n_l,
+            n_h,
+            n_l + n_h,
+        );
+    }
+}
+
+/// Generic 1-D IDWT pass (port of FreeRDP `progressive_rfx_idwt_x`).
+///
+/// Reads `dst_count` rows of (n_low + n_high) interleaved samples,
+/// reconstructing the merged signal into `pDst`. The structure operates
+/// row by row — for each of `dst_count` rows, traverse `n_high` H
+/// samples and `n_low` L samples and emit `n_low + n_high` outputs.
+#[allow(clippy::too_many_arguments)]
+fn idwt_horizontal_pass(
+    p_low: &[i16],
+    low_step: usize,
+    p_high: &[i16],
+    high_step: usize,
+    p_dst: &mut [i16],
+    dst_step: usize,
+    n_low_count: usize,
+    n_high_count: usize,
+    dst_count: usize,
+) {
+    for i in 0..dst_count {
+        let l_row = &p_low[i * low_step..i * low_step + n_low_count];
+        let h_row = &p_high[i * high_step..i * high_step + n_high_count];
+        let dst_row = &mut p_dst[i * dst_step..i * dst_step + n_low_count + n_high_count];
+        idwt_1d(l_row, h_row, dst_row, n_low_count, n_high_count);
+    }
+}
+
+/// Generic 1-D IDWT pass (port of FreeRDP `progressive_rfx_idwt_y`).
+///
+/// Like `_horizontal_pass` but iterates `dst_count` columns rather than
+/// rows — pL/pH/pX advance by 1 each iteration instead of by step.
+#[allow(clippy::too_many_arguments)]
+fn idwt_vertical_pass(
+    p_low: &[i16],
+    low_step: usize,
+    p_high: &[i16],
+    high_step: usize,
+    p_dst: &mut [i16],
+    dst_step: usize,
+    n_low_count: usize,
+    n_high_count: usize,
+    dst_count: usize,
+) {
+    // Walk one column at a time: column i contributes column i to L,
+    // column i to H, column i to dst. Within each column, walk down
+    // n_high or n_low rows.
+    let mut l_col_buf = vec![0i16; n_low_count];
+    let mut h_col_buf = vec![0i16; n_high_count];
+    let mut d_col_buf = vec![0i16; n_low_count + n_high_count];
+    for i in 0..dst_count {
+        // gather column i
+        for r in 0..n_low_count {
+            l_col_buf[r] = p_low[r * low_step + i];
+        }
+        for r in 0..n_high_count {
+            h_col_buf[r] = p_high[r * high_step + i];
+        }
+        idwt_1d(
+            &l_col_buf,
+            &h_col_buf,
+            &mut d_col_buf,
+            n_low_count,
+            n_high_count,
+        );
+        // scatter column i
+        for r in 0..(n_low_count + n_high_count) {
+            p_dst[r * dst_step + i] = d_col_buf[r];
+        }
+    }
+}
+
+/// Core 1-D IDWT reconstruction (port of FreeRDP's per-row inner loop
+/// in `progressive_rfx_idwt_x`). Reads `n_low` L samples + `n_high` H
+/// samples and writes `n_low + n_high` reconstructed values.
+fn idwt_1d(l: &[i16], h: &[i16], dst: &mut [i16], n_low: usize, n_high: usize) {
+    debug_assert!(l.len() >= n_low);
+    debug_assert!(h.len() >= n_high);
+    debug_assert!(dst.len() >= n_low + n_high);
+    if n_high == 0 {
+        // Degenerate case (shouldn't occur for our levels).
+        for i in 0..n_low {
+            dst[i] = l[i];
+        }
+        return;
+    }
+
+    let mut h0 = h[0] as i32;
+    let mut l0 = l[0] as i32;
+    let mut x0 = clamp_i16(l0 - h0);
+    let mut x2 = clamp_i16(l0 - h0);
+    let mut wpos = 0usize;
+    let mut lpos = 1usize; // next L to read
+    let mut hpos = 1usize; // next H to read
+
+    for _ in 0..n_high.saturating_sub(1) {
+        let h1 = h[hpos] as i32;
+        hpos += 1;
+        l0 = l[lpos] as i32;
+        lpos += 1;
+        x2 = clamp_i16(l0 - ((h0 + h1) / 2));
+        let x1 = clamp_i16(((x0 as i32 + x2 as i32) / 2) + (2 * h0));
+        dst[wpos] = x0;
+        dst[wpos + 1] = x1;
+        wpos += 2;
+        x0 = x2;
+        h0 = h1;
+    }
+
+    // Tail handling — exactly mirrors the FreeRDP boundary cases.
+    if n_low <= n_high + 1 {
+        if n_low <= n_high {
+            // Two more outputs from the boundary.
+            dst[wpos] = x2;
+            dst[wpos + 1] = clamp_i16(x2 as i32 + 2 * h0);
+        } else {
+            l0 = l[lpos] as i32;
+            // (lpos consumed; not needed further)
+            x0 = clamp_i16(l0 - h0);
+            dst[wpos] = x2;
+            dst[wpos + 1] = clamp_i16(((x0 as i32 + x2 as i32) / 2) + 2 * h0);
+            dst[wpos + 2] = x0;
+        }
+    } else {
+        l0 = l[lpos] as i32;
+        lpos += 1;
+        x0 = clamp_i16(l0 - (h0 / 2));
+        dst[wpos] = x2;
+        dst[wpos + 1] = clamp_i16(((x0 as i32 + x2 as i32) / 2) + 2 * h0);
+        dst[wpos + 2] = x0;
+        let l_next = l[lpos] as i32;
+        dst[wpos + 3] = clamp_i16((x0 as i32 + l_next) / 2);
+    }
+}
+
+fn clamp_i16(v: i32) -> i16 {
+    v.clamp(i16::MIN as i32, i16::MAX as i32) as i16
+}
+
+// ---- RFX Progressive UPGRADE (refinement) primitives ----
+//
+// A FIRST/SIMPLE tile decodes a coarse pass; Windows then sends
+// WBT_TILE_UPGRADE blocks that refine the stored coefficients with more bits.
+// Port of FreeRDP's `progressive_rfx_srl_read` / `rawShift` /
+// `progressive_rfx_upgrade_block`. The AC sub-bands (nonLL) use two
+// interleaved bitstreams — an SRL stream that says which currently-zero
+// coefficients turn non-zero (and their sign), and a raw stream of
+// refinement bits for already-non-zero coefficients. LL3 is raw-only.
+//
+// ⚠ Ported from the reference algorithm; NOT yet verified against a real
+// Windows upgrade PDU (#418). Kept behind the WBT_TILE_UPGRADE handler.
+
+/// MSB-first bit reader over a byte slice (WinPR `wBitStream` equivalent).
+/// `acc()` returns the 32 bits starting at the current position, MSB-first,
+/// zero-padded past the end — matching FreeRDP's `bs->accumulator`.
+struct BitReader<'a> {
+    data: &'a [u8],
+    pos: usize,
+}
+
+impl<'a> BitReader<'a> {
+    fn new(data: &'a [u8]) -> Self {
+        Self { data, pos: 0 }
+    }
+
+    fn acc(&self) -> u32 {
+        let mut a = 0u32;
+        for i in 0..32 {
+            let bit_index = self.pos + i;
+            let byte = bit_index >> 3;
+            let bit = if byte < self.data.len() {
+                (self.data[byte] >> (7 - (bit_index & 7))) & 1
+            } else {
+                0
+            };
+            a = (a << 1) | u32::from(bit);
+        }
+        a
+    }
+
+    fn top_bit(&self) -> u32 {
+        (self.acc() >> 31) & 1
+    }
+
+    /// Read `n` bits (1..=16) as an unsigned magnitude, MSB-first.
+    fn read(&mut self, n: u32) -> u32 {
+        debug_assert!((1..=16).contains(&n));
+        let v = self.acc() >> (32 - n);
+        self.pos += n as usize;
+        v
+    }
+}
+
+/// Decoder state carried across an upgrade component's sub-bands (FreeRDP
+/// `RFX_PROGRESSIVE_UPGRADE_STATE`): the two bitstreams plus the SRL run
+/// state (`kp`, `mode`, `nz`).
+struct UpgradeState<'a> {
+    srl: BitReader<'a>,
+    raw: BitReader<'a>,
+    kp: u32,
+    mode: u32,
+    nz: u32,
+    non_ll: bool,
+}
+
+impl<'a> UpgradeState<'a> {
+    fn new(srl: &'a [u8], raw: &'a [u8]) -> Self {
+        Self {
+            srl: BitReader::new(srl),
+            raw: BitReader::new(raw),
+            kp: 8,
+            mode: 0,
+            nz: 0,
+            non_ll: true,
+        }
+    }
+
+    /// Port of FreeRDP `rawShift`: read `num_bits` refinement bits.
+    fn raw_shift(&mut self, num_bits: u32) -> i32 {
+        self.raw.read(num_bits) as i32
+    }
+
+    /// Port of FreeRDP `progressive_rfx_srl_read`: decode the next non-zero
+    /// coefficient (magnitude+sign) or 0 for a run of zeros.
+    fn srl_read(&mut self, num_bits: u32) -> i16 {
+        if self.nz > 0 {
+            self.nz -= 1;
+            return 0;
+        }
+        let k = self.kp / 8;
+        if self.mode == 0 {
+            // zero encoding
+            let bit = self.srl.top_bit();
+            self.srl.pos += 1;
+            if bit == 0 {
+                // '0': a run of (1 << k) zeros
+                self.nz = 1u32 << k;
+                self.kp += 4;
+                if self.kp > 80 {
+                    self.kp = 80;
+                }
+                self.nz -= 1;
+                return 0;
+            }
+            // '1': fewer than (1 << k) zeros — next k bits give the count
+            self.nz = 0;
+            self.mode = 1; // unary next
+            if k != 0 {
+                self.nz = self.srl.read(k);
+            }
+            if self.nz > 0 {
+                self.nz -= 1;
+                return 0;
+            }
+        }
+        self.mode = 0; // zero encoding next
+        // unary encoding: sign bit then unary magnitude
+        let sign = self.srl.top_bit();
+        self.srl.pos += 1;
+        if self.kp < 6 {
+            self.kp = 0;
+        } else {
+            self.kp -= 6;
+        }
+        if num_bits == 1 {
+            return if sign != 0 { -1 } else { 1 };
+        }
+        let mut mag = 1u32;
+        let max = (1u32 << num_bits) - 1;
+        while mag < max {
+            let bit = self.srl.top_bit();
+            self.srl.pos += 1;
+            if bit != 0 {
+                break;
+            }
+            mag += 1;
+        }
+        if mag > i16::MAX as u32 {
+            mag = i16::MAX as u32;
+        }
+        if sign != 0 {
+            -(mag as i16)
+        } else {
+            mag as i16
+        }
+    }
+}
+
+/// Refine one sub-band's coefficients in place (FreeRDP
+/// `progressive_rfx_upgrade_block`). `buffer` holds the accumulated shifted
+/// coefficients; `sign` holds the FIRST-pass raw signs (0 = still zero).
+fn upgrade_block(
+    state: &mut UpgradeState,
+    buffer: &mut [i16],
+    sign: &mut [i16],
+    length: usize,
+    shift: u8,
+    num_bits: u8,
+) {
+    if num_bits < 1 {
+        return;
+    }
+    let shift = i32::from(shift);
+    if !state.non_ll {
+        // LL3: raw refinement bits only.
+        for i in 0..length {
+            let input = state.raw_shift(u32::from(num_bits));
+            buffer[i] = clamp_i16(i32::from(buffer[i]) + (input << shift));
+        }
+        return;
+    }
+    for i in 0..length {
+        let input: i32 = if sign[i] > 0 {
+            state.raw_shift(u32::from(num_bits))
+        } else if sign[i] < 0 {
+            -state.raw_shift(u32::from(num_bits))
+        } else {
+            let v = state.srl_read(u32::from(num_bits));
+            sign[i] = v;
+            i32::from(v)
+        };
+        buffer[i] = clamp_i16(i32::from(buffer[i]) + (input << shift));
+    }
+}
+
+/// Refine one plane's coefficients from a WBT_TILE_UPGRADE component (FreeRDP
+/// `progressive_rfx_upgrade_component`). Uses the extrapolate band layout —
+/// the only mode upgrade tiles occur in. AC bands are processed with the
+/// sign/SRL path (`non_ll = true`), LL3 raw-only (`non_ll = false`). Offsets
+/// and lengths match the FIRST-pass extrapolate layout in `decode_component`.
+fn upgrade_component(
+    current: &mut [i16; SUBBAND_LEN],
+    sign: &mut [i16; SUBBAND_LEN],
+    srl_data: &[u8],
+    raw_data: &[u8],
+    shift: &Quant,    // per-band left shift for this pass (newBitPos - 1)
+    num_bits: &Quant, // per-band refinement bits (oldBitPos - newBitPos)
+) {
+    let mut st = UpgradeState::new(srl_data, raw_data);
+    st.non_ll = true;
+    upgrade_block(&mut st, &mut current[0..1023], &mut sign[0..1023], 1023, shift.hl1, num_bits.hl1);
+    upgrade_block(&mut st, &mut current[1023..2046], &mut sign[1023..2046], 1023, shift.lh1, num_bits.lh1);
+    upgrade_block(&mut st, &mut current[2046..3007], &mut sign[2046..3007], 961, shift.hh1, num_bits.hh1);
+    upgrade_block(&mut st, &mut current[3007..3279], &mut sign[3007..3279], 272, shift.hl2, num_bits.hl2);
+    upgrade_block(&mut st, &mut current[3279..3551], &mut sign[3279..3551], 272, shift.lh2, num_bits.lh2);
+    upgrade_block(&mut st, &mut current[3551..3807], &mut sign[3551..3807], 256, shift.hh2, num_bits.hh2);
+    upgrade_block(&mut st, &mut current[3807..3879], &mut sign[3807..3879], 72, shift.hl3, num_bits.hl3);
+    upgrade_block(&mut st, &mut current[3879..3951], &mut sign[3879..3951], 72, shift.lh3, num_bits.lh3);
+    upgrade_block(&mut st, &mut current[3951..4015], &mut sign[3951..4015], 64, shift.hh3, num_bits.hh3);
+    st.non_ll = false;
+    upgrade_block(&mut st, &mut current[4015..4096], &mut sign[4015..4096], 81, shift.ll3, num_bits.ll3);
+}
+
+// ---- color conversion ----
+
+/// Convert three 64×64 i16 YCbCr planes (encoder-format 11.5 fixed
+/// point: pixel value × 32, centred at 0) to a 64×64 RGBA8888 buffer.
+///
+/// Port of FreeRDP `general_yCbCrToRGB_16s8u_P3AC4R_general` from
+/// `libfreerdp/primitives/prim_colors.c` at `divisor=16`:
+///
+/// ```text
+///   yp = (Y + 4096) << 16          // Q16 of (Y + 4096)
+///   R = ((yp + Cr * 91916) >> 16) >> 5
+///   G = ((yp - Cb * 22527 - Cr * 46819) >> 16) >> 5
+///   B = ((yp + Cb * 115992) >> 16) >> 5
+/// ```
+///
+/// 91916/65536 ≈ 1.4025 (BT.601 R-from-Cr), 46819/65536 ≈ 0.7144
+/// (G-from-Cr), 22527/65536 ≈ 0.3437 (G-from-Cb), 115992/65536 ≈ 1.7700
+/// (B-from-Cb).
+fn ycbcr_i16_to_rgba(y: &[i16; SUBBAND_LEN], cb: &[i16; SUBBAND_LEN], cr: &[i16; SUBBAND_LEN], rgba: &mut [u8]) {
+    debug_assert!(rgba.len() >= 64 * 64 * 4);
+    for i in 0..64 * 64 {
+        let yv = i32::from(y[i]);
+        let cbv = i32::from(cb[i]);
+        let crv = i32::from(cr[i]);
+        let yp = (yv + 4096) << 16;
+        let r = (((yp + crv * 91916) >> 16) >> 5).clamp(0, 255) as u8;
+        let g = (((yp - cbv * 22527 - crv * 46819) >> 16) >> 5).clamp(0, 255) as u8;
+        let b = (((yp + cbv * 115992) >> 16) >> 5).clamp(0, 255) as u8;
+        let o = i * 4;
+        rgba[o] = r;
+        rgba[o + 1] = g;
+        rgba[o + 2] = b;
+        rgba[o + 3] = 0xFF;
+    }
+}
+
+// ---- small helpers ----
+
+fn u16_le(b: &[u8]) -> u16 {
+    u16::from_le_bytes([b[0], b[1]])
+}
+fn u32_le(b: &[u8]) -> u32 {
+    u32::from_le_bytes([b[0], b[1], b[2], b[3]])
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Quant byte 0x66, 0x76, 0x88, 0x99, 0xa9 — all 5 wire bytes of
+    /// the captured PDU's lone quant. Verify decoding picks the right
+    /// nibbles.
+    #[test]
+    fn quant_decode_matches_freerdp_ordering() {
+        let q = Quant::read([0x66, 0x76, 0x88, 0x99, 0xa9]);
+        assert_eq!(q.ll3, 6);
+        assert_eq!(q.hl3, 6);
+        assert_eq!(q.lh3, 6);
+        assert_eq!(q.hh3, 7);
+        assert_eq!(q.hl2, 8);
+        assert_eq!(q.lh2, 8);
+        assert_eq!(q.hh2, 9);
+        assert_eq!(q.hl1, 9);
+        assert_eq!(q.lh1, 9);
+        assert_eq!(q.hh1, 10);
+    }
+
+    #[test]
+    fn parser_handles_captured_first_pdu() {
+        // Synthetic minimal PDU: SYNC + CONTEXT + FRAME_BEGIN +
+        // empty REGION + FRAME_END.
+        let mut pdu = Vec::new();
+        // SYNC
+        pdu.extend_from_slice(&WBT_SYNC.to_le_bytes());
+        pdu.extend_from_slice(&12u32.to_le_bytes());
+        pdu.extend_from_slice(&SYNC_MAGIC.to_le_bytes());
+        pdu.extend_from_slice(&SYNC_VERSION.to_le_bytes());
+        // CONTEXT
+        pdu.extend_from_slice(&WBT_CONTEXT.to_le_bytes());
+        pdu.extend_from_slice(&10u32.to_le_bytes());
+        pdu.extend_from_slice(&[0u8, 64, 0, 0x01]); // ctxId, tileSize=64, flags=0x01
+        // FRAME_BEGIN
+        pdu.extend_from_slice(&WBT_FRAME_BEGIN.to_le_bytes());
+        pdu.extend_from_slice(&12u32.to_le_bytes());
+        pdu.extend_from_slice(&0u32.to_le_bytes()); // frameIndex
+        pdu.extend_from_slice(&0u16.to_le_bytes()); // regionCount=0
+        // FRAME_END
+        pdu.extend_from_slice(&WBT_FRAME_END.to_le_bytes());
+        pdu.extend_from_slice(&6u32.to_le_bytes());
+        let mut dec = ProgressiveDecoder::new();
+        let mut tiles = Vec::new();
+        dec.decode(0, &pdu, &mut tiles).unwrap();
+        assert!(dec.sync_seen);
+        assert_eq!(dec.context_flags, Some(0x01));
+        assert!(tiles.is_empty());
+    }
+
+    #[test]
+    fn idwt_classic_round_trip_zero_input() {
+        // All-zero input should produce all-zero output and not panic.
+        let mut buf = Box::new([0i16; SUBBAND_LEN]);
+        let mut tmp = Box::new([0i16; SUBBAND_LEN]);
+        idwt_classic(&mut buf, &mut tmp);
+        assert!(buf.iter().all(|&v| v == 0));
+    }
+
+    #[test]
+    fn idwt_extrapolate_zero_input_no_panic() {
+        let mut buf = Box::new([0i16; SUBBAND_LEN]);
+        let mut tmp = Box::new([0i16; SUBBAND_LEN]);
+        idwt_extrapolate(&mut buf, &mut tmp);
+        assert!(buf.iter().all(|&v| v == 0));
+    }
+
+    #[test]
+    fn lshift_block_handles_zero_factor() {
+        let mut b = [10i16, 20, 30];
+        lshift_block(&mut b, 1); // factor = 0
+        assert_eq!(b, [10, 20, 30]);
+        lshift_block(&mut b, 3); // factor = 2
+        assert_eq!(b, [40, 80, 120]);
+    }
+
+    #[test]
+    fn differential_decode_running_sum() {
+        let mut b = [1i16, 2, 3, 4];
+        differential_decode(&mut b);
+        assert_eq!(b, [1, 3, 6, 10]);
+    }
+
+    // ---- UPGRADE primitive tests ----
+
+    #[test]
+    fn bitreader_reads_msb_first() {
+        // bits: 1 0 1 1 0 0 1 0 | 0 1 1 0 0 0 0 0
+        let mut r = BitReader::new(&[0b1011_0010, 0b0110_0000]);
+        assert_eq!(r.read(1), 0b1);
+        assert_eq!(r.read(3), 0b011);
+        assert_eq!(r.read(4), 0b0010);
+        assert_eq!(r.read(2), 0b01);
+    }
+
+    #[test]
+    fn bitreader_zero_pads_past_end() {
+        let mut r = BitReader::new(&[0xFF]);
+        assert_eq!(r.read(8), 0xFF);
+        assert_eq!(r.read(8), 0x00); // past end → zeros
+    }
+
+    #[test]
+    fn srl_read_unary_magnitude_and_sign() {
+        // srl = 0b100_00000: bit0=1 (enter unary path), bit1=0 (k=1 count=0),
+        // bit2=0 (sign=+). num_bits=1 → returns +1. See the trace in the
+        // FreeRDP srl_read port.
+        let mut st = UpgradeState::new(&[0b1000_0000], &[]);
+        assert_eq!(st.srl_read(1), 1);
+        assert_eq!(st.mode, 0);
+        assert_eq!(st.kp, 2); // 8 - 6
+    }
+
+    #[test]
+    fn srl_read_emits_zero_run() {
+        // srl = all zeros, kp=8 (k=1): first read starts a run of 1<<1=2
+        // zeros, so three successive reads all return 0.
+        let mut st = UpgradeState::new(&[0x00, 0x00], &[]);
+        assert_eq!(st.srl_read(1), 0); // starts run, nz becomes 1
+        assert_eq!(st.nz, 1);
+        assert_eq!(st.srl_read(1), 0); // drains the run
+        assert_eq!(st.nz, 0);
+    }
+
+    /// #477: a difference tile adds to the tile's retained coefficients, and
+    /// leaves the sum behind as the base for the next one.
+    ///
+    /// Both halves matter and only one is visible on screen. Writing just the
+    /// painted buffer looks right for a single frame and drifts from the
+    /// second difference onwards, because each later delta would then be added
+    /// to a stale base — the kind of wrong that shows up as a slowly degrading
+    /// picture rather than an obvious fault. FreeRDP's `add_16s_inplace`
+    /// writes the saturating sum to both arrays; this pins that.
+    #[test]
+    fn a_difference_tile_accumulates_into_the_retained_coefficients() {
+        let mut buffer = [0i16; SUBBAND_LEN];
+        let mut current = [0i16; SUBBAND_LEN];
+        buffer[0] = 100;
+        buffer[1] = -50;
+        buffer[2] = i16::MAX;
+        current[0] = 25;
+        current[1] = -25;
+        current[2] = 10; // would overflow i16 without saturation
+
+        combine_with_current(&mut buffer, &mut current, true);
+
+        assert_eq!(buffer[0], 125, "painted coefficients are the sum");
+        assert_eq!(current[0], 125, "retained coefficients are the sum too");
+        assert_eq!(buffer[1], -75);
+        assert_eq!(current[1], -75);
+        assert_eq!(buffer[2], i16::MAX, "addition saturates rather than wrapping");
+        assert_eq!(current[2], i16::MAX);
+    }
+
+    /// A non-difference tile replaces the retained coefficients outright.
+    #[test]
+    fn a_normal_tile_replaces_the_retained_coefficients() {
+        let mut buffer = [0i16; SUBBAND_LEN];
+        let mut current = [0i16; SUBBAND_LEN];
+        buffer[0] = 7;
+        current[0] = 999;
+
+        combine_with_current(&mut buffer, &mut current, false);
+
+        assert_eq!(buffer[0], 7, "the painted coefficients are untouched");
+        assert_eq!(current[0], 7, "the retained ones are overwritten, not added to");
+    }
+
+    /// Saturation is signed in both directions, matching FreeRDP's `add`.
+    #[test]
+    fn difference_saturation_clamps_at_both_ends() {
+        let mut buffer = [0i16; SUBBAND_LEN];
+        let mut current = [0i16; SUBBAND_LEN];
+        buffer[0] = i16::MIN;
+        current[0] = -1;
+        combine_with_current(&mut buffer, &mut current, true);
+        assert_eq!(buffer[0], i16::MIN);
+        assert_eq!(current[0], i16::MIN);
+    }
+
+    #[test]
+    fn upgrade_block_ll3_adds_raw_shifted_bits() {
+        // LL3 path (non_ll=false): buffer[i] += raw_bits << shift, no sign/srl.
+        // raw = 0b01_10_00.. → read(2) twice = 1, 2.
+        let mut st = UpgradeState::new(&[], &[0b0110_0000]);
+        st.non_ll = false;
+        let mut buf = [10i16, 20];
+        let mut sign = [0i16, 0];
+        upgrade_block(&mut st, &mut buf, &mut sign, 2, /*shift*/ 3, /*num_bits*/ 2);
+        // (1 << 3) = 8, (2 << 3) = 16
+        assert_eq!(buf, [10 + 8, 20 + 16]);
+    }
+
+    /// A well-formed WBT_TILE_UPGRADE with empty SRL/RAW streams and no prior
+    /// FIRST tile: exercises the 20-byte header parse + region threading and
+    /// the "no prior first → skip" path. Also checks the gate: disabled → the
+    /// upgrade block is ignored, no error.
+    fn upgrade_only_pdu() -> Vec<u8> {
+        // REGION payload: 12-byte header + 1 quant (5B) + one 26-byte upgrade
+        // tile block (6B block header + 20B tile header, zero data).
+        let mut region = Vec::new();
+        region.push(64); // tileSize
+        region.extend_from_slice(&0u16.to_le_bytes()); // numRects
+        region.push(1); // numQuant
+        region.push(0); // numProgQuant
+        region.push(0x01); // flags = RFX_DWT_REDUCE_EXTRAPOLATE
+        region.extend_from_slice(&1u16.to_le_bytes()); // numTiles
+        region.extend_from_slice(&26u32.to_le_bytes()); // tileDataSize
+        region.extend_from_slice(&[0x66, 0x76, 0x88, 0x99, 0xa9]); // 1 quant
+        // WBT_TILE_UPGRADE block
+        region.extend_from_slice(&WBT_TILE_UPGRADE.to_le_bytes());
+        region.extend_from_slice(&26u32.to_le_bytes()); // block len
+        region.extend_from_slice(&[0u8, 0, 0]); // quantIdx Y/Cb/Cr
+        region.extend_from_slice(&0u16.to_le_bytes()); // xIdx
+        region.extend_from_slice(&0u16.to_le_bytes()); // yIdx
+        region.push(0xFF); // quality (full → no progQuant lookup)
+        for _ in 0..6 {
+            region.extend_from_slice(&0u16.to_le_bytes()); // 6 zero lengths
+        }
+
+        let mut pdu = Vec::new();
+        pdu.extend_from_slice(&WBT_SYNC.to_le_bytes());
+        pdu.extend_from_slice(&12u32.to_le_bytes());
+        pdu.extend_from_slice(&SYNC_MAGIC.to_le_bytes());
+        pdu.extend_from_slice(&SYNC_VERSION.to_le_bytes());
+        pdu.extend_from_slice(&WBT_CONTEXT.to_le_bytes());
+        pdu.extend_from_slice(&10u32.to_le_bytes());
+        pdu.extend_from_slice(&[0u8, 64, 0, 0x01]);
+        pdu.extend_from_slice(&WBT_REGION.to_le_bytes());
+        pdu.extend_from_slice(&((6 + region.len()) as u32).to_le_bytes());
+        pdu.extend_from_slice(&region);
+        pdu
+    }
+
+    #[test]
+    fn upgrade_pdu_parses_and_skips_when_no_prior_first() {
+        let pdu = upgrade_only_pdu();
+        let mut dec = ProgressiveDecoder::new();
+        dec.set_upgrade_enabled(true);
+        let mut tiles = Vec::new();
+        // Must not error on the 20-byte header parse; no prior FIRST → no tile.
+        dec.decode(0, &pdu, &mut tiles).unwrap();
+        assert!(tiles.is_empty());
+    }
+
+    #[test]
+    fn upgrade_pdu_ignored_when_gate_disabled() {
+        let pdu = upgrade_only_pdu();
+        // Explicitly disabled rather than relying on the default: refinement
+        // decoding is ON by default since #496, but a user can still turn it
+        // off, and this pins what happens when they do.
+        let mut dec = ProgressiveDecoder::new();
+        dec.set_upgrade_enabled(false);
+        let mut tiles = Vec::new();
+        dec.decode(0, &pdu, &mut tiles).unwrap();
+        assert!(tiles.is_empty());
+        // The count is what the warning reports, and it is the only evidence
+        // a bug report can carry that refinement was dropped — so assert the
+        // skip actually ran, not merely that no tile came out (#462). A tile
+        // that never reached this branch would also produce no tiles.
+        assert_eq!(1, dec.upgrades_skipped);
+    }
+
+    /// #496: refinement state is ~48 KB per 64x64 tile and nothing else evicts
+    /// it, so it has to die with its surface. Latent while the gate was off —
+    /// the map was never populated — which is why it had to be fixed in the
+    /// same change that turns refinement decoding on.
+    #[test]
+    fn tile_state_dies_with_its_surface() {
+        let mut dec = ProgressiveDecoder::new();
+        // Two surfaces' worth of refinement state.
+        for sid in [1u16, 2u16] {
+            for x in 0..3u16 {
+                dec.tile_states.insert((sid, x, 0), Box::new(TileState::new()));
+            }
+        }
+        assert_eq!(6, dec.tile_states.len());
+
+        dec.forget_surface(1);
+        assert_eq!(3, dec.tile_states.len(), "surface 1's tiles should be gone");
+        assert!(
+            dec.tile_states.keys().all(|(sid, _, _)| *sid == 2),
+            "only surface 2's tiles should remain",
+        );
+
+        // Deleting a surface that has no state is not an error.
+        dec.forget_surface(99);
+        assert_eq!(3, dec.tile_states.len());
+
+        dec.forget_all();
+        assert!(dec.tile_states.is_empty(), "a graphics reset drops everything");
+    }
+
+    #[test]
+    fn dropped_refinements_keep_counting() {
+        let pdu = upgrade_only_pdu();
+        // Refinement decoding is on by default since #496; this pins the
+        // counter that reports what a user who turns it off is losing.
+        let mut dec = ProgressiveDecoder::new();
+        dec.set_upgrade_enabled(false);
+        let mut tiles = Vec::new();
+        for _ in 0..3 {
+            dec.decode(0, &pdu, &mut tiles).unwrap();
+        }
+        assert_eq!(3, dec.upgrades_skipped);
+    }
+
+    #[test]
+    fn the_first_drop_is_always_reported_then_every_500th() {
+        // The first matters most: it is the one that turns a vague report
+        // into a named cause. Reporting every tile would bury the session.
+        assert!(should_report(1));
+        assert!(!should_report(2));
+        assert!(!should_report(499));
+        assert!(should_report(500));
+        assert!(!should_report(501));
+        assert!(should_report(1000));
+    }
+
+    #[test]
+    fn nothing_is_reported_before_anything_is_dropped() {
+        assert!(!should_report(0));
+    }
+
+    #[test]
+    fn upgrade_block_ac_uses_raw_for_nonzero_and_srl_for_zero() {
+        // AC path (non_ll=true): sign[0]>0 → raw refine; sign[1]==0 → srl read
+        // (which sets sign[1]). raw=0b11_...(read(2)=3), srl=0b100... (→ +1).
+        let mut st = UpgradeState::new(&[0b1000_0000], &[0b1100_0000]);
+        let mut buf = [10i16, 0];
+        let mut sign = [5i16, 0]; // [0] already non-zero, [1] still zero
+        upgrade_block(&mut st, &mut buf, &mut sign, 2, /*shift*/ 0, /*num_bits*/ 1);
+        // i=0: sign>0 → raw_shift(1)=1 → buf[0] += 1<<0 = 11
+        // i=1: sign==0 → srl_read(1)=+1 → sign[1]=1, buf[1] += 1 = 1
+        assert_eq!(buf, [11, 1]);
+        assert_eq!(sign[1], 1);
+    }
+}

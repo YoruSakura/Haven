@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">বাতিল</string>
+    <string name="common_save">সংরক্ষণ</string>
+    <string name="common_done">সম্পন্ন</string>
+    <string name="common_close">বন্ধ</string>
+    <string name="common_ok">ঠিক আছে</string>
+    <string name="common_delete">মুছুন</string>
+    <string name="common_edit">সম্পাদনা</string>
+    <string name="common_rename">নাম পরিবর্তন</string>
+    <string name="common_create">তৈরি</string>
+    <string name="common_connect">সংযোগ</string>
+    <string name="common_disconnect">সংযোগ বিচ্ছিন্ন</string>
+    <string name="common_copy">কপি</string>
+    <string name="common_paste">পেস্ট</string>
+    <string name="common_label">লেবেল</string>
+    <string name="common_password">পাসওয়ার্ড</string>
+    <string name="common_port">পোর্ট</string>
+    <string name="common_host">হোস্ট</string>
+    <string name="common_username">ব্যবহারকারীর নাম</string>
+    <string name="common_install">ইনস্টল</string>
+    <string name="common_reset">রিসেট</string>
+    <string name="common_allow">অনুমতি</string>
+    <string name="common_not_now">এখন নয়</string>
+    <string name="common_import">ইমপোর্ট</string>
+    <string name="common_add">যোগ</string>
+    <string name="common_download">ডাউনলোড</string>
+    <string name="common_unlock">আনলক</string>
+
+    <!-- Tab bar -->
+    <string name="terminal_reconnecting">পুনরায় সংযোগ হচ্ছে</string>
+    <string name="terminal_sessions">সেশন</string>
+    <string name="terminal_move_left">বামে সরান</string>
+    <string name="terminal_move_right">ডানে সরান</string>
+    <string name="terminal_close">বন্ধ</string>
+    <string name="terminal_switch_tab">ট্যাব পরিবর্তন</string>
+    <string name="terminal_copy_last_output">শেষ আউটপুট কপি</string>
+    <string name="terminal_copied_output">আউটপুট কপি হয়েছে (%d অক্ষর)</string>
+    <string name="terminal_no_command_output">কমান্ড আউটপুট পাওয়া যায়নি (শেল ইন্টিগ্রেশন দরকার)</string>
+    <string name="terminal_paste_no_active_tab">পেস্ট করার জন্য কোনো সক্রিয় ট্যাব নেই</string>
+    <string name="terminal_search">অনুসন্ধান</string>
+
+    <!-- EmptyTerminalState -->
+    <string name="terminal_connect_prompt">সেশন শুরু করতে একটি সার্ভারে সংযোগ করুন।</string>
+
+    <!-- NewTabSessionPickerDialog -->
+    <string name="terminal_sessions_title">%s সেশন</string>
+    <string name="terminal_rename_session">সেশনের নাম পরিবর্তন</string>
+    <string name="terminal_kill_session">সেশন বন্ধ</string>
+
+    <!-- VncSettingsDialog -->
+    <string name="terminal_vnc_desktop">VNC ডেস্কটপ</string>
+    <string name="terminal_connect_to_host">%s-এ সংযোগ</string>
+    <string name="terminal_port">পোর্ট</string>
+    <string name="terminal_password">পাসওয়ার্ড</string>
+    <string name="terminal_tunnel_through_ssh">SSH দিয়ে টানেল</string>
+    <string name="terminal_save_for_connection">এই সংযোগের জন্য সংরক্ষণ</string>
+    <string name="terminal_connect">সংযোগ</string>
+
+    <!-- RenameSessionDialog -->
+    <string name="terminal_rename_session_title">সেশনের নাম পরিবর্তন</string>
+    <string name="terminal_name">নাম</string>
+    <string name="terminal_rename">নাম পরিবর্তন</string>
+    <string name="terminal_rename_exists">এই সার্ভারে \"%1$s\" নামের একটি সেশন আগেই আছে</string>
+    <string name="terminal_new_tab_no_active">ক্লোন করার মতো সক্রিয় সেশন নেই</string>
+    <string name="terminal_new_tab_no_config">সংযোগ কনফিগ পাওয়া যায়নি — আগে আবার সংযোগ করুন</string>
+    <string name="terminal_new_tab_host_key_changed">%s এর হোস্ট কী পরিবর্তিত হয়েছে — নিরাপত্তার কারণে সংযোগ প্রত্যাখ্যাত</string>
+    <string name="terminal_new_tab_connection_failed">সংযোগ করা যায়নি: %s</string>
+    <string name="terminal_new_tab_shell_failed">শেল খোলা যায়নি: %s</string>
+    <string name="terminal_new_tab_reticulum_no_session">ক্লোন করার মতো সক্রিয় Reticulum সেশন নেই</string>
+    <string name="terminal_new_tab_connecting">সংযোগ করা হচ্ছে…</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="terminal_no_contact">সার্ভার থেকে %1$d সেকেন্ড ধরে সাড়া নেই — পুনরায় চেষ্টা চলছে</string>
+    <string name="terminal_attach_notice_unavailable">সেশন ম্যানেজার %1$s শুরু হয়নি — আপনি একটি সাধারণ শেলে আছেন। হোস্টে ইনস্টল আছে কিনা দেখুন, অথবা সংযোগ এডিটরে (উন্নত) সেশন কমান্ড সেট করুন।</string>
+    <string name="terminal_attach_notice_missing">%1$s সেশন "%2$s" সংযুক্ত হয়নি — আপনি একটি সাধারণ শেলে আছেন। শুরুর কমান্ড দেখুন, অথবা সংযোগ এডিটরে (উন্নত) সেশন কমান্ড সেট করুন।</string>
+    <string name="terminal_attach_notice_dismiss">বাতিল করুন</string>
+    <string name="terminal_new_session_create">তৈরি করুন</string>
+    <string name="terminal_vnc_username_label">ইউজারনেম (ঐচ্ছিক — শুধু VeNCrypt)</string>
+    <string name="terminal_vnc_username_placeholder">ক্লাসিক VncAuth এর জন্য ফাঁকা রাখুন</string>
+    <string name="terminal_vnc_color_depth">রঙের গভীরতা</string>
+    <string name="terminal_open_plain_shell">সাধারণ শেল খুলুন</string>
+
+    <string name="terminal_enter_fullscreen">ফুলস্ক্রিনে প্রবেশ করুন</string>
+    <string name="terminal_exit_fullscreen">ফুলস্ক্রিন থেকে বেরিয়ে আসুন</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="terminal_link_open_failed">এই লিংক খোলার জন্য কোনো অ্যাপ নেই</string>
+    <string name="terminal_link_scheme_blocked">ব্লক করা লিংক (অসমর্থিত scheme)</string>
+    <string name="terminal_local_vnc_failed">স্থানীয় ডেস্কটপ শুরু করা যায়নি</string>
+    <string name="terminal_attach_title">সংযুক্ত করুন</string>
+    <string name="terminal_attach_send_file">একটি ফাইল পাঠান</string>
+    <string name="terminal_attach_send_file_desc">রিমোটে আপলোড করুন এবং এর path পেস্ট করুন</string>
+    <string name="terminal_attach_take_photo">ছবি তুলুন</string>
+    <string name="terminal_attach_take_photo_desc">একটি ছবি তুলে ফাইলের মতো পাঠান</string>
+    <string name="terminal_attach_scan_camera">কোড স্ক্যান (ক্যামেরা)</string>
+    <string name="terminal_attach_scan_camera_desc">একটি QR বা barcode ছবি তুলুন এবং এর বিষয়বস্তু পেস্ট করুন</string>
+    <string name="terminal_attach_scan_gallery">কোড স্ক্যান (Photos)</string>
+    <string name="terminal_attach_scan_gallery_desc">একটি QR বা barcode-এর ছবি বেছে নিন এবং এর বিষয়বস্তু পেস্ট করুন</string>
+    <string name="terminal_attach_ocr_camera">টেক্সট শনাক্ত করুন (ক্যামেরা)</string>
+    <string name="terminal_attach_ocr_camera_desc">মুদ্রিত টেক্সটের ছবি তুলুন এবং শনাক্ত হওয়া অংশ পেস্ট করুন</string>
+    <string name="terminal_attach_ocr_gallery">টেক্সট শনাক্ত করুন (Photos)</string>
+    <string name="terminal_attach_ocr_gallery_desc">মুদ্রিত টেক্সটের ছবি বেছে নিন এবং শনাক্ত হওয়া অংশ পেস্ট করুন</string>
+    <string name="terminal_scan_no_code">ছবিতে কোনো কোড পাওয়া যায়নি</string>
+    <string name="terminal_scan_no_text">ছবিতে কোনো টেক্সট পাওয়া যায়নি</string>
+    <string name="terminal_scan_failed">স্ক্যান ব্যর্থ: %s</string>
+    <string name="terminal_scan_no_camera">কোনো ক্যামেরা অ্যাপ পাওয়া যায়নি</string>
+    <string name="terminal_selection_copy">কপি</string>
+    <string name="terminal_selection_paste">পেস্ট</string>
+    <string name="terminal_selection_open">খুলুন</string>
+    <string name="terminal_selection_macros">ম্যাক্রো</string>
+    <string name="terminal_selection_copied">কপি হয়েছে</string>
+    <string name="terminal_selection_copy_one_line">এক লাইনে কপি করুন</string>
+    <string name="terminal_selection_no_url">কোনো URL পাওয়া যায়নি</string>
+    <string name="terminal_selection_anchor_start">শুরু</string>
+    <string name="terminal_selection_anchor_end">শেষ</string>
+    <string name="terminal_selection_up">উপরে</string>
+    <string name="terminal_selection_down">নিচে</string>
+    <string name="terminal_selection_left">বামে</string>
+    <string name="terminal_selection_right">ডানে</string>
+    <string name="terminal_selection_cancel">বাতিল</string>
+    <string name="terminal_vnc_depth_24bit">24-বিট রঙ (সেরা মান)</string>
+    <string name="terminal_vnc_depth_16bit">16-বিট রঙ (দ্রুততর)</string>
+    <string name="terminal_vnc_depth_256">256 রঙ (সর্বনিম্ন ব্যান্ডউইথ)</string>
+    <string name="terminal_new_tab_host_key_unknown">%s-এর জন্য অজানা হোস্ট কী — এটি যাচাই করে বিশ্বাস করতে প্রথমে এই সংযোগটি খুলুন</string>
+    <string name="terminal_text_input_title">টেক্সট ইনপুট</string>
+    <string name="terminal_text_input_placeholder">পাঠানোর টেক্সট লিখুন\u2026</string>
+    <string name="terminal_text_input_send">পাঠান</string>
+    <string name="terminal_text_input_expand">বড় করুন</string>
+    <string name="terminal_text_input_shrink">ছোট করুন</string>
+    <string name="terminal_text_input_move_up">উপরে সরান</string>
+    <string name="terminal_text_input_move_down">নিচে সরান</string>
+    <string name="terminal_text_input_move_left">বামে সরান</string>
+    <string name="terminal_text_input_move_right">ডানে সরান</string>
+    <string name="terminal_text_input_resize_handle">টেক্সট ইনপুট উইন্ডোর আকার বদলান</string>
+    <string name="terminal_save_connection">সংযোগ সংরক্ষণ করুন</string>
+    <string name="terminal_save_connection_title">সংযোগ সংরক্ষণ করুন</string>
+    <string name="terminal_save_connection_name_label">নাম</string>
+    <string name="terminal_save_connection_name_hint">সংযোগ তালিকায় দেখানো হয়</string>
+    <string name="terminal_save_connection_id">প্রোফাইল ID</string>
+    <string name="terminal_save_connection_id_hint">সংরক্ষিত সংযোগ শনাক্ত করে, সেশনের নাম নয়</string>
+    <string name="terminal_save_connection_context">সংযোগ: %1$s\nট্রান্সপোর্ট: %2$s\nপিন করার সেশন: %3$s</string>
+    <string name="terminal_save_connection_mismatch">এই সংযোগটি \"%1$s\" সেশনে পিন করা, কিন্তু আপনি \"%2$s\"-এ আছেন। সংরক্ষণ করলে এটি বর্তমান সেশনে পুনরায় পিন হবে।</string>
+    <string name="terminal_save_connection_update">পিন আপডেট করুন</string>
+    <string name="terminal_save_connection_saved">সংযোগ \"%1$s\" সংরক্ষিত হয়েছে</string>
+    <string name="terminal_save_connection_updated">সংযোগ \"%1$s\" আপডেট হয়েছে</string>
+    <string name="terminal_save_connection_need_session">এই ট্যাবের সেশনের নাম শনাক্ত করা যায়নি। নামযুক্ত tmux/zellij/screen সেশন খুলুন, বা প্রোফাইলে রিমোট কমান্ড সেট করুন, তারপর আবার চেষ্টা করুন।</string>
+    <string name="terminal_details">বিবরণ</string>
+    <string name="terminal_details_title">আমি কোথায়?</string>
+    <string name="terminal_details_door">দরজা (সংযোগ কার্ড)</string>
+    <string name="terminal_details_path">পথ (ট্রান্সপোর্ট)</string>
+    <string name="terminal_details_room">ঘর (tmux / সেশন)</string>
+    <string name="terminal_details_room_unknown">\u2014 অজানা \u2014</string>
+    <string name="terminal_details_room_pin">কার্ড পিন: %1$s</string>
+    <string name="terminal_details_room_no_pin">\u2014 নেই \u2014</string>
+    <string name="terminal_details_room_mismatch">সক্রিয় ঘর কার্ড পিনের থেকে ভিন্ন \u2014 আপনি হয়তো অন্য দরজা দিয়ে ঢুকেছেন বা স্বয়ংক্রিয়ভাবে তৈরি সেশনে পৌঁছেছেন।</string>
+    <string name="terminal_details_copy">কপি করুন</string>
+    <string name="terminal_details_copied">অবস্থান কপি হয়েছে</string>
+    <string name="terminal_details_unavailable">এই ট্যাবের সংযোগ বিবরণ পড়া যায়নি।</string>
+    <string name="terminal_mouse_requested_but_disabled">এই অ্যাপটি মাউস চাইছে। ব্যবহার করতে Settings → Terminal-এ “TUI অ্যাপে মাউস ইনপুট” চালু করুন।</string>
+    <string name="terminal_dictate_unavailable">এই ডিভাইসে কোনো ভয়েস ইনপুট অ্যাপ নেই</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="terminal_inline_image_title">ইনলাইন ছবি</string>
+    <string name="terminal_inline_image_question">এই টার্মিনালটি ইনলাইনে একটি ছবি দেখাতে চায়।</string>
+    <string name="terminal_inline_image_protocol_kitty">Kitty গ্রাফিক্স প্রোটোকল</string>
+    <string name="terminal_inline_image_protocol_iterm2">iTerm2 প্রোটোকল</string>
+    <string name="terminal_inline_image_name">ফাইল: %1$s</string>
+    <string name="terminal_inline_image_dimensions">আকার: %1$d × %2$d পিক্সেল</string>
+    <string name="terminal_inline_image_deny">প্রত্যাখ্যান</string>
+    <string name="terminal_inline_image_always_tab">এই ট্যাবে সবসময়</string>
+    <string name="terminal_bell_notification_title">টার্মিনাল</string>
+    <string name="terminal_bell_notification_body">একটি টার্মিনাল প্রোগ্রাম ঘণ্টি বাজিয়েছে</string>
+    <string name="terminal_sudo_prompt_detected">sudo পাসওয়ার্ড চাওয়া হয়েছে</string>
+    <string name="terminal_sudo_prompt_subtitle">Android Keystore • বায়োমেট্রিক আনলক • শুধু পূরণ চাপলেই পাঠানো হয়</string>
+    <string name="terminal_sudo_fill_action">পূরণ</string>
+    <string name="terminal_sudo_turn_off_action">বন্ধ করুন</string>
+    <string name="terminal_sudo_disabled_toast">sudo প্রম্পট শনাক্তকরণ বন্ধ করা হয়েছে (সেটিংস → নিরাপত্তা ও গোপনীয়তা)</string>
+    <string name="terminal_sudo_entry_title">%1$s-এর জন্য sudo পাসওয়ার্ড</string>
+    <string name="terminal_sudo_entry_hint">এই সংযোগে এখনো কোনো পাসওয়ার্ড সংরক্ষিত নেই। এই টার্মিনালে SSH-এর মাধ্যমে সরাসরি পাঠাতে একবার লিখুন। সংরক্ষণ করা হলে এটি এই ডিভাইসের Android Keystore-এ এনক্রিপ্ট করা থাকে, প্রতিবার ব্যবহারে বায়োমেট্রিক আনলক প্রয়োজন হয় এবং কখনোই AI/MCP টুলে প্রকাশ করা হয় না।</string>
+    <string name="terminal_sudo_turn_off_detection">sudo প্রম্পট শনাক্তকরণ বন্ধ করুন</string>
+    <string name="terminal_sudo_send_action">পাঠান</string>
+</resources>

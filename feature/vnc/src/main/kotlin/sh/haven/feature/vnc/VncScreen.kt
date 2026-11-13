@@ -1,0 +1,3081 @@
+package sh.haven.feature.vnc
+
+import android.graphics.Bitmap
+import android.os.SystemClock
+import android.view.KeyEvent as AndroidKeyEvent
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.EditNote
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.Fullscreen
+import androidx.compose.material.icons.filled.FitScreen
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
+import androidx.compose.material.icons.filled.FullscreenExit
+import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.material.icons.filled.KeyboardHide
+import androidx.compose.material.icons.filled.Minimize
+import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.PictureInPictureAlt
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.OpenWith
+import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.ScreenLockLandscape
+import androidx.compose.material.icons.filled.ScreenLockPortrait
+import androidx.compose.material.icons.filled.ScreenRotation
+import androidx.compose.material.icons.filled.SwapVert
+import androidx.compose.material.icons.filled.TouchApp
+import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.FilledIconToggleButton
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.input.pointer.PointerButtons
+import androidx.compose.ui.input.pointer.PointerEvent
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.PointerType
+import androidx.compose.ui.input.pointer.areAnyPressed
+import androidx.compose.ui.input.pointer.isPrimaryPressed
+import androidx.compose.ui.input.pointer.isSecondaryPressed
+import androidx.compose.ui.input.pointer.isTertiaryPressed
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.pointerInteropFilter
+import androidx.compose.ui.input.pointer.positionChange
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.compose.ui.text.font.FontWeight
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.withTimeoutOrNull
+import sh.haven.core.data.preferences.ToolbarKey
+import sh.haven.core.data.preferences.ToolbarLayout
+import sh.haven.core.ui.CursorOverlay
+import sh.haven.core.ui.clampPanToCover
+import sh.haven.feature.vnc.R
+import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.layout.offset
+import kotlin.math.abs
+import kotlin.math.roundToInt
+
+/**
+ * Stateless VNC session content — takes StateFlows and input lambdas directly.
+ * Used by DesktopViewModel's multi-tab system. All connection management
+ * is handled externally; this composable only renders and forwards input.
+ */
+@Composable
+fun VncSessionContent(
+    connected: StateFlow<Boolean>,
+    frame: StateFlow<Bitmap?>,
+    error: StateFlow<String?>,
+    toolbarLayout: ToolbarLayout = ToolbarLayout.DEFAULT,
+    navBlockMode: sh.haven.core.data.preferences.NavBlockMode = sh.haven.core.data.preferences.NavBlockMode.ALIGNED,
+    toolbarUniformGrid: Boolean = false,
+    toolbarMinKeyWidth: Int = 0,
+    toolbarKeyScale: Float = 1f,
+    editModeControlsPlacement: sh.haven.core.data.preferences.EditModeControlsPlacement = sh.haven.core.data.preferences.EditModeControlsPlacement.LEFT,
+    snippetLibrary: List<sh.haven.core.data.preferences.ToolbarItem.Custom> = emptyList(),
+    onToolbarLayoutChanged: (ToolbarLayout) -> Unit = {},
+    onSnippetLibraryChanged: (List<sh.haven.core.data.preferences.ToolbarItem.Custom>) -> Unit = {},
+    onOpenToolbarSettings: () -> Unit = {},
+    onTap: (Int, Int) -> Unit,
+    /** Two-finger tap → middle-button click at the tapped point (X11 button 2). */
+    onMiddleClick: (Int, Int) -> Unit = { _, _ -> },
+    onLongPress: (Int, Int) -> Unit,
+    onDragStart: (Int, Int) -> Unit,
+    onDrag: (Int, Int) -> Unit,
+    onDragEnd: () -> Unit,
+    onScrollUp: () -> Unit,
+    onScrollDown: () -> Unit,
+    /** Hold/release a mouse button (1=L, 2=M, 3=R) for the toolbar's
+     *  explicit mouse-button toggles (#183). Default no-op. */
+    onPressButton: (Int) -> Unit = {},
+    onReleaseButton: (Int) -> Unit = {},
+    onTypeChar: (Char) -> Unit,
+    onTypeText: (String) -> Unit = { s -> s.forEach(onTypeChar) },
+    /** Push text to the remote VNC clipboard via RFB ClientCutText (#718). */
+    onSendClipboard: ((String) -> Unit)? = null,
+    onKeyDown: (keySym: Int) -> Unit,
+    onKeyUp: (keySym: Int) -> Unit,
+    onDisconnect: () -> Unit,
+    onFullscreenChanged: (Boolean) -> Unit = {},
+    cursor: StateFlow<CursorOverlay?>? = null,
+    pointerPos: StateFlow<Pair<Int, Int>>? = null,
+    inputMode: String = "DIRECT",
+    /** Switch DIRECT/TOUCHPAD input mode from the toolbar (#183). */
+    onSetInputMode: ((String) -> Unit)? = null,
+    /** TOUCHPAD-mode speed multiplier; gesture math scales deltas by it (#696). */
+    touchpadSensitivity: Float = 1f,
+    /** Persist trackpad sensitivity from the toolbar (#696). Null hides the control. */
+    onSetTouchpadSensitivity: ((Float) -> Unit)? = null,
+    bandwidthSuggestion: StateFlow<String?>? = null,
+    onAcceptBandwidthSuggestion: (() -> Unit)? = null,
+    onDismissBandwidthSuggestion: (() -> Unit)? = null,
+    securityWarning: StateFlow<String?>? = null,
+    onDismissSecurityWarning: (() -> Unit)? = null,
+    currentOrientation: Int = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
+    onCycleOrientation: () -> Unit = {},
+    onRetry: (() -> Unit)? = null,
+    onClose: (() -> Unit)? = null,
+    /**
+     * App-window-only toolbar actions. When non-null the bottom toolbar shows a
+     * minimize (background to edge icon) and/or a Picture-in-Picture button.
+     * Full desktops leave these null and don't show them.
+     */
+    onMinimize: (() -> Unit)? = null,
+    onPictureInPicture: (() -> Unit)? = null,
+    /** See [VncViewer]: 2-finger pinch-zoom for single-app windows. */
+    twoFingerZoom: Boolean = false,
+    /**
+     * App-window-only: when non-null, fullscreen is host-controlled (the host
+     * promotes the window into a full-screen Dialog that escapes the bottom
+     * sheet). The desktop viewer leaves this null and keeps its own internal
+     * fullscreen state. [onFullscreenChanged] is then the toggle-request channel
+     * back to the host.
+     */
+    fullscreenOverride: Boolean? = null,
+    /** App-window fullscreen: 3-finger pinch → live cage output scale. See [VncViewer]. */
+    onChangeScale: ((Float) -> Unit)? = null,
+    currentScale: Float = 1f,
+    /** App-window fullscreen: persist the current output scale as the app's default. See [VncViewer]. */
+    onSaveDefault: ((Float) -> Unit)? = null,
+    isActive: Boolean = true,
+    sessionKey: String? = null,
+) {
+    val connectedState by connected.collectAsState()
+    val frameState by frame.collectAsState()
+    val errorState by error.collectAsState()
+    val cursorState = cursor?.collectAsState()?.value
+    val pointerState = pointerPos?.collectAsState()?.value ?: (0 to 0)
+
+    // Fullscreen is normally self-managed (the desktop viewer). When a caller
+    // passes [fullscreenOverride] (the app-window case) the host owns the state
+    // and the immersive window — VncSessionContent only mirrors it and routes
+    // toggle requests up via [onFullscreenChanged].
+    var localFullscreen by rememberSaveable { mutableStateOf(false) }
+    val fullscreen = fullscreenOverride ?: localFullscreen
+    val view = LocalView.current
+    val window = (view.context as? android.app.Activity)?.window
+
+    LaunchedEffect(fullscreen) {
+        if (fullscreenOverride != null) return@LaunchedEffect
+        onFullscreenChanged(fullscreen)
+        if (window != null) {
+            val controller = WindowCompat.getInsetsController(window, view)
+            if (fullscreen) {
+                controller.hide(WindowInsetsCompat.Type.systemBars())
+                controller.systemBarsBehavior =
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            } else {
+                controller.show(WindowInsetsCompat.Type.systemBars())
+            }
+        }
+    }
+
+    LaunchedEffect(connectedState) {
+        if (!connectedState && fullscreenOverride == null && localFullscreen) localFullscreen = false
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            // Reads `localFullscreen`, NOT `fullscreen`. DisposableEffect(Unit) keeps the
+            // effect lambda from the first composition, so a plain val like `fullscreen`
+            // is frozen at its first-composition value (false) and this would never fire.
+            // `localFullscreen` is a state delegate, so its getter yields the live value.
+            // Without this, closing a fullscreen tab left onFullscreenChanged(false)
+            // uncalled: the host kept hiding the app bar and bottom nav, and pager swipe
+            // stays disabled while it thinks we're fullscreen — no way out. (#386)
+            if (fullscreenOverride == null && localFullscreen && window != null) {
+                val controller = WindowCompat.getInsetsController(window, view)
+                controller.show(WindowInsetsCompat.Type.systemBars())
+                onFullscreenChanged(false)
+            }
+        }
+    }
+
+    if (connectedState && frameState != null) {
+        VncViewer(
+            frame = frameState!!,
+            fullscreen = fullscreen,
+            toolbarLayout = toolbarLayout,
+            navBlockMode = navBlockMode,
+            toolbarUniformGrid = toolbarUniformGrid,
+            toolbarMinKeyWidth = toolbarMinKeyWidth,
+            toolbarKeyScale = toolbarKeyScale,
+            editModeControlsPlacement = editModeControlsPlacement,
+            snippetLibrary = snippetLibrary,
+            onToolbarLayoutChanged = onToolbarLayoutChanged,
+            onSnippetLibraryChanged = onSnippetLibraryChanged,
+            onOpenToolbarSettings = onOpenToolbarSettings,
+            onTap = onTap,
+            onMiddleClick = onMiddleClick,
+            onLongPress = onLongPress,
+            onDragStart = onDragStart,
+            onDrag = onDrag,
+            onDragEnd = onDragEnd,
+            onScrollUp = onScrollUp,
+            onScrollDown = onScrollDown,
+            onPressButton = onPressButton,
+            onReleaseButton = onReleaseButton,
+            onTypeChar = onTypeChar,
+            onTypeText = onTypeText,
+            onSendClipboard = onSendClipboard,
+            onKeyDown = onKeyDown,
+            onKeyUp = onKeyUp,
+            onToggleFullscreen = {
+                if (fullscreenOverride != null) onFullscreenChanged(!fullscreen)
+                else localFullscreen = !localFullscreen
+            },
+            onDisconnect = onDisconnect,
+            cursor = cursorState,
+            pointerPos = pointerState,
+            inputMode = inputMode,
+            onSetInputMode = onSetInputMode,
+            touchpadSensitivity = touchpadSensitivity,
+            onSetTouchpadSensitivity = onSetTouchpadSensitivity,
+            bandwidthSuggestion = bandwidthSuggestion?.collectAsState()?.value,
+            onAcceptBandwidthSuggestion = onAcceptBandwidthSuggestion,
+            onDismissBandwidthSuggestion = onDismissBandwidthSuggestion,
+            securityWarning = securityWarning?.collectAsState()?.value,
+            onDismissSecurityWarning = onDismissSecurityWarning,
+            currentOrientation = currentOrientation,
+            onCycleOrientation = onCycleOrientation,
+            onMinimize = onMinimize,
+            onPictureInPicture = onPictureInPicture,
+            twoFingerZoom = twoFingerZoom,
+            onChangeScale = onChangeScale,
+            currentScale = currentScale,
+            onSaveDefault = onSaveDefault,
+            isActive = isActive,
+            sessionKey = sessionKey,
+        )
+    } else {
+        VncPlaceholder(
+            error = errorState,
+            onRetry = onRetry,
+            onClose = onClose,
+        )
+    }
+}
+
+/** Legacy VncScreen with ViewModel — delegates to VncSessionContent. */
+@Composable
+fun VncScreen(
+    isActive: Boolean = true,
+    pendingHost: String? = null,
+    pendingPort: Int? = null,
+    pendingPassword: String? = null,
+    pendingUsername: String? = null,
+    pendingSshForward: Boolean = false,
+    pendingSshSessionId: String? = null,
+    toolbarLayout: ToolbarLayout = ToolbarLayout.DEFAULT,
+    onPendingConsumed: () -> Unit = {},
+    onFullscreenChanged: (Boolean) -> Unit = {},
+    viewModel: VncViewModel = hiltViewModel(),
+) {
+    LaunchedEffect(isActive) { viewModel.setActive(isActive) }
+
+    LaunchedEffect(pendingHost) {
+        if (pendingHost != null) {
+            if (pendingSshForward && pendingSshSessionId != null) {
+                // 127.0.0.1 rather than "localhost" so sshd doesn't resolve
+                // through getaddrinfo and hit the IPv6 loopback first — a
+                // VNC server bound only to 127.0.0.1 (common for wayvnc)
+                // rejects the ::1 attempt and depending on the sshd version
+                // the retry can surface as a closed channel rather than
+                // a successful fallback (#104).
+                viewModel.connectViaSsh(
+                    pendingSshSessionId, "127.0.0.1", pendingPort ?: 5900, pendingPassword,
+                )
+            } else {
+                viewModel.connect(pendingHost, pendingPort ?: 5900, pendingPassword, pendingUsername)
+            }
+            onPendingConsumed()
+        }
+    }
+
+    // Standalone-path orientation state. Lives in VncScreen (the
+    // outer composable) so it sits above any conditional siblings
+    // inside VncSessionContent / VncViewer. Mirrors RdpScreen.
+    val activity = androidx.activity.compose.LocalActivity.current
+    var orientationValue by remember {
+        mutableStateOf(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+    }
+    LaunchedEffect(orientationValue, activity) {
+        activity?.requestedOrientation = orientationValue
+    }
+    DisposableEffect(activity) {
+        onDispose {
+            activity?.requestedOrientation =
+                android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        }
+    }
+
+    VncSessionContent(
+        connected = viewModel.connected,
+        frame = viewModel.frame,
+        error = viewModel.error,
+        toolbarLayout = toolbarLayout,
+        onTap = { x, y -> viewModel.sendClick(x, y) },
+        onLongPress = { x, y -> viewModel.sendClick(x, y, button = 3) },
+        onDragStart = { x, y ->
+            viewModel.sendPointer(x, y)
+            viewModel.pressButton(1)
+        },
+        onDrag = { x, y -> viewModel.sendPointer(x, y) },
+        onDragEnd = { viewModel.releaseButton(1) },
+        onScrollUp = { viewModel.scrollUp() },
+        onScrollDown = { viewModel.scrollDown() },
+        onPressButton = { btn -> viewModel.pressButton(btn) },
+        onReleaseButton = { btn -> viewModel.releaseButton(btn) },
+        onTypeChar = { ch -> viewModel.typeKey(charToKeySym(ch)) },
+        onTypeText = { text -> viewModel.typeText(text) },
+        onSendClipboard = { text -> viewModel.sendClipboardText(text) },
+        onKeyDown = { keySym -> viewModel.sendKey(keySym, true) },
+        onKeyUp = { keySym -> viewModel.sendKey(keySym, false) },
+        onDisconnect = { viewModel.disconnect() },
+        onFullscreenChanged = onFullscreenChanged,
+        cursor = viewModel.cursor,
+        pointerPos = viewModel.pointerPos,
+        securityWarning = viewModel.securityWarning,
+        onDismissSecurityWarning = { viewModel.dismissSecurityWarning() },
+        currentOrientation = orientationValue,
+        onCycleOrientation = { orientationValue = cycleVncOrientation(orientationValue) },
+    )
+}
+
+/**
+ * Explicit mouse-button toggles (L / M / R) for the VNC toolbar (#183).
+ * Each is a sticky hold: tapping arms that button down on the remote so a
+ * finger drag moves with it held; tapping again releases. Mutually exclusive.
+ * Lets the user move the pointer with no button pressed, or hold any button
+ * and drag — the "use real mouse buttons like SSH" request.
+ */
+/**
+ * Toggle between DIRECT (absolute: finger position = cursor, drag presses the
+ * button) and TOUCHPAD (relative: drag glides the cursor with no button held)
+ * input modes from inside the viewer (#183). The capability already exists as
+ * the `desktopInputMode` preference; this surfaces it in-context so users hit
+ * by "swiping always clicks" can switch without digging into Settings. Checked
+ * (highlighted) = trackpad mode.
+ */
+@Composable
+private fun InputModeToggle(
+    inputMode: String,
+    onSetInputMode: ((String) -> Unit)?,
+    onSetTouchpadSensitivity: ((Float) -> Unit)?,
+    onOpenSensitivity: () -> Unit,
+    vertical: Boolean = false,
+) {
+    if (onSetInputMode == null) return
+    val touchpad = inputMode == "TOUCHPAD"
+    // #696 reporter follow-up: in the corner-docked fullscreen overlay the
+    // toggle sits inside a vertical panel — stacking here keeps the strip's
+    // width at one button instead of widening it for a horizontal row.
+    val content: @Composable () -> Unit = {
+        FilledIconToggleButton(
+            checked = touchpad,
+            onCheckedChange = { onSetInputMode(if (touchpad) "DIRECT" else "TOUCHPAD") },
+            modifier = Modifier.size(40.dp),
+        ) {
+            Icon(
+                Icons.Default.TouchApp,
+                contentDescription = if (touchpad) stringResource(R.string.vnc_cd_input_mode_trackpad_on)
+                                     else stringResource(R.string.vnc_cd_input_mode_direct),
+            )
+        }
+        // Speed control (#696): only while trackpad mode is on — direct touch
+        // has no speed to tune. Opens the sensitivity dialog.
+        if (touchpad && onSetTouchpadSensitivity != null) {
+            val speedDesc = stringResource(R.string.vnc_cd_trackpad_sensitivity)
+            IconButton(onClick = onOpenSensitivity) {
+                Icon(Icons.Default.Speed, contentDescription = speedDesc)
+            }
+        }
+    }
+    if (vertical) {
+        Column { content() }
+    } else {
+        Row(verticalAlignment = Alignment.CenterVertically) { content() }
+    }
+}
+
+/**
+ * Trackpad sensitivity dialog (#696): a slider over the relative-motion
+ * multiplier the VNC and RDP touchpad paths share. Commits on release and on
+ * Close, so the value can be tuned live; leaving without a drag keeps the old
+ * value.
+ */
+@Composable
+private fun TrackpadSensitivityDialog(
+    sensitivity: Float,
+    onSetSensitivity: (Float) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var value by remember { mutableStateOf(sensitivity.coerceIn(TOUCHPAD_SENSITIVITY_MIN, TOUCHPAD_SENSITIVITY_MAX)) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = { onSetSensitivity(value); onDismiss() }) {
+                Text(stringResource(R.string.vnc_action_close))
+            }
+        },
+        icon = { Icon(Icons.Default.Speed, contentDescription = null) },
+        title = { Text(stringResource(R.string.vnc_cd_trackpad_sensitivity)) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Text(
+                    "%.1f×".format(value),
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                )
+                Slider(
+                    value = value,
+                    onValueChange = { value = it },
+                    onValueChangeFinished = { onSetSensitivity(value) },
+                    valueRange = TOUCHPAD_SENSITIVITY_MIN..TOUCHPAD_SENSITIVITY_MAX,
+                    steps = 27,
+                )
+            }
+        },
+    )
+}
+
+/** Two-finger drag target: viewport pan (off) vs remote scroll-wheel (on). */
+@Composable
+private fun ScrollModeToggle(twoFingerScroll: Boolean, onToggle: () -> Unit) {
+    FilledIconToggleButton(
+        checked = twoFingerScroll,
+        onCheckedChange = { onToggle() },
+        modifier = Modifier.size(40.dp),
+    ) {
+        Icon(
+            if (twoFingerScroll) Icons.Default.SwapVert else Icons.Default.OpenWith,
+            contentDescription = if (twoFingerScroll) stringResource(R.string.vnc_cd_two_finger_scroll_on)
+                                 else stringResource(R.string.vnc_cd_two_finger_viewport),
+        )
+    }
+}
+
+@Composable
+private fun MouseButtonToggles(held: Int?, onToggle: (Int) -> Unit) {
+    listOf(1 to "L", 2 to "M", 3 to "R").forEach { (btn, label) ->
+        FilledIconToggleButton(
+            checked = held == btn,
+            onCheckedChange = { onToggle(btn) },
+            modifier = Modifier.size(40.dp),
+        ) {
+            Text(label, style = MaterialTheme.typography.labelLarge)
+        }
+    }
+}
+
+@Composable
+private fun VncPlaceholder(
+    error: String?,
+    onRetry: (() -> Unit)? = null,
+    onClose: (() -> Unit)? = null,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(stringResource(R.string.vnc_placeholder_title), style = MaterialTheme.typography.headlineMedium)
+        Spacer(Modifier.height(16.dp))
+        Text(
+            stringResource(R.string.vnc_placeholder_hint),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        if (error != null) {
+            Spacer(Modifier.height(16.dp))
+            Card(
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                ),
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Text(
+                    text = error,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(12.dp),
+                )
+            }
+            // Inline recovery so a lost connection isn't a long-press-to-close
+            // dead-end (#121, KoriKraut). Retry re-runs the connect; Close drops
+            // the tab and releases any lingering SSH tunnel.
+            if (onRetry != null || onClose != null) {
+                Spacer(Modifier.height(16.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    if (onClose != null) {
+                        TextButton(onClick = onClose) { Text(stringResource(R.string.vnc_action_close)) }
+                    }
+                    if (onRetry != null) {
+                        Button(onClick = onRetry) { Text(stringResource(R.string.vnc_action_retry)) }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun VncViewer(
+    frame: Bitmap,
+    fullscreen: Boolean,
+    toolbarLayout: ToolbarLayout = ToolbarLayout.DEFAULT,
+    navBlockMode: sh.haven.core.data.preferences.NavBlockMode = sh.haven.core.data.preferences.NavBlockMode.ALIGNED,
+    toolbarUniformGrid: Boolean = false,
+    toolbarMinKeyWidth: Int = 0,
+    toolbarKeyScale: Float = 1f,
+    editModeControlsPlacement: sh.haven.core.data.preferences.EditModeControlsPlacement = sh.haven.core.data.preferences.EditModeControlsPlacement.LEFT,
+    snippetLibrary: List<sh.haven.core.data.preferences.ToolbarItem.Custom> = emptyList(),
+    onToolbarLayoutChanged: (ToolbarLayout) -> Unit = {},
+    onSnippetLibraryChanged: (List<sh.haven.core.data.preferences.ToolbarItem.Custom>) -> Unit = {},
+    onOpenToolbarSettings: () -> Unit = {},
+    onTap: (Int, Int) -> Unit,
+    onMiddleClick: (Int, Int) -> Unit = { _, _ -> },
+    onLongPress: (Int, Int) -> Unit,
+    onDragStart: (Int, Int) -> Unit,
+    onDrag: (Int, Int) -> Unit,
+    onDragEnd: () -> Unit,
+    onScrollUp: () -> Unit,
+    onScrollDown: () -> Unit,
+    onPressButton: (Int) -> Unit = {},
+    onReleaseButton: (Int) -> Unit = {},
+    onTypeChar: (Char) -> Unit,
+    onTypeText: (String) -> Unit = { s -> s.forEach(onTypeChar) },
+    onSendClipboard: ((String) -> Unit)? = null,
+    onKeyDown: (Int) -> Unit,
+    onKeyUp: (Int) -> Unit,
+    onToggleFullscreen: () -> Unit,
+    onDisconnect: () -> Unit,
+    cursor: CursorOverlay? = null,
+    pointerPos: Pair<Int, Int> = 0 to 0,
+    inputMode: String = "DIRECT",
+    /** TOUCHPAD-mode speed multiplier; gesture math scales deltas by it (#696). */
+    touchpadSensitivity: Float = 1f,
+    /** Persist trackpad sensitivity from the toolbar (#696). Null hides the control. */
+    onSetTouchpadSensitivity: ((Float) -> Unit)? = null,
+    bandwidthSuggestion: String? = null,
+    onAcceptBandwidthSuggestion: (() -> Unit)? = null,
+    onDismissBandwidthSuggestion: (() -> Unit)? = null,
+    securityWarning: String? = null,
+    onDismissSecurityWarning: (() -> Unit)? = null,
+    currentOrientation: Int = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
+    onCycleOrientation: () -> Unit = {},
+    /** Switch DIRECT/TOUCHPAD input mode from the toolbar (#183). When null
+     *  the toggle is hidden (e.g. the legacy single-session path). */
+    onSetInputMode: ((String) -> Unit)? = null,
+    onMinimize: (() -> Unit)? = null,
+    onPictureInPicture: (() -> Unit)? = null,
+    /**
+     * Local-viewport zoom/pan on TWO fingers instead of the default three.
+     * For single-app windows (present_app) where users expect ordinary
+     * pinch-to-zoom; the two-finger remote scroll-wheel is then unavailable.
+     * The full desktop viewer leaves this false (2 fingers = remote scroll,
+     * 3 fingers = local zoom/pan).
+     */
+    twoFingerZoom: Boolean = false,
+    /**
+     * App-window fullscreen only: a 3-finger pinch adjusts the cage's live
+     * output scale (re-render bigger/smaller) instead of digital zoom-out.
+     * [currentScale] seeds the gesture; [onChangeScale] pushes quantized changes.
+     */
+    onChangeScale: ((Float) -> Unit)? = null,
+    currentScale: Float = 1f,
+    /**
+     * App-window fullscreen only: when non-null, the overlay shows a "Save as
+     * default" button that persists the current cage output scale as this app's
+     * per-app default. Receives the current applied scale.
+     */
+    onSaveDefault: ((Float) -> Unit)? = null,
+    isActive: Boolean = true,
+    sessionKey: String? = null,
+) {
+    val orientationMode = OrientationMode.fromActivityValue(currentOrientation)
+    val orientationDesc = when (orientationMode) {
+        OrientationMode.Landscape -> stringResource(R.string.vnc_orientation_landscape_desc)
+        OrientationMode.Portrait -> stringResource(R.string.vnc_orientation_portrait_desc)
+        OrientationMode.Auto -> stringResource(R.string.vnc_orientation_auto_desc)
+    }
+    // App-window fullscreen: cover/crop-fill the screen (no letterbox — phones
+    // have rounded corners so losing a sliver is fine) and floor the digital
+    // zoom at the fill scale so a pinch-out can't expose a black border. The
+    // desktop viewer stays contain so its edges/taskbar aren't cropped.
+    val coverFill = fullscreen && twoFingerZoom
+    var viewSize by remember { mutableStateOf(IntSize.Zero) }
+    val imageBitmap = remember(frame) { frame.asImageBitmap() }
+    val cursorImage = remember(cursor?.bitmap) { cursor?.bitmap?.asImageBitmap() }
+    val externalDisplay = sh.haven.core.ui.rememberExternalDisplayProjection(
+        frame = frame,
+        cursor = cursor,
+        pointerX = pointerPos.first,
+        pointerY = pointerPos.second,
+        showCursor = true,
+        coverFill = coverFill,
+        sessionKey = sessionKey,
+    )
+
+    // Zoom & pan state
+    var zoom by remember { mutableFloatStateOf(1f) }
+    var panX by remember { mutableFloatStateOf(0f) }
+    var panY by remember { mutableFloatStateOf(0f) }
+    // Desktop only: two-finger drag = viewport pan (false) vs remote
+    // scroll-wheel (true). Pinch always zooms. Toolbar toggle (#286 —
+    // 3-finger gestures are unreliable on OnePlus/OxygenOS).
+    var twoFingerScroll by rememberSaveable { mutableStateOf(false) }
+    // 3-finger fullscreen output-scale gesture (app windows): accumulates the
+    // pinch and pushes quantized scale changes to the live cage via onChangeScale.
+    var outputScale by remember { mutableFloatStateOf(currentScale) }
+    var lastSentScale by remember { mutableFloatStateOf(currentScale) }
+
+    // A framebuffer resize — the fullscreen refit's re-mode (on enter/rotate),
+    // a per-app resolution change, or any cage output `mode` change — leaves the
+    // digital zoom/pan expressed in the *previous* framebuffer's coordinate
+    // space. The pan-clamp in the gesture handler only re-runs while a gesture
+    // is active, so a stale offset pans the freshly-rendered app off-screen and
+    // reads as a black screen (e.g. pinch-zoom, then a 3-finger/rotation re-mode).
+    // Snap back to the fitted view (zoom 1, no pan) on any size change. App-window
+    // mode only — the desktop viewer keeps its free pan + mario-camera.
+    if (twoFingerZoom) {
+        LaunchedEffect(frame.width, frame.height) {
+            zoom = 1f
+            panX = 0f
+            panY = 0f
+        }
+    }
+
+    // Mario-camera viewport pan: when in touchpad mode and zoomed, snap the
+    // pan so the cursor always stays inside the inner dead-zone of the view.
+    LaunchedEffect(pointerPos, inputMode, zoom, viewSize, frame.width, frame.height) {
+        if (inputMode == "TOUCHPAD" && zoom > 1f && viewSize.width > 0 && viewSize.height > 0) {
+            val (newPanX, newPanY) = cameraFollow(
+                cursorFbX = pointerPos.first,
+                cursorFbY = pointerPos.second,
+                fbWidth = frame.width,
+                fbHeight = frame.height,
+                viewW = viewSize.width.toFloat(),
+                viewH = viewSize.height.toFloat(),
+                zoom = zoom,
+                panX = panX,
+                panY = panY,
+            )
+            // #738: the dead-zone snap can overshoot the cover bound near a
+            // content edge — clamp so the camera never exposes black.
+            val fit = if (coverFill) maxOf(
+                viewSize.width.toFloat() / frame.width,
+                viewSize.height.toFloat() / frame.height,
+            ) else minOf(
+                viewSize.width.toFloat() / frame.width,
+                viewSize.height.toFloat() / frame.height,
+            )
+            val clampedX = clampPanToCover(newPanX, frame.width * fit, viewSize.width.toFloat(), zoom)
+            val clampedY = clampPanToCover(newPanY, frame.height * fit, viewSize.height.toFloat(), zoom)
+            if (clampedX != panX) panX = clampedX
+            if (clampedY != panY) panY = clampedY
+        }
+    }
+
+    // (Orientation state lives outside this composable — owners are
+    // VncScreen for the standalone path and DesktopViewModel for the
+    // multi-session Desktop view. We only render the icon based on
+    // the value passed in.)
+
+    // Keyboard
+    // #511: where a real keyboard is attached and usable, the keyboard icon
+    // must not raise the IME — it enables hardware-key passthrough instead.
+    // The soft keyboard over a desktop is an obstruction, not the input
+    // method. hardKeyboardHidden is part of the test on purpose: a
+    // docked/folded device reports KEYBOARD_QWERTY with the keys physically
+    // inaccessible, and there the soft keyboard is the only way to type.
+    // Same predicate the terminal tab uses for #511 (TerminalScreen).
+    val screenConfiguration = LocalConfiguration.current
+    val physicalKeyboardAttached =
+        screenConfiguration.keyboard != android.content.res.Configuration.KEYBOARD_NOKEYS &&
+            screenConfiguration.hardKeyboardHidden ==
+            android.content.res.Configuration.HARDKEYBOARDHIDDEN_NO
+    val focusManager = LocalFocusManager.current
+    val focusRequester = remember { FocusRequester() }
+    val keyboardController = LocalSoftwareKeyboardController.current
+    // With a hardware keyboard attached the screen starts in passthrough-on
+    // (AVNC parity: click inside the desktop and type immediately); without
+    // one it starts with the IME down, as before. Keyed on the predicate so a
+    // mid-session hotplug resets the bit to the new mode's default.
+    var keyboardVisible by remember(physicalKeyboardAttached) { mutableStateOf(physicalKeyboardAttached) }
+
+    // #511(b): physical-keyboard support. The hidden text field was the only
+    // focusable thing on this screen, and it was focused only when the soft
+    // keyboard toggle was tapped — so with the soft keyboard closed nothing
+    // held focus, and hardware keys went nowhere (sae13: keys reach the remote
+    // only when the on-screen keyboard is open). The canvas is focusable so the
+    // screen can hold focus WITHOUT summoning the IME, and the key handler
+    // lives on the root Box, whose preview pass fires for every descendant —
+    // the text field included. When the field holds focus (soft keyboard up)
+    // the root handler defers to it so the commit path stays the single
+    // sender for printable characters; otherwise the root handler is the
+    // sender. Same shape as the RDP viewer's #507 fix.
+    // Modifier state for VNC key toolbar (hoisted above handleHardwareKey so
+    // hardware key events can read sticky Shift and release sticky modifiers).
+    var ctrlActive by remember { mutableStateOf(false) }
+    var altActive by remember { mutableStateOf(false) }
+    var shiftActive by remember { mutableStateOf(false) }
+    // Super/Logo (Mod4) — needed to drive nested-Wayland compositor
+    // keybinds (Sway/Hyprland/niri all use Super for $mod), which the
+    // in-app VNC viewer surfaces (#171).
+    var superActive by remember { mutableStateOf(false) }
+    val releaseActiveModifiers: () -> Unit = {
+        if (ctrlActive) { onKeyUp(XK_CONTROL_L); ctrlActive = false }
+        if (altActive) { onKeyUp(XK_ALT_L); altActive = false }
+        if (shiftActive) { onKeyUp(XK_SHIFT_L); shiftActive = false }
+        if (superActive) { onKeyUp(XK_SUPER_L); superActive = false }
+    }
+
+    val hardwareKeyFocus = remember { FocusRequester() }
+    var canvasFocused by remember { mutableStateOf(false) }
+    var fieldFocused by remember { mutableStateOf(false) }
+    val pressedHardwareKeySyms = remember { mutableMapOf<Key, Int>() }
+    val handleHardwareKey: (androidx.compose.ui.input.key.KeyEvent) -> Boolean = { event ->
+        if (fieldFocused) {
+            // Soft keyboard attached: the field's own onPreviewKeyEvent /
+            // onValueChange commit path handles input. Defer.
+            false
+        } else {
+            val native = event.nativeKeyEvent
+            val shiftHeld = shiftActive ||
+                (native.metaState and AndroidKeyEvent.META_SHIFT_MASK) != 0
+            // Strip Ctrl/Alt/Meta when querying getUnicodeChar so Ctrl+C still
+            // resolves to 'c' while XK_CONTROL_L is held on the wire (#774).
+            val charMeta = (native.metaState and (
+                AndroidKeyEvent.META_CTRL_MASK or
+                    AndroidKeyEvent.META_ALT_MASK or
+                    AndroidKeyEvent.META_META_MASK
+                ).inv()) or (if (shiftActive) AndroidKeyEvent.META_SHIFT_ON else 0)
+            val resolvedKeySym = hardwareKeyEventToKeySym(
+                key = event.key,
+                unicodeChar = native.getUnicodeChar(charMeta),
+                shiftHeld = shiftHeld,
+            )
+            when (event.type) {
+                KeyEventType.KeyDown -> {
+                    if (resolvedKeySym != null) {
+                        pressedHardwareKeySyms[event.key] = resolvedKeySym
+                        onKeyDown(resolvedKeySym)
+                        true
+                    } else {
+                        false
+                    }
+                }
+                KeyEventType.KeyUp -> {
+                    val keySym = pressedHardwareKeySyms.remove(event.key) ?: resolvedKeySym
+                    if (keySym != null) {
+                        onKeyUp(keySym)
+                        if (!isModifierKeySym(keySym)) {
+                            releaseActiveModifiers()
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                }
+                else -> false
+            }
+        }
+    }
+    LaunchedEffect(isActive, physicalKeyboardAttached) {
+        if (isActive) {
+            if (keyboardVisible == physicalKeyboardAttached) hardwareKeyFocus.requestFocus()
+        } else {
+            if (!physicalKeyboardAttached) keyboardVisible = false
+        }
+    }
+
+    // The keyboard icon's meaning is context-dependent (#511). With a
+    // hardware keyboard attached it toggles passthrough: on = the canvas
+    // holds focus and keys go straight to the remote (the IME is never
+    // raised); off = focus is released so keys stop reaching the session.
+    // Without a hardware keyboard it is the soft-keyboard show/hide toggle
+    // it has always been. keyboardVisible doubles as the on/off bit for
+    // both modes; the IME-invariant effect below only acts while the IME
+    // is actually up, so reusing it here is safe.
+    val toggleKeyboard: () -> Unit = {
+        keyboardVisible = !keyboardVisible
+        if (physicalKeyboardAttached) {
+            if (keyboardVisible) {
+                hardwareKeyFocus.requestFocus()
+            } else {
+                focusManager.clearFocus(force = true)
+            }
+        } else if (keyboardVisible) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        } else {
+            keyboardController?.hide()
+            hardwareKeyFocus.requestFocus()
+        }
+    }
+
+    // The system re-shows the IME across a configuration change even when the
+    // user dismissed it; enforce the invariant that the IME is up only when we
+    // asked for it. Scoped to this screen's own focus holders so the terminal
+    // tab's keyboard isn't hidden by this effect (isImeVisible is window-global).
+    val imeVisible = WindowInsets.isImeVisible
+    var wasImeVisible by remember { mutableStateOf(imeVisible) }
+    var toolbarPopupOpen by remember { mutableStateOf(false) }
+    var wasToolbarPopupOpen by remember { mutableStateOf(false) }
+    LaunchedEffect(imeVisible, toolbarPopupOpen) {
+        val step = sh.haven.core.toolbar.stepDesktopImeVisibility(
+            keyboardVisible = keyboardVisible,
+            wasImeVisible = wasImeVisible,
+            imeVisible = imeVisible,
+            physicalKeyboardAttached = physicalKeyboardAttached,
+            toolbarPopupOpen = toolbarPopupOpen,
+            wasToolbarPopupOpen = wasToolbarPopupOpen,
+        )
+        keyboardVisible = step.keyboardVisible
+        wasImeVisible = step.wasImeVisible
+        wasToolbarPopupOpen = toolbarPopupOpen
+        if (step.transferFocusToCanvas && isActive && (fieldFocused || canvasFocused)) {
+            hardwareKeyFocus.requestFocus()
+        } else if (step.restoreSoftKeyboard && isActive) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
+        }
+    }
+    LaunchedEffect(imeVisible, keyboardVisible, canvasFocused, fieldFocused, isActive, toolbarPopupOpen) {
+        if (isActive && !keyboardVisible && !toolbarPopupOpen && imeVisible && (canvasFocused || fieldFocused)) {
+            keyboardController?.hide()
+            hardwareKeyFocus.requestFocus()
+        }
+    }
+    val currentImeVisible by rememberUpdatedState(imeVisible)
+    val currentFieldFocused by rememberUpdatedState(fieldFocused)
+    val currentKeyboardVisible by rememberUpdatedState(keyboardVisible)
+    val currentPhysicalKeyboardAttached by rememberUpdatedState(physicalKeyboardAttached)
+
+    // Fullscreen overlay toolbar
+    var overlayVisible by remember { mutableStateOf(false) }
+    var showGestureHelp by remember { mutableStateOf(false) }
+    // Trackpad sensitivity dialog (#696) — opened from the speed button next
+    // to the input-mode toggle while TOUCHPAD is active.
+    var showSensitivityDialog by remember { mutableStateOf(false) }
+    // Draggable fullscreen menu button: offset from the top-right corner
+    // (x grows left/negative, y grows down). Survives rotation/recompose.
+    var menuOffX by rememberSaveable { mutableStateOf(0f) }
+    var menuOffY by rememberSaveable { mutableStateOf(0f) }
+    var rootBoxSize by remember { mutableStateOf(IntSize.Zero) }
+    // Measured sizes so the opened toolbar can grow UP when the button sits in
+    // the lower half (otherwise its downward column runs off the screen bottom).
+    var menuBtnH by remember { mutableStateOf(0) }
+    var menuToolbarH by remember { mutableStateOf(0) }
+    val density = LocalDensity.current
+
+    // Explicit mouse-button hold (#183): when non-null (1=L, 2=M, 3=R) that
+    // button is held down on the remote, so finger movement drags with it
+    // held instead of the implicit button-1-on-drag. Lets the user move the
+    // cursor with no button pressed (no toggle) or hold any button and drag —
+    // most natural in TOUCHPAD mode where movement doesn't imply a press.
+    // Mutually exclusive: toggling one releases any other. Read live inside
+    // the gesture loop, so it isn't a pointerInput key.
+    var heldButton by remember { mutableStateOf<Int?>(null) }
+    val toggleHeldButton: (Int) -> Unit = { btn ->
+        val current = heldButton
+        when (current) {
+            btn -> { onReleaseButton(btn); heldButton = null }
+            else -> {
+                if (current != null) onReleaseButton(current)
+                onPressButton(btn)
+                heldButton = btn
+            }
+        }
+    }
+    // Release a held button if the viewer leaves composition with one engaged,
+    // so the remote isn't left with a stuck button.
+    DisposableEffect(Unit) {
+        onDispose { heldButton?.let(onReleaseButton) }
+    }
+
+    // Compose-then-send bar (VncComposeBar): type and check text locally,
+    // then send it in one go. Replaces the key toolbar while open.
+    var composeOpen by remember { mutableStateOf(false) }
+    val openCompose: () -> Unit = { composeOpen = true }
+    val closeCompose: () -> Unit = {
+        composeOpen = false
+        if (!physicalKeyboardAttached) {
+            keyboardVisible = false
+            keyboardController?.hide()
+        }
+        hardwareKeyFocus.requestFocus()
+    }
+    val sendComposed: (String) -> Unit = { keystrokes ->
+        // Release sticky modifiers and a held mouse button *before* typing:
+        // the composed text must arrive as plain keystrokes, not Ctrl+letter.
+        releaseActiveModifiers()
+        heldButton?.let { onReleaseButton(it); heldButton = null }
+        onTypeText(keystrokes)
+    }
+
+    // Virtual cursor position for TOUCHPAD mode. Hoisted to composable
+    // scope so it persists across gesture lifts — Nesos-ita reported on
+    // #107 that cursor "teleported back" on each finger lift, because
+    // the previous implementation re-seeded it inside the pointerInput
+    // closure (which captures pointerPos as a snapshot at composition).
+    // Reset when inputMode changes so re-entering touchpad picks up the
+    // latest server-reported pointer.
+    var virtualCursor by remember(inputMode) { mutableStateOf(pointerPos) }
+    // #696: float accumulator for the same cursor — per-event Int rounding
+    // would otherwise drop sub-pixel steps at low sensitivity (a slow drag
+    // would round to zero and never move). The Int pair above stays the
+    // emitted/consumed value.
+    var virtualCursorF by remember(inputMode) {
+        mutableStateOf(Offset(pointerPos.first.toFloat(), pointerPos.second.toFloat()))
+    }
+
+    // Tap-then-drag state: the uptime at which the previous short-tap
+    // ended. A touch-down within TAP_THEN_DRAG_WINDOW_MS of this
+    // timestamp is treated as a follow-up gesture — if it moves, it's a
+    // drag with button 1 held (RealVNC convention); if it stays still,
+    // the long-press right-click is suppressed so tap-tap-hold-still
+    // resolves as a double-click via two onTap callbacks instead.
+    var lastTapUpMs by remember { mutableStateOf(0L) }
+
+    // Auto-hide overlay after 4 seconds
+    LaunchedEffect(overlayVisible) {
+        if (overlayVisible) {
+            delay(4000)
+            overlayVisible = false
+        }
+    }
+
+    // Hidden text field state. The field mirrors whatever the IME reports
+    // and is never reset: resetting it to a sentinel desynced the IME's
+    // own buffer from the field value, so each commit diff sliced the
+    // wrong baseline and dropped/repeated characters (bug #5). Backspace
+    // at the empty field is handled by the onPreviewKeyEvent fallback
+    // below, since the IME has nothing to delete there.
+    var textFieldValue by remember {
+        mutableStateOf(TextFieldValue("", TextRange(0)))
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .onPreviewKeyEvent(handleHardwareKey)
+            .onSizeChanged { rootBoxSize = it },
+    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        // Security banner: the server's identity is unverified (anonymous TLS
+        // or security type None). Non-blocking; the connection still works but
+        // the user should know it isn't authenticated (security-review #1/#11).
+        if (!fullscreen && securityWarning != null) {
+            Surface(
+                color = MaterialTheme.colorScheme.errorContainer,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = securityWarning,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        modifier = Modifier.weight(1f),
+                    )
+                    if (onDismissSecurityWarning != null) {
+                        TextButton(onClick = onDismissSecurityWarning) {
+                            Text(stringResource(R.string.vnc_action_dismiss))
+                        }
+                    }
+                }
+            }
+        }
+        // Bandwidth-suggestion banner (#107 follow-up). Non-blocking; user
+        // chooses Switch (clean reconnect at 256 colours) or Dismiss.
+        if (!fullscreen && bandwidthSuggestion != null && onAcceptBandwidthSuggestion != null && onDismissBandwidthSuggestion != null) {
+            Surface(
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = stringResource(R.string.vnc_bandwidth_suggestion),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.weight(1f),
+                    )
+                    TextButton(onClick = onAcceptBandwidthSuggestion) { Text(stringResource(R.string.vnc_action_switch)) }
+                    TextButton(onClick = onDismissBandwidthSuggestion) { Text(stringResource(R.string.vnc_action_dismiss)) }
+                }
+            }
+        }
+        // VNC canvas
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .background(Color.Black)
+                .focusRequester(hardwareKeyFocus)
+                .focusable()
+                .onFocusChanged { canvasFocused = it.isFocused }
+                .onSizeChanged { viewSize = it }
+                // #660/#622: unpressed hardware mouse / trackpad hover motion
+                // (PointerEventType.Move with pressed == false) and mouse wheel
+                // scroll (PointerEventType.Scroll) carry no pressed pointer, so
+                // awaitFirstDown() below never wakes for them. Handle both here
+                // so moving a Bluetooth/USB mouse moves the remote cursor and
+                // rolling the wheel scrolls the window under the cursor.
+                .pointerInput(frame.width, frame.height, viewSize, inputMode) {
+                    val wheelNotches = VncWheelNotchAccumulator()
+                    awaitPointerEventScope {
+                        while (true) {
+                            val event = awaitPointerEvent(PointerEventPass.Initial)
+                            val change = event.changes.firstOrNull() ?: continue
+                            if (event.type == PointerEventType.Scroll) {
+                                val pos = screenToVnc(
+                                    change.position, viewSize,
+                                    frame.width, frame.height,
+                                    zoom, panX, panY, coverFill,
+                                )
+                                virtualCursor = pos
+                                virtualCursorF = Offset(pos.first.toFloat(), pos.second.toFloat())
+                                onDrag(pos.first, pos.second)
+                                val steps = wheelNotches.feed(change.scrollDelta.y)
+                                change.consume()
+                                if (steps > 0) {
+                                    repeat(steps) { onScrollUp() }
+                                } else if (steps < 0) {
+                                    repeat(-steps) { onScrollDown() }
+                                }
+                            } else if (event.type == PointerEventType.Move && event.changes.none { it.pressed }) {
+                                val pos = screenToVnc(
+                                    change.position, viewSize,
+                                    frame.width, frame.height,
+                                    zoom, panX, panY, coverFill,
+                                )
+                                virtualCursor = pos
+                                virtualCursorF = Offset(pos.first.toFloat(), pos.second.toFloat())
+                                onDrag(pos.first, pos.second)
+                                change.consume()
+                            }
+                        }
+                    }
+                }
+                // All touch handling: tap, drag, pinch-to-zoom, two-finger pan/scroll.
+                // Uses Initial pass and consumes all events so the pager can't steal them.
+                // Sensitivity is a key so an in-flight drag does not carry the
+                // stale multiplier from capture time (#696).
+                .pointerInput(frame.width, frame.height, viewSize, inputMode, touchpadSensitivity) {
+                    val touchSlopPx = viewConfiguration.touchSlop
+                    awaitEachGesture {
+                        val firstDown = awaitFirstDown(
+                            requireUnconsumed = false,
+                            pass = PointerEventPass.Initial,
+                        )
+                        val downMotionEvent = currentEvent.motionEvent
+                        val isMouseDevice = isHardwareMouseGesture(
+                            pointerType = firstDown.type,
+                            buttons = currentEvent.buttons,
+                            motionSource = downMotionEvent?.source ?: 0,
+                        )
+                        var mouseButton = if (isMouseDevice) {
+                            resolveHardwareMouseButton(
+                                buttons = currentEvent.buttons,
+                                motionButtonState = downMotionEvent?.buttonState ?: 0,
+                            )
+                        } else {
+                            0
+                        }
+                        firstDown.consume()
+                        // #511: a canvas tap re-claims hardware-key focus from
+                        // whatever took it (the pager, a toolbar button, another
+                        // tab) — without this the initial requestFocus at
+                        // composition is the only one, and by the time the user
+                        // taps in, focus has left the canvas subtree, so hardware
+                        // keys never reach this screen's preview handler. Mirrors
+                        // the RDP #507 fix. Reclaim whenever passthrough should
+                        // hold focus: hardware mode with the toggle on, soft mode
+                        // with the IME down (reclaiming while the IME is up would
+                        // dismiss it). keyboardVisible == physicalKeyboardAttached
+                        // is exactly that condition, and it also respects a
+                        // deliberate hardware-mode toggle-off (no re-grab).
+                        if (!currentImeVisible && !currentFieldFocused &&
+                            currentKeyboardVisible == currentPhysicalKeyboardAttached
+                        ) {
+                            hardwareKeyFocus.requestFocus()
+                        }
+                        var totalFingers = 1
+                        var prevCentroid = firstDown.position
+                        var prevSpan = 0f
+                        var prevCount = 0
+                        var gestureStarted = false
+                        var cumulativeScrollY = 0f
+                        var totalMovement = 0f
+                        // Centroid travel while ≥2 fingers are down; a near-zero
+                        // total means a 2-finger tap → middle click (#286).
+                        var twoFingerMovement = 0f
+                        var lastSinglePos = firstDown.position
+                        var dragging = false
+                        var longPressFired = false
+                        val longPressMs = viewConfiguration.longPressTimeoutMillis
+                        val downUptimeMs = firstDown.uptimeMillis
+                        // Tap-then-drag follow-up window: this touch came
+                        // within 300 ms of the previous tap's lift. In
+                        // touchpad mode that signals "drag with button 1"
+                        // (RealVNC convention). Hardware mouse/touchpad gestures
+                        // never use touchscreen tap-then-drag (#622).
+                        val isFollowUpTouch = !isMouseDevice && inputMode == "TOUCHPAD" &&
+                            (downUptimeMs - lastTapUpMs) <= 300L
+                        var dragButtonPressed = false
+                        // virtualCursor is hoisted to composable scope so
+                        // it survives across gesture lifts — the
+                        // pointerInput closure captures pointerPos as a
+                        // snapshot, so a local re-seed here would reset
+                        // the cursor on every finger-down (Nesos-ita's
+                        // touchpad report on #107).
+
+                        var event: PointerEvent
+                        do {
+                            // Use timeout to detect long press when finger is still
+                            // (touchscreen only — a real mouse has its own right button).
+                            val remaining = if (!isMouseDevice && !longPressFired && totalMovement < touchSlopPx)
+                                (longPressMs - (SystemClock.uptimeMillis() - downUptimeMs)).coerceAtLeast(1)
+                            else Long.MAX_VALUE
+
+                            val timedEvent = withTimeoutOrNull(remaining) {
+                                awaitPointerEvent(PointerEventPass.Initial)
+                            }
+
+                            if (timedEvent == null) {
+                                // Timeout — fire long press (right-click), but
+                                // only when this gesture has stayed single-finger
+                                // AND isn't a follow-up to a recent tap (in which
+                                // case we want to allow the user to start a drag
+                                // with button 1, not get a phantom right-click).
+                                if (!isMouseDevice && totalFingers == 1 && !longPressFired && !dragging && totalMovement < touchSlopPx && !isFollowUpTouch && heldButton == null) {
+                                    val (vx, vy) = if (inputMode == "TOUCHPAD") {
+                                        virtualCursor
+                                    } else {
+                                        screenToVnc(
+                                            lastSinglePos, viewSize,
+                                            frame.width, frame.height,
+                                            zoom, panX, panY, coverFill,
+                                        )
+                                    }
+                                    onLongPress(vx, vy)
+                                    longPressFired = true
+                                }
+                                // Wait for the actual next event
+                                event = awaitPointerEvent(PointerEventPass.Initial)
+                            } else {
+                                event = timedEvent
+                            }
+                            if (isMouseDevice && mouseButton == 0) {
+                                mouseButton = resolveHardwareMouseButton(
+                                    buttons = event.buttons,
+                                    motionButtonState = event.motionEvent?.buttonState ?: 0,
+                                )
+                            }
+
+                            val pointers = event.changes.filter { it.pressed }
+                            val count = pointers.size
+
+                            if (count >= 2) {
+                                // If we were dragging, release the active button
+                                if (dragging) {
+                                    if (isMouseDevice && mouseButton in 2..3) {
+                                        onReleaseButton(mouseButton)
+                                    } else {
+                                        onDragEnd()
+                                    }
+                                    dragging = false
+                                }
+                                totalFingers = maxOf(totalFingers, count)
+                                val centroid = Offset(
+                                    pointers.map { it.position.x }.average().toFloat(),
+                                    pointers.map { it.position.y }.average().toFloat(),
+                                )
+                                val span = pointers.map {
+                                    (it.position - centroid).getDistance()
+                                }.average().toFloat()
+
+                                // Skip delta application on the frame where the
+                                // pointer-count changed. Otherwise the centroid
+                                // (and span) recompute over a different set of
+                                // pointers and the apparent jump gets fed in as
+                                // a real pan/zoom delta — which made the
+                                // viewport visibly jump as fingers lifted.
+                                if (gestureStarted && count == prevCount) {
+                                    val dx = centroid.x - prevCentroid.x
+                                    val dy = centroid.y - prevCentroid.y
+                                    twoFingerMovement += abs(dx) + abs(dy)
+                                    if (coverFill && onChangeScale != null && totalFingers >= 3) {
+                                        // App-window 3-finger fullscreen: adjust the live
+                                        // cage output scale (re-render bigger/smaller),
+                                        // not the pointless local digital zoom-out.
+                                        if (prevSpan > 0f && span > 0f) {
+                                            outputScale = (outputScale * (span / prevSpan)).coerceIn(0.5f, 3f)
+                                            val q = Math.round(outputScale / 0.25f) * 0.25f
+                                            if (q != lastSentScale) {
+                                                lastSentScale = q
+                                                onChangeScale(q)
+                                            }
+                                        }
+                                    } else {
+                                        // Two fingers: pinch (span changing) = zoom; a
+                                        // same-span drag = remote scroll (scroll-mode
+                                        // toggle, or an app window not yet zoomed) or
+                                        // viewport pan (zoomed). Everything is on two
+                                        // fingers — 3-finger desktop zoom was unreliable
+                                        // on OxygenOS (#286).
+                                        val spanDelta = if (prevSpan > 0f) abs(span - prevSpan) else 0f
+                                        val pinching = spanDelta > 2f && spanDelta >= abs(dx) + abs(dy)
+                                        if (pinching && prevSpan > 0f && span > 0f) {
+                                            // Pinch-zoom about the centroid. Cover-fill
+                                            // floors zoom at 1× (so a pinch-out can't
+                                            // expose black); otherwise 0.5× min, 10× max.
+                                            val newZoom = (zoom * (span / prevSpan))
+                                                .coerceIn(if (coverFill) 1f else 0.5f, 10f)
+                                            val actualScale = if (zoom > 0f) newZoom / zoom else 1f
+                                            val cx = viewSize.width / 2f
+                                            val cy = viewSize.height / 2f
+                                            panX = (centroid.x - cx) * (1 - actualScale) + panX * actualScale
+                                            panY = (centroid.y - cy) * (1 - actualScale) + panY * actualScale
+                                            zoom = newZoom
+                                            // #738: clamp the residual off-centre pan
+                                            // so the scaled content keeps covering the
+                                            // viewport (fit honours coverFill here).
+                                            if (viewSize.width > 0 && viewSize.height > 0) {
+                                                val fit = if (coverFill) maxOf(
+                                                    viewSize.width.toFloat() / frame.width,
+                                                    viewSize.height.toFloat() / frame.height,
+                                                ) else minOf(
+                                                    viewSize.width.toFloat() / frame.width,
+                                                    viewSize.height.toFloat() / frame.height,
+                                                )
+                                                panX = clampPanToCover(panX, frame.width * fit, viewSize.width.toFloat(), newZoom)
+                                                panY = clampPanToCover(panY, frame.height * fit, viewSize.height.toFloat(), newZoom)
+                                            }
+                                        } else if (twoFingerScroll || (twoFingerZoom && zoom <= 1.01f)) {
+                                            // Remote wheel-scroll: desktop scroll-mode
+                                            // toggle, or an app window not yet zoomed.
+                                            // Finger-down (dy>0) → wheel-up so content
+                                            // tracks the fingers (touchscreen convention).
+                                            cumulativeScrollY += dy
+                                            if (abs(cumulativeScrollY) > 40f) {
+                                                if (cumulativeScrollY < 0) onScrollDown() else onScrollUp()
+                                                cumulativeScrollY = 0f
+                                            }
+                                        } else if (zoom > 1f) {
+                                            // Viewport pan (zoomed). App windows clamp so a
+                                            // corner of the scaled content can't be dragged
+                                            // inside the viewport leaving empty space.
+                                            panX += dx
+                                            panY += dy
+                                            // #738: clamp on every pan, not only the
+                                            // app-window (twoFingerZoom) case — the
+                                            // same cover rule as the pinch path.
+                                            if (viewSize.width > 0 && viewSize.height > 0) {
+                                                val fit = if (coverFill) maxOf(
+                                                    viewSize.width.toFloat() / frame.width,
+                                                    viewSize.height.toFloat() / frame.height,
+                                                ) else minOf(
+                                                    viewSize.width.toFloat() / frame.width,
+                                                    viewSize.height.toFloat() / frame.height,
+                                                )
+                                                panX = clampPanToCover(panX, frame.width * fit, viewSize.width.toFloat(), zoom)
+                                                panY = clampPanToCover(panY, frame.height * fit, viewSize.height.toFloat(), zoom)
+                                            }
+                                        }
+                                    }
+                                }
+
+                                gestureStarted = true
+                                prevCentroid = centroid
+                                prevSpan = span
+                                prevCount = count
+
+                                pointers.forEach { it.consume() }
+                            } else if (count == 1 && totalFingers == 1) {
+                                val change = pointers.first()
+                                val deltaScreen = change.positionChange()
+                                totalMovement += deltaScreen.getDistance()
+                                lastSinglePos = change.position
+                                if (isMouseDevice) {
+                                    // #622/#660: hardware mouse or SOURCE_MOUSE trackpad.
+                                    // Buttonless SOURCE_MOUSE motion (mouseButton == 0)
+                                    // moves the remote pointer without pressing button 1,
+                                    // while a held mouse button (1/2/3) drags with that button.
+                                    val pos = screenToVnc(
+                                        change.position, viewSize,
+                                        frame.width, frame.height,
+                                        zoom, panX, panY, coverFill,
+                                    )
+                                    virtualCursor = pos
+                                    virtualCursorF = Offset(pos.first.toFloat(), pos.second.toFloat())
+                                    when {
+                                        heldButton != null -> onDrag(pos.first, pos.second)
+                                        mouseButton == 0 -> {
+                                            if (totalMovement >= touchSlopPx) {
+                                                onDrag(pos.first, pos.second)
+                                            }
+                                        }
+                                        !dragging && totalMovement >= touchSlopPx -> {
+                                            if (mouseButton == 1) {
+                                                onDragStart(pos.first, pos.second)
+                                            } else {
+                                                onDrag(pos.first, pos.second)
+                                                onPressButton(mouseButton)
+                                            }
+                                            dragging = true
+                                        }
+                                        dragging -> onDrag(pos.first, pos.second)
+                                    }
+                                } else if (inputMode == "TOUCHPAD") {
+                                    // Integrate finger delta into virtualCursor in
+                                    // framebuffer coords (screen delta / zoom).
+                                    // If this gesture is a tap-then-touch
+                                    // follow-up, the first time we cross the
+                                    // touch slop we press button 1 (drag with
+                                    // button), then continue normally.
+                                    val scale = if (zoom > 0f) zoom else 1f
+                                    // #696: scale the finger delta by the trackpad
+                                    // sensitivity multiplier; keep the position in
+                                    // float space so per-event rounding can't drop
+                                    // sub-pixel steps at low sensitivity.
+                                    val fx = virtualCursorF.x + deltaScreen.x / scale * touchpadSensitivity
+                                    val fy = virtualCursorF.y + deltaScreen.y / scale * touchpadSensitivity
+                                    virtualCursorF = Offset(
+                                        fx.coerceIn(0f, (frame.width - 1).toFloat()),
+                                        fy.coerceIn(0f, (frame.height - 1).toFloat()),
+                                    )
+                                    val nx = fx.toInt().coerceIn(0, frame.width - 1)
+                                    val ny = fy.toInt().coerceIn(0, frame.height - 1)
+                                    virtualCursor = nx to ny
+                                    if (!longPressFired && totalMovement >= touchSlopPx) {
+                                        when {
+                                            // A toolbar button is held — just move
+                                            // the pointer; the held button rides
+                                            // along in the mask, so this drags
+                                            // with that button (#183).
+                                            heldButton != null -> onDrag(nx, ny)
+                                            isFollowUpTouch && !dragButtonPressed -> {
+                                                onDragStart(nx, ny)
+                                                dragButtonPressed = true
+                                            }
+                                            else -> onDrag(nx, ny)
+                                        }
+                                    }
+                                } else {
+                                    val pos = screenToVnc(
+                                        change.position, viewSize,
+                                        frame.width, frame.height,
+                                        zoom, panX, panY, coverFill,
+                                    )
+                                    when {
+                                        // Held toolbar button: move only (no
+                                        // implicit button-1 press), so the drag
+                                        // uses the held button instead (#183).
+                                        heldButton != null -> onDrag(pos.first, pos.second)
+                                        // Start drag (button 1 press) once movement exceeds touch slop
+                                        !longPressFired && !dragging && totalMovement >= touchSlopPx -> {
+                                            onDragStart(pos.first, pos.second)
+                                            dragging = true
+                                        }
+                                        dragging -> onDrag(pos.first, pos.second)
+                                    }
+                                }
+                                change.consume()
+                            } else {
+                                // Residual finger after a multi-finger pinch
+                                // (count == 1 but totalFingers already >= 2), or
+                                // the final all-up frame. Consume it so the
+                                // lingering single-finger slide can't leak up to
+                                // the HorizontalPager and swipe the Haven screen
+                                // sideways during/after a zoom. It isn't a tap or
+                                // drag in this state, so consuming costs nothing.
+                                event.changes.forEach { it.consume() }
+                            }
+                        } while (event.changes.any { it.pressed })
+
+                        // Release active button if drag was active (direct-mode
+                        // drag, touchpad tap-then-drag, or mouse drag).
+                        if (dragging || dragButtonPressed) {
+                            if (isMouseDevice && mouseButton in 2..3) {
+                                onReleaseButton(mouseButton)
+                            } else {
+                                onDragEnd()
+                            }
+                        }
+
+                        // Short tap with little movement = click (skip if
+                        // long press fired, or a toolbar button is held — the
+                        // held button is the press, so a tap mustn't inject an
+                        // extra button-1 click, #183). Record the lift time so
+                        // a subsequent touch within 300 ms is treated as a
+                        // tap-then-drag follow-up.
+                        if (totalFingers == 1 && totalMovement < touchSlopPx && !longPressFired && heldButton == null) {
+                            val (vx, vy) = if (!isMouseDevice && inputMode == "TOUCHPAD") {
+                                virtualCursor
+                            } else {
+                                val pos = screenToVnc(
+                                    lastSinglePos, viewSize,
+                                    frame.width, frame.height,
+                                    zoom, panX, panY, coverFill,
+                                )
+                                virtualCursor = pos
+                                virtualCursorF = Offset(pos.first.toFloat(), pos.second.toFloat())
+                                pos
+                            }
+                            when {
+                                isMouseDevice && mouseButton == 3 -> onLongPress(vx, vy)
+                                isMouseDevice && mouseButton == 2 -> onMiddleClick(vx, vy)
+                                else -> onTap(vx, vy)
+                            }
+                            if (!isMouseDevice && inputMode == "TOUCHPAD" && !isFollowUpTouch) {
+                                lastTapUpMs = SystemClock.uptimeMillis()
+                            } else {
+                                // Either non-touchpad mode (no follow-up
+                                // semantics) or this *was* the follow-up
+                                // tap (don't chain into a third touch).
+                                lastTapUpMs = 0L
+                            }
+                        } else if (totalFingers == 2 && twoFingerMovement < touchSlopPx &&
+                            !longPressFired && heldButton == null) {
+                            // Two fingers down + up with no travel = middle click (#286).
+                            val (mx, my) = if (inputMode == "TOUCHPAD") {
+                                virtualCursor
+                            } else {
+                                screenToVnc(
+                                    prevCentroid, viewSize,
+                                    frame.width, frame.height,
+                                    zoom, panX, panY, coverFill,
+                                )
+                            }
+                            onMiddleClick(mx, my)
+                            lastTapUpMs = 0L
+                        } else {
+                            // Drag, multi-finger, or long-press fired: this
+                            // gesture didn't end with a clean tap, so don't
+                            // chain to a follow-up.
+                            lastTapUpMs = 0L
+                        }
+                    }
+                },
+        ) {
+            Canvas(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer {
+                        scaleX = zoom
+                        scaleY = zoom
+                        translationX = panX
+                        translationY = panY
+                        // Without this, zoomed/panned pixels escape the Canvas's
+                        // layout bounds and paint over the sibling bottom toolbar
+                        // in the enclosing Column (reported by Nesos-ita on #107).
+                        clip = true
+                    },
+            ) {
+                if (!externalDisplay.isProjecting) {
+                    drawVncFrame(imageBitmap, frame.width, frame.height, coverFill)
+                    if (cursorImage != null && cursor != null) {
+                        drawVncCursor(
+                            cursor = cursorImage,
+                            cursorW = cursor.bitmap.width,
+                            cursorH = cursor.bitmap.height,
+                            hotspotX = cursor.hotspotX,
+                            hotspotY = cursor.hotspotY,
+                            pointerX = pointerPos.first,
+                            pointerY = pointerPos.second,
+                            fbWidth = frame.width,
+                            fbHeight = frame.height,
+                            coverFill = coverFill,
+                        )
+                    }
+                }
+            }
+        }
+
+        // Hidden text field for keyboard input capture
+        BasicTextField(
+            value = textFieldValue,
+            onValueChange = { newValue ->
+                // Diff against the previous field value — the text the IME
+                // holds — not a reset sentinel. The old sentinel reset made
+                // every commit slice the growing IME buffer at a fixed
+                // offset, dropping and repeating characters (bug #5).
+                val (added, deleted) = diffImeCommit(textFieldValue.text, newValue.text)
+
+                // Backspaces first: for a replacement (autocorrect swaps a
+                // word in one commit) the remote still holds the old text,
+                // so the removed run must be erased before the new run is
+                // typed. The VMs serialize keyboard traffic on a
+                // single-threaded dispatcher, so this submission order is
+                // the wire order.
+                if (deleted > 0) {
+                    repeat(deleted) {
+                        onKeyDown(XK_BACKSPACE)
+                        onKeyUp(XK_BACKSPACE)
+                    }
+                }
+                if (added != null) {
+                    if (added.length == 1 && (ctrlActive || altActive || shiftActive || superActive)) {
+                        onTypeChar(added[0])
+                        releaseActiveModifiers()
+                    } else {
+                        // Characters were typed (or pasted). Route through
+                        // onTypeText so multi-char input goes via the
+                        // serialized typeText path — the previous one-
+                        // launch-per-char model interleaved key events on
+                        // the wire and Windows VNC produced "half-capitals".
+                        onTypeText(added)
+                        releaseActiveModifiers()
+                    }
+                }
+
+                // Keep the field in sync with the IME: the next commit's
+                // baseline must be exactly what the IME thinks it sent.
+                textFieldValue = newValue
+            },
+            modifier = Modifier
+                .size(1.dp)
+                .focusRequester(focusRequester)
+                .onFocusChanged { fieldFocused = it.isFocused }
+                .onPreviewKeyEvent { event ->
+                    val keySym = androidKeyToKeySym(event.key)
+                    if (keySym != null) {
+                        when (event.type) {
+                            KeyEventType.KeyDown -> onKeyDown(keySym)
+                            KeyEventType.KeyUp -> onKeyUp(keySym)
+                        }
+                        true
+                    } else {
+                        false
+                    }
+                },
+        )
+
+        val clipboardManager = LocalClipboardManager.current
+        val pasteClipboard: () -> Unit = {
+            val text = clipboardManager.getText()?.text
+            if (!text.isNullOrEmpty()) {
+                onSendClipboard?.invoke(text)
+                onTypeText(text)
+                releaseActiveModifiers()
+            }
+        }
+
+        var reorderMode by remember { mutableStateOf(false) }
+
+        if (composeOpen) {
+            VncComposeBar(onSend = sendComposed, onDismiss = closeCompose)
+        } else if (keyboardVisible || imeVisible) {
+            sh.haven.core.toolbar.KeyboardToolbar(
+                onSendBytes = { bytes ->
+                    handleVncToolbarBytes(
+                        bytes = bytes,
+                        ctrlActive = ctrlActive,
+                        altActive = altActive,
+                        shiftActive = shiftActive,
+                        superActive = superActive,
+                        onKeyDown = onKeyDown,
+                        onKeyUp = onKeyUp,
+                        onTypeChar = onTypeChar,
+                        onTypeText = onTypeText,
+                        releaseModifiers = releaseActiveModifiers,
+                    )
+                },
+                onDispatchKey = { _, key ->
+                    val keySym = vtermKeyToKeySym(key)
+                    if (keySym != null) {
+                        onKeyDown(keySym)
+                        onKeyUp(keySym)
+                        releaseActiveModifiers()
+                    }
+                },
+                focusRequester = focusRequester,
+                ctrlActive = ctrlActive,
+                altActive = altActive,
+                shiftActive = shiftActive,
+                winActive = superActive,
+                onToggleCtrl = {
+                    ctrlActive = !ctrlActive
+                    if (!ctrlActive) onKeyUp(XK_CONTROL_L) else onKeyDown(XK_CONTROL_L)
+                },
+                onToggleAlt = {
+                    altActive = !altActive
+                    if (!altActive) onKeyUp(XK_ALT_L) else onKeyDown(XK_ALT_L)
+                },
+                onToggleShift = {
+                    shiftActive = !shiftActive
+                    if (!shiftActive) onKeyUp(XK_SHIFT_L) else onKeyDown(XK_SHIFT_L)
+                },
+                onShiftUsed = {
+                    if (shiftActive) {
+                        onKeyUp(XK_SHIFT_L)
+                        shiftActive = false
+                    }
+                },
+                onToggleWin = {
+                    superActive = !superActive
+                    if (!superActive) onKeyUp(XK_SUPER_L) else onKeyDown(XK_SUPER_L)
+                },
+                layout = toolbarLayout,
+                navBlockMode = navBlockMode,
+                uniformGrid = toolbarUniformGrid,
+                editModeControlsPlacement = editModeControlsPlacement,
+                minKeyWidth = toolbarMinKeyWidth.dp,
+                keyScale = toolbarKeyScale,
+                onPaste = { text ->
+                    if (text.isNotEmpty()) {
+                        onSendClipboard?.invoke(text)
+                        onTypeText(text)
+                        releaseActiveModifiers()
+                    }
+                },
+                reorderMode = reorderMode,
+                onReorderModeChanged = { reorderMode = it },
+                onToolbarLayoutChanged = onToolbarLayoutChanged,
+                snippetLibrary = snippetLibrary,
+                onSnippetLibraryChanged = onSnippetLibraryChanged,
+                onOpenSettings = onOpenToolbarSettings,
+                onToggleKeyboard = toggleKeyboard,
+                onPopupOpenChanged = { toolbarPopupOpen = it },
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+
+        // Bottom toolbar (hidden in fullscreen).
+        // Solid background so a zoomed framebuffer doesn't show through —
+        // Nesos-ita reported on #107 that the toolbar looked like the
+        // image was overpainting it. The image is correctly clipped to
+        // the Canvas (clip = true on the graphicsLayer); the leak was
+        // visual transparency on this Row, which previously had no
+        // background at all.
+        if (!fullscreen) {
+            // Surface (not a bare .background) so the toolbar also sets its
+            // content colour: without onSurface the icons fall back to the
+            // default (black) and vanish on a dark surface (#286).
+            Surface(
+                color = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface,
+            ) {
+            // FlowRow, not Row: an app window's toolbar carries ~10 buttons
+            // (close/keyboard/orientation/L-M-R/input-mode/minimize/PiP/
+            // fullscreen), which is wider than a portrait phone. A plain Row
+            // silently clipped the tail — users reported the fullscreen
+            // button as missing. Overflow now wraps to a second line.
+            FlowRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                IconButton(onClick = onDisconnect) {
+                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.vnc_cd_disconnect))
+                }
+
+                // Keyboard toggle
+                IconButton(onClick = toggleKeyboard) {
+                    Icon(
+                        if (keyboardVisible) Icons.Default.KeyboardHide
+                        else Icons.Default.Keyboard,
+                        contentDescription = stringResource(R.string.vnc_cd_toggle_keyboard),
+                    )
+                }
+
+                // Paste from Android clipboard (#718): pushes text to remote RFB
+                // CutText (for Ctrl+V / middle-click paste via vncconfig) AND types
+                // it into the focused window.
+                IconButton(onClick = pasteClipboard) {
+                    Icon(
+                        Icons.Default.ContentPaste,
+                        contentDescription = stringResource(R.string.vnc_cd_paste),
+                    )
+                }
+
+                // Compose-then-send text (VncComposeBar) — same icon as the
+                // terminal toolbar's text-input key.
+                IconButton(onClick = openCompose) {
+                    Icon(
+                        Icons.Default.EditNote,
+                        contentDescription = stringResource(R.string.vnc_compose_open),
+                    )
+                }
+
+                IconButton(onClick = onCycleOrientation) {
+                    Icon(orientationMode.icon, contentDescription = orientationDesc)
+                }
+
+                // Explicit mouse-button hold toggles (L/M/R) — #183.
+                MouseButtonToggles(held = heldButton, onToggle = toggleHeldButton)
+
+                // Direct/trackpad input-mode toggle + speed button — #183/#696.
+                InputModeToggle(
+                    inputMode, onSetInputMode, onSetTouchpadSensitivity,
+                    onOpenSensitivity = { showSensitivityDialog = true },
+                )
+                // Desktop only: two-finger drag = viewport pan vs remote scroll — #286.
+                if (!twoFingerZoom) {
+                    ScrollModeToggle(twoFingerScroll) { twoFingerScroll = !twoFingerScroll }
+                }
+                if (externalDisplay.hasExternalDisplay) {
+                    sh.haven.core.ui.ExternalDisplayToggle(externalDisplay.isProjecting) {
+                        externalDisplay.toggleProjection()
+                    }
+                }
+
+                // App-window-only: background to an edge icon (keeps it alive).
+                onMinimize?.let { minimize ->
+                    IconButton(onClick = minimize) {
+                        Icon(Icons.Default.Minimize, contentDescription = stringResource(R.string.vnc_cd_background_to_edge))
+                    }
+                }
+                // App-window-only: enter system Picture-in-Picture.
+                onPictureInPicture?.let { pip ->
+                    IconButton(onClick = pip) {
+                        Icon(Icons.Default.PictureInPictureAlt, contentDescription = stringResource(R.string.vnc_cd_picture_in_picture))
+                    }
+                }
+
+                Spacer(Modifier.weight(1f))
+
+                // Reset zoom
+                if (zoom != 1f || panX != 0f || panY != 0f) {
+                    IconButton(onClick = {
+                        zoom = 1f
+                        panX = 0f
+                        panY = 0f
+                    }) {
+                        Icon(Icons.Default.FitScreen, contentDescription = stringResource(R.string.vnc_cd_reset_zoom))
+                    }
+                }
+
+                // Fullscreen button
+                IconButton(onClick = onToggleFullscreen) {
+                    Icon(Icons.Default.Fullscreen, contentDescription = stringResource(R.string.vnc_cd_fullscreen))
+                }
+            }
+            }
+        }
+    } // end Column
+
+    // Fullscreen corner hotspot and overlay toolbar
+    if (fullscreen) {
+        // Dismiss scrim — rendered first so toolbar buttons are on top
+        if (overlayVisible) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) { overlayVisible = false },
+            )
+        }
+
+        // Corner hotspot — defaults to top-right; drag to reposition.
+        AnimatedVisibility(
+            visible = !overlayVisible,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset { IntOffset(menuOffX.roundToInt(), menuOffY.roundToInt()) },
+        ) {
+            val btnPx = with(density) { 48.dp.toPx() }
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.4f),
+                modifier = Modifier
+                    .onSizeChanged { menuBtnH = it.height }
+                    // Tap opens the toolbar; drag moves the button out of the
+                    // app's way (clamped to the viewport so it can't be lost).
+                    .pointerInput(Unit) {
+                        detectTapGestures { overlayVisible = true }
+                    }
+                    .pointerInput(rootBoxSize) {
+                        detectDragGestures { change, drag ->
+                            change.consume()
+                            val minX = -(rootBoxSize.width - btnPx).coerceAtLeast(0f)
+                            val maxY = (rootBoxSize.height - btnPx).coerceAtLeast(0f)
+                            menuOffX = (menuOffX + drag.x).coerceIn(minX, 0f)
+                            menuOffY = (menuOffY + drag.y).coerceIn(0f, maxY)
+                        }
+                    },
+            ) {
+                Icon(
+                    Icons.Default.Menu,
+                    contentDescription = stringResource(R.string.vnc_cd_session_menu),
+                    tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(8.dp).size(20.dp),
+                )
+            }
+        }
+
+        // Floating toolbar overlay — rendered last so it's on top of the dismiss
+        // scrim; follows the (draggable) menu button's position. When the button
+        // is in the lower half the column would run off the bottom, so anchor the
+        // toolbar's BOTTOM to the button and grow upward instead.
+        AnimatedVisibility(
+            visible = overlayVisible,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .onSizeChanged { menuToolbarH = it.height }
+                .offset {
+                    val invert = rootBoxSize.height > 0 &&
+                        (menuOffY + menuBtnH / 2f) > rootBoxSize.height / 2f
+                    val ty = if (invert) {
+                        (menuOffY + menuBtnH - menuToolbarH).coerceAtLeast(0f)
+                    } else {
+                        menuOffY
+                    }
+                    IntOffset(menuOffX.roundToInt(), ty.roundToInt())
+                },
+        ) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.85f),
+                // alpha-copied colour defeats contentColorFor, so set it
+                // explicitly or the icons render black on the dark sheet (#286).
+                contentColor = MaterialTheme.colorScheme.onSurface,
+                shadowElevation = 8.dp,
+            ) {
+                val clipboardManager = LocalClipboardManager.current
+                Column(
+                    modifier = Modifier.padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    IconButton(onClick = {
+                        overlayVisible = false
+                        onDisconnect()
+                    }) {
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.vnc_cd_disconnect))
+                    }
+                    IconButton(onClick = toggleKeyboard) {
+                        Icon(
+                            if (keyboardVisible) Icons.Default.KeyboardHide
+                            else Icons.Default.Keyboard,
+                            contentDescription = stringResource(R.string.vnc_cd_toggle_keyboard),
+                        )
+                    }
+                    IconButton(onClick = {
+                        overlayVisible = false
+                        val text = clipboardManager.getText()?.text
+                        if (!text.isNullOrEmpty()) {
+                            onSendClipboard?.invoke(text)
+                            onTypeText(text)
+                        }
+                    }) {
+                        Icon(
+                            Icons.Default.ContentPaste,
+                            contentDescription = stringResource(R.string.vnc_cd_paste),
+                        )
+                    }
+                    IconButton(onClick = {
+                        overlayVisible = false
+                        openCompose()
+                    }) {
+                        Icon(
+                            Icons.Default.EditNote,
+                            contentDescription = stringResource(R.string.vnc_compose_open),
+                        )
+                    }
+                    IconButton(onClick = onCycleOrientation) {
+                        Icon(orientationMode.icon, contentDescription = orientationDesc)
+                    }
+                    // Explicit mouse-button hold toggles (L/M/R) — #183.
+                    MouseButtonToggles(held = heldButton, onToggle = toggleHeldButton)
+                    // Direct/trackpad input-mode toggle + speed button — #183/#696.
+                    InputModeToggle(
+                        inputMode, onSetInputMode, onSetTouchpadSensitivity, vertical = true,
+                        onOpenSensitivity = { showSensitivityDialog = true },
+                    )
+                    // Desktop only: two-finger drag = viewport pan vs remote scroll — #286.
+                    if (!twoFingerZoom) {
+                        ScrollModeToggle(twoFingerScroll) { twoFingerScroll = !twoFingerScroll }
+                    }
+                    if (externalDisplay.hasExternalDisplay) {
+                        sh.haven.core.ui.ExternalDisplayToggle(externalDisplay.isProjecting) {
+                            externalDisplay.toggleProjection()
+                        }
+                    }
+                    if (zoom != 1f || panX != 0f || panY != 0f) {
+                        IconButton(onClick = {
+                            zoom = 1f
+                            panX = 0f
+                            panY = 0f
+                        }) {
+                            Icon(
+                                Icons.Default.FitScreen,
+                                contentDescription = stringResource(R.string.vnc_cd_reset_zoom),
+                            )
+                        }
+                    }
+                    // App-window gestures aren't obvious — surface them (#3-finger resize).
+                    if (onChangeScale != null) {
+                        IconButton(onClick = { showGestureHelp = true }) {
+                            Icon(
+                                Icons.AutoMirrored.Filled.HelpOutline,
+                                contentDescription = stringResource(R.string.vnc_cd_gesture_help),
+                            )
+                        }
+                    }
+                    // App windows: pin the current output scale as this app's default.
+                    onSaveDefault?.let { save ->
+                        IconButton(onClick = {
+                            overlayVisible = false
+                            save(lastSentScale)
+                        }) {
+                            Icon(
+                                Icons.Default.Save,
+                                contentDescription = stringResource(R.string.vnc_cd_save_default),
+                            )
+                        }
+                    }
+                    IconButton(onClick = {
+                        overlayVisible = false
+                        onToggleFullscreen()
+                    }) {
+                        Icon(Icons.Default.FullscreenExit, contentDescription = stringResource(R.string.vnc_cd_exit_fullscreen))
+                    }
+                }
+            }
+        }
+
+        if (showGestureHelp) {
+            AlertDialog(
+                onDismissRequest = { showGestureHelp = false },
+                confirmButton = {
+                    TextButton(onClick = { showGestureHelp = false }) {
+                        Text(stringResource(R.string.vnc_action_close))
+                    }
+                },
+                icon = { Icon(Icons.Default.TouchApp, contentDescription = null) },
+                title = { Text(stringResource(R.string.vnc_gesture_help_title)) },
+                text = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(stringResource(R.string.vnc_gesture_help_two_finger))
+                        Text(stringResource(R.string.vnc_gesture_help_three_finger))
+                    }
+                },
+            )
+        }
+
+    }
+
+    if (showSensitivityDialog) {
+        TrackpadSensitivityDialog(
+            sensitivity = touchpadSensitivity,
+            onSetSensitivity = { onSetTouchpadSensitivity?.invoke(it) },
+            onDismiss = { showSensitivityDialog = false },
+        )
+    }
+    } // end Box
+}
+
+private fun DrawScope.drawVncFrame(
+    image: androidx.compose.ui.graphics.ImageBitmap,
+    srcWidth: Int,
+    srcHeight: Int,
+    coverFill: Boolean = false,
+) {
+    val viewW = size.width
+    val viewH = size.height
+    // contain (letterbox) by default; cover (crop-fill) for app-window fullscreen.
+    val scale = if (coverFill) maxOf(viewW / srcWidth, viewH / srcHeight)
+    else minOf(viewW / srcWidth, viewH / srcHeight)
+    val dstW = srcWidth * scale
+    val dstH = srcHeight * scale
+    val offsetX = (viewW - dstW) / 2
+    val offsetY = (viewH - dstH) / 2
+
+    drawImage(
+        image = image,
+        srcOffset = androidx.compose.ui.unit.IntOffset.Zero,
+        srcSize = androidx.compose.ui.unit.IntSize(srcWidth, srcHeight),
+        dstOffset = androidx.compose.ui.unit.IntOffset(offsetX.toInt(), offsetY.toInt()),
+        dstSize = androidx.compose.ui.unit.IntSize(dstW.toInt(), dstH.toInt()),
+    )
+}
+
+private fun DrawScope.drawVncCursor(
+    cursor: androidx.compose.ui.graphics.ImageBitmap,
+    cursorW: Int,
+    cursorH: Int,
+    hotspotX: Int,
+    hotspotY: Int,
+    pointerX: Int,
+    pointerY: Int,
+    fbWidth: Int,
+    fbHeight: Int,
+    coverFill: Boolean = false,
+) {
+    val viewW = size.width
+    val viewH = size.height
+    val scale = if (coverFill) maxOf(viewW / fbWidth, viewH / fbHeight)
+    else minOf(viewW / fbWidth, viewH / fbHeight)
+    val fbOffsetX = (viewW - fbWidth * scale) / 2
+    val fbOffsetY = (viewH - fbHeight * scale) / 2
+
+    // Cursor origin in framebuffer coords; scale into view.
+    val cx = fbOffsetX + (pointerX - hotspotX) * scale
+    val cy = fbOffsetY + (pointerY - hotspotY) * scale
+    val dstW = cursorW * scale
+    val dstH = cursorH * scale
+
+    drawImage(
+        image = cursor,
+        srcOffset = androidx.compose.ui.unit.IntOffset.Zero,
+        srcSize = androidx.compose.ui.unit.IntSize(cursorW, cursorH),
+        dstOffset = androidx.compose.ui.unit.IntOffset(cx.toInt(), cy.toInt()),
+        dstSize = androidx.compose.ui.unit.IntSize(dstW.toInt().coerceAtLeast(1), dstH.toInt().coerceAtLeast(1)),
+    )
+}
+
+/**
+ * Mario-camera viewport pan: keep the cursor inside an inner dead-zone of
+ * the view. Returns the (panX, panY) we should snap to. No-op when not
+ * zoomed in (whole framebuffer fits, no point panning).
+ *
+ * Math: the forward transform from framebuffer (fbX, fbY) to screen pixel is:
+ *   localX = fbX * fitScale + fitOffsetX
+ *   screenX = (localX - cx) * zoom + cx + panX
+ * (and analogously for Y). For each axis independently, if the cursor's
+ * screen position lands outside the dead-zone, adjust pan so it lands on
+ * the dead-zone boundary.
+ */
+internal fun cameraFollow(
+    cursorFbX: Int, cursorFbY: Int,
+    fbWidth: Int, fbHeight: Int,
+    viewW: Float, viewH: Float,
+    zoom: Float, panX: Float, panY: Float,
+    deadZoneFraction: Float = 0.30f,
+): Pair<Float, Float> {
+    if (zoom <= 1f) return panX to panY
+    if (viewW <= 0f || viewH <= 0f || fbWidth <= 0 || fbHeight <= 0) return panX to panY
+
+    val cx = viewW / 2f
+    val cy = viewH / 2f
+    val fitScale = minOf(viewW / fbWidth, viewH / fbHeight)
+    val fitOffsetX = (viewW - fbWidth * fitScale) / 2f
+    val fitOffsetY = (viewH - fbHeight * fitScale) / 2f
+
+    val localX = cursorFbX * fitScale + fitOffsetX
+    val localY = cursorFbY * fitScale + fitOffsetY
+    val screenX = (localX - cx) * zoom + cx + panX
+    val screenY = (localY - cy) * zoom + cy + panY
+
+    // Dead-zone: centred rectangle of size view * (1 - margin).
+    val marginX = viewW * (deadZoneFraction / 2f)
+    val marginY = viewH * (deadZoneFraction / 2f)
+    val minX = marginX
+    val maxX = viewW - marginX
+    val minY = marginY
+    val maxY = viewH - marginY
+
+    val newPanX = when {
+        screenX < minX -> panX + (minX - screenX)
+        screenX > maxX -> panX - (screenX - maxX)
+        else -> panX
+    }
+    val newPanY = when {
+        screenY < minY -> panY + (minY - screenY)
+        screenY > maxY -> panY - (screenY - maxY)
+        else -> panY
+    }
+    return newPanX to newPanY
+}
+
+/**
+ * Map a screen touch coordinate to VNC framebuffer coordinates,
+ * accounting for zoom and pan.
+ */
+private fun screenToVnc(
+    offset: Offset,
+    viewSize: IntSize,
+    fbWidth: Int,
+    fbHeight: Int,
+    zoom: Float,
+    panX: Float,
+    panY: Float,
+    coverFill: Boolean = false,
+): Pair<Int, Int> {
+    if (viewSize.width == 0 || viewSize.height == 0) return 0 to 0
+    val viewW = viewSize.width.toFloat()
+    val viewH = viewSize.height.toFloat()
+
+    // Reverse the graphicsLayer transform: the canvas is scaled by zoom and translated by pan.
+    // The center of the view is the pivot point for graphicsLayer scaling.
+    val cx = viewW / 2f
+    val cy = viewH / 2f
+    val localX = (offset.x - cx - panX) / zoom + cx
+    val localY = (offset.y - cy - panY) / zoom + cy
+
+    // Now map from view coordinates to VNC coordinates (same as before)
+    val fitScale = if (coverFill) maxOf(viewW / fbWidth, viewH / fbHeight)
+    else minOf(viewW / fbWidth, viewH / fbHeight)
+    val dstW = fbWidth * fitScale
+    val dstH = fbHeight * fitScale
+    val offsetX = (viewW - dstW) / 2
+    val offsetY = (viewH - dstH) / 2
+
+    val vncX = ((localX - offsetX) / fitScale).toInt().coerceIn(0, fbWidth - 1)
+    val vncY = ((localY - offsetY) / fitScale).toInt().coerceIn(0, fbHeight - 1)
+    return vncX to vncY
+}
+
+internal fun isHardwareMouseGesture(
+    pointerType: PointerType,
+    buttons: PointerButtons,
+    motionSource: Int,
+): Boolean =
+    pointerType == PointerType.Mouse ||
+        buttons.areAnyPressed ||
+        (motionSource and android.view.InputDevice.SOURCE_MOUSE) == android.view.InputDevice.SOURCE_MOUSE
+
+internal fun resolveHardwareMouseButton(
+    buttons: PointerButtons,
+    motionButtonState: Int,
+): Int = when {
+    buttons.isSecondaryPressed ||
+        (motionButtonState and (android.view.MotionEvent.BUTTON_SECONDARY or android.view.MotionEvent.BUTTON_STYLUS_SECONDARY)) != 0 -> 3
+    buttons.isTertiaryPressed ||
+        (motionButtonState and android.view.MotionEvent.BUTTON_TERTIARY) != 0 -> 2
+    buttons.isPrimaryPressed ||
+        (motionButtonState and (android.view.MotionEvent.BUTTON_PRIMARY or android.view.MotionEvent.BUTTON_STYLUS_PRIMARY)) != 0 -> 1
+    else -> 0
+}
+
+internal class VncWheelNotchAccumulator {
+    private var accumulated = 0f
+
+    fun feed(scrollDeltaY: Float): Int {
+        if (scrollDeltaY.isNaN() || scrollDeltaY == 0f) return 0
+        accumulated += scrollDeltaY
+        var notches = 0
+        while (abs(accumulated) >= 1f) {
+            if (accumulated <= -1f) {
+                notches += 1
+                accumulated += 1f
+            } else {
+                notches -= 1
+                accumulated -= 1f
+            }
+        }
+        return notches
+    }
+}
+
+/** Keys that form the aligned navigation block. */
+private val VNC_NAV_KEYS = setOf(
+    ToolbarKey.ARROW_UP, ToolbarKey.ARROW_DOWN,
+    ToolbarKey.ARROW_LEFT, ToolbarKey.ARROW_RIGHT,
+    ToolbarKey.HOME, ToolbarKey.END,
+    ToolbarKey.PGUP, ToolbarKey.PGDN,
+)
+
+private val VNC_NAV_GRID_TOP = arrayOf(
+    ToolbarKey.HOME, ToolbarKey.ARROW_UP, ToolbarKey.END, ToolbarKey.PGUP,
+)
+private val VNC_NAV_GRID_BOTTOM = arrayOf(
+    ToolbarKey.ARROW_LEFT, ToolbarKey.ARROW_DOWN,
+    ToolbarKey.ARROW_RIGHT, ToolbarKey.PGDN,
+)
+
+private val VNC_NAV_CELL_WIDTH = 44.dp
+
+/** Map a libvterm key constant from KeyboardToolbar.onDispatchKey to an X11 KeySym. */
+internal fun vtermKeyToKeySym(key: Int): Int? = when (key) {
+    5 -> XK_UP
+    6 -> XK_DOWN
+    7 -> XK_LEFT
+    8 -> XK_RIGHT
+    9 -> XK_INSERT
+    10 -> XK_DELETE
+    11 -> XK_HOME
+    12 -> XK_END
+    13 -> XK_PAGE_UP
+    14 -> XK_PAGE_DOWN
+    in 257..268 -> {
+        val fn = key - 256 // 1..12
+        XK_F1 + (fn - 1)
+    }
+    else -> null
+}
+
+/** Translate KeyboardToolbar.onSendBytes payloads into VNC KeySym events. */
+internal fun handleVncToolbarBytes(
+    bytes: ByteArray,
+    ctrlActive: Boolean,
+    altActive: Boolean,
+    shiftActive: Boolean,
+    superActive: Boolean = false,
+    onKeyDown: (Int) -> Unit,
+    onKeyUp: (Int) -> Unit,
+    onTypeChar: (Char) -> Unit,
+    onTypeText: (String) -> Unit,
+    releaseModifiers: () -> Unit,
+) {
+    if (bytes.isEmpty()) return
+    val payload = if (altActive && bytes.size == 2 && bytes[0] == 0x1b.toByte() && bytes[1] != '['.code.toByte()) {
+        byteArrayOf(bytes[1])
+    } else {
+        bytes
+    }
+    val str = String(payload, Charsets.UTF_8)
+    when {
+        payload.contentEquals(byteArrayOf(0x1b)) -> {
+            onKeyDown(XK_ESCAPE)
+            onKeyUp(XK_ESCAPE)
+            releaseModifiers()
+        }
+        payload.contentEquals(byteArrayOf(0x09)) -> {
+            onKeyDown(XK_TAB)
+            onKeyUp(XK_TAB)
+            releaseModifiers()
+        }
+        payload.contentEquals(byteArrayOf(0x0d)) -> {
+            onKeyDown(XK_RETURN)
+            onKeyUp(XK_RETURN)
+            releaseModifiers()
+        }
+        str == "\u001b[Z" -> {
+            if (!shiftActive) onKeyDown(XK_SHIFT_L)
+            onKeyDown(XK_TAB)
+            onKeyUp(XK_TAB)
+            if (!shiftActive) onKeyUp(XK_SHIFT_L)
+            releaseModifiers()
+        }
+        str == "\u001b[3;8~" -> {
+            if (!ctrlActive) onKeyDown(XK_CONTROL_L)
+            if (!altActive) onKeyDown(XK_ALT_L)
+            onKeyDown(XK_DELETE)
+            onKeyUp(XK_DELETE)
+            if (!altActive) onKeyUp(XK_ALT_L)
+            if (!ctrlActive) onKeyUp(XK_CONTROL_L)
+            releaseModifiers()
+        }
+        str == "\u001b[3;6~" -> {
+            if (!ctrlActive) onKeyDown(XK_CONTROL_L)
+            onKeyDown(XK_DELETE)
+            onKeyUp(XK_DELETE)
+            if (!ctrlActive) onKeyUp(XK_CONTROL_L)
+            releaseModifiers()
+        }
+        str == "\u001b[2;5~" -> {
+            if (!ctrlActive) onKeyDown(XK_CONTROL_L)
+            onKeyDown(XK_INSERT)
+            onKeyUp(XK_INSERT)
+            if (!ctrlActive) onKeyUp(XK_CONTROL_L)
+            releaseModifiers()
+        }
+        str == "\u001b[2;2~" -> {
+            if (!shiftActive) onKeyDown(XK_SHIFT_L)
+            onKeyDown(XK_INSERT)
+            onKeyUp(XK_INSERT)
+            if (!shiftActive) onKeyUp(XK_SHIFT_L)
+            releaseModifiers()
+        }
+        payload.size == 1 && payload[0] in 1..26 -> {
+            val ch = 'a' + (payload[0].toInt() - 1)
+            if (!ctrlActive) {
+                onKeyDown(XK_CONTROL_L)
+                onTypeChar(ch)
+                onKeyUp(XK_CONTROL_L)
+                releaseModifiers()
+            } else {
+                onTypeChar(ch)
+                if (superActive || shiftActive) releaseModifiers()
+            }
+        }
+        payload.size == 1 && (ctrlActive || altActive) -> {
+            onTypeChar(payload[0].toInt().toChar())
+            if (superActive || shiftActive) releaseModifiers()
+        }
+        payload.size == 1 && (superActive || shiftActive) -> {
+            onTypeChar(payload[0].toInt().toChar())
+            releaseModifiers()
+        }
+        else -> {
+            onTypeText(str)
+            releaseModifiers()
+        }
+    }
+}
+
+/** Map a ToolbarKey to its X11 KeySym for VNC. */
+private fun toolbarKeyToKeySym(key: ToolbarKey): Int? = when (key) {
+    ToolbarKey.ESC_KEY -> XK_ESCAPE
+    ToolbarKey.TAB_KEY -> XK_TAB
+    ToolbarKey.ENTER_KEY -> XK_RETURN
+    ToolbarKey.ARROW_LEFT -> XK_LEFT
+    ToolbarKey.ARROW_UP -> XK_UP
+    ToolbarKey.ARROW_DOWN -> XK_DOWN
+    ToolbarKey.ARROW_RIGHT -> XK_RIGHT
+    ToolbarKey.HOME -> XK_HOME
+    ToolbarKey.END -> XK_END
+    ToolbarKey.PGUP -> XK_PAGE_UP
+    ToolbarKey.PGDN -> XK_PAGE_DOWN
+    ToolbarKey.INSERT -> XK_INSERT
+    ToolbarKey.DELETE -> XK_DELETE
+    ToolbarKey.F1 -> XK_F1
+    ToolbarKey.F2 -> XK_F2
+    ToolbarKey.F3 -> XK_F3
+    ToolbarKey.F4 -> XK_F4
+    ToolbarKey.F5 -> XK_F5
+    ToolbarKey.F6 -> XK_F6
+    ToolbarKey.F7 -> XK_F7
+    ToolbarKey.F8 -> XK_F8
+    ToolbarKey.F9 -> XK_F9
+    ToolbarKey.F10 -> XK_F10
+    ToolbarKey.F11 -> XK_F11
+    ToolbarKey.F12 -> XK_F12
+    else -> key.char?.code
+}
+
+/** Split a row's items into (before nav keys, after nav keys). */
+private fun vncSplitAroundNav(row: List<sh.haven.core.data.preferences.ToolbarItem>): Pair<List<sh.haven.core.data.preferences.ToolbarItem>, List<sh.haven.core.data.preferences.ToolbarItem>> {
+    val firstNavIdx = row.indexOfFirst { it is sh.haven.core.data.preferences.ToolbarItem.BuiltIn && it.key in VNC_NAV_KEYS }
+    val lastNavIdx = row.indexOfLast { it is sh.haven.core.data.preferences.ToolbarItem.BuiltIn && it.key in VNC_NAV_KEYS }
+    if (firstNavIdx == -1) return row to emptyList()
+    val left = row.subList(0, firstNavIdx)
+    val right = if (lastNavIdx + 1 < row.size) row.subList(lastNavIdx + 1, row.size) else emptyList()
+    return left to right
+}
+
+@Composable
+private fun VncKeyToolbar(
+    layout: ToolbarLayout,
+    ctrlActive: Boolean,
+    altActive: Boolean,
+    shiftActive: Boolean,
+    superActive: Boolean,
+    onToggleCtrl: () -> Unit,
+    onToggleAlt: () -> Unit,
+    onToggleShift: () -> Unit,
+    onToggleSuper: () -> Unit,
+    onVncKey: (keySym: Int) -> Unit,
+    onToggleKeyboard: () -> Unit,
+    onPaste: () -> Unit,
+) {
+    val presentNavKeys = layout.rows.flatten()
+        .filterIsInstance<sh.haven.core.data.preferences.ToolbarItem.BuiltIn>()
+        .filter { it.key in VNC_NAV_KEYS }
+        .map { it.key }
+        .toSet()
+
+    Surface(tonalElevation = 2.dp) {
+        // Super (Mod4) toggle for nested-Wayland compositor keybinds
+        // (#171) is rendered inline as the first key of row 1 — NOT a
+        // separate row, since the toolbar height budget can't afford a
+        // third row. Kept out of the configurable layout because that
+        // layout is shared with the terminal toolbar (where Super is
+        // meaningless).
+        if (layout.rows.size >= 2 && presentNavKeys.isNotEmpty()) {
+            val (row1Left, row1Right) = vncSplitAroundNav(layout.row1)
+            val (row2Left, row2Right) = vncSplitAroundNav(layout.row2)
+
+            Row(
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(horizontal = 4.dp),
+            ) {
+                // Left keys column
+                Column(modifier = Modifier.width(IntrinsicSize.Max)) {
+                    Row(Modifier.fillMaxWidth().padding(vertical = 1.dp), verticalAlignment = Alignment.CenterVertically) {
+                        VncToggleButton("Super", superActive, onToggleSuper)
+                        for (item in row1Left) {
+                            VncRenderItem(item, ctrlActive, altActive, shiftActive, onToggleCtrl, onToggleAlt, onToggleShift, onVncKey, onToggleKeyboard, onPaste)
+                        }
+                    }
+                    Row(Modifier.fillMaxWidth().padding(vertical = 1.dp), verticalAlignment = Alignment.CenterVertically) {
+                        for (item in row2Left) {
+                            VncRenderItem(item, ctrlActive, altActive, shiftActive, onToggleCtrl, onToggleAlt, onToggleShift, onVncKey, onToggleKeyboard, onPaste)
+                        }
+                    }
+                }
+
+                // Nav block grid
+                Column {
+                    Row(Modifier.padding(vertical = 1.dp), verticalAlignment = Alignment.CenterVertically) {
+                        for (key in VNC_NAV_GRID_TOP) {
+                            if (key != null && key in presentNavKeys) {
+                                val keySym = toolbarKeyToKeySym(key)
+                                VncNavButton(key, keySym) { if (keySym != null) onVncKey(keySym) }
+                            } else {
+                                Spacer(Modifier.width(VNC_NAV_CELL_WIDTH).height(32.dp))
+                            }
+                        }
+                    }
+                    Row(Modifier.padding(vertical = 1.dp), verticalAlignment = Alignment.CenterVertically) {
+                        for (key in VNC_NAV_GRID_BOTTOM) {
+                            if (key != null && key in presentNavKeys) {
+                                val keySym = toolbarKeyToKeySym(key)
+                                VncNavButton(key, keySym) { if (keySym != null) onVncKey(keySym) }
+                            } else {
+                                Spacer(Modifier.width(VNC_NAV_CELL_WIDTH).height(32.dp))
+                            }
+                        }
+                    }
+                }
+
+                // Right keys (symbols)
+                if (row1Right.isNotEmpty() || row2Right.isNotEmpty()) {
+                    Column {
+                        if (row1Right.isNotEmpty()) {
+                            Row(Modifier.padding(vertical = 1.dp), verticalAlignment = Alignment.CenterVertically) {
+                                for (item in row1Right) {
+                                    VncRenderItem(item, ctrlActive, altActive, shiftActive, onToggleCtrl, onToggleAlt, onToggleShift, onVncKey, onToggleKeyboard, onPaste)
+                                }
+                            }
+                        } else {
+                            Spacer(Modifier.height(34.dp))
+                        }
+                        Row(Modifier.padding(vertical = 1.dp), verticalAlignment = Alignment.CenterVertically) {
+                            for (item in row2Right) {
+                                VncRenderItem(item, ctrlActive, altActive, shiftActive, onToggleCtrl, onToggleAlt, onToggleShift, onVncKey, onToggleKeyboard, onPaste)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            // Fallback: flat rows
+            Column {
+                var superPlaced = false
+                for (row in layout.rows) {
+                    if (row.isEmpty()) continue
+                    Row(
+                        modifier = Modifier
+                            .horizontalScroll(rememberScrollState())
+                            .padding(horizontal = 4.dp, vertical = 1.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        // Super inline as the first key of the first row
+                        // (no extra row — see above).
+                        if (!superPlaced) {
+                            VncToggleButton("Super", superActive, onToggleSuper)
+                            superPlaced = true
+                        }
+                        for (item in row) {
+                            VncRenderItem(item, ctrlActive, altActive, shiftActive, onToggleCtrl, onToggleAlt, onToggleShift, onVncKey, onToggleKeyboard, onPaste)
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun VncRenderItem(
+    item: sh.haven.core.data.preferences.ToolbarItem,
+    ctrlActive: Boolean,
+    altActive: Boolean,
+    shiftActive: Boolean,
+    onToggleCtrl: () -> Unit,
+    onToggleAlt: () -> Unit,
+    onToggleShift: () -> Unit,
+    onVncKey: (keySym: Int) -> Unit,
+    onToggleKeyboard: () -> Unit,
+    onPaste: () -> Unit,
+) {
+    when (item) {
+        is sh.haven.core.data.preferences.ToolbarItem.BuiltIn -> {
+            VncBuiltInKey(item.key, ctrlActive, altActive, shiftActive, onToggleCtrl, onToggleAlt, onToggleShift, onVncKey, onToggleKeyboard, onPaste)
+        }
+        is sh.haven.core.data.preferences.ToolbarItem.Custom -> {
+            VncSymbolButton(item.label) {
+                for (ch in item.send) { onVncKey(ch.code) }
+            }
+        }
+    }
+}
+
+/** Nav block button with fixed cell width for VNC toolbar. */
+private const val VNC_REPEAT_DELAY_MS = 400L
+private const val VNC_REPEAT_INTERVAL_MS = 80L
+
+// Trackpad sensitivity slider range (#696): 0.2 (very fine) up to 3 (fast);
+// slider steps are 0.1 granularity.
+private const val TOUCHPAD_SENSITIVITY_MIN = 0.2f
+private const val TOUCHPAD_SENSITIVITY_MAX = 3f
+
+@OptIn(ExperimentalComposeUiApi::class)
+@Composable
+private fun VncRepeatingButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+    content: @Composable () -> Unit,
+) {
+    var isPressed by remember { mutableStateOf(false) }
+    var didRepeat by remember { mutableStateOf(false) }
+    val currentOnClick by rememberUpdatedState(onClick)
+
+    LaunchedEffect(isPressed) {
+        if (isPressed) {
+            delay(VNC_REPEAT_DELAY_MS)
+            didRepeat = true
+            while (isPressed) {
+                currentOnClick()
+                delay(VNC_REPEAT_INTERVAL_MS)
+            }
+        }
+    }
+
+    FilledTonalButton(
+        onClick = {}, // handled by pointerInteropFilter
+        // #515 — the same latch fixed in core:toolbar's ToolbarKeyButton, which
+        // carries the full explanation. Short version: `action` misses the
+        // ACTION_POINTER_* forms a second finger produces, and `didRepeat` has to
+        // be cleared on release rather than at the top of the effect. Leaving
+        // either latched gives a button that highlights but sends nothing until
+        // the screen is recreated.
+        modifier = modifier.pointerInteropFilter { motionEvent ->
+            when (motionEvent.actionMasked) {
+                android.view.MotionEvent.ACTION_DOWN,
+                android.view.MotionEvent.ACTION_POINTER_DOWN -> {
+                    isPressed = true
+                    true
+                }
+                android.view.MotionEvent.ACTION_UP,
+                android.view.MotionEvent.ACTION_POINTER_UP -> {
+                    if (!didRepeat) onClick()
+                    didRepeat = false
+                    isPressed = false
+                    true
+                }
+                android.view.MotionEvent.ACTION_CANCEL -> {
+                    didRepeat = false
+                    isPressed = false
+                    true
+                }
+                else -> false
+            }
+        },
+        contentPadding = contentPadding,
+    ) {
+        content()
+    }
+}
+
+@Composable
+private fun VncNavButton(key: ToolbarKey, keySym: Int?, onClick: () -> Unit) {
+    val isArrow = key in setOf(ToolbarKey.ARROW_UP, ToolbarKey.ARROW_DOWN, ToolbarKey.ARROW_LEFT, ToolbarKey.ARROW_RIGHT)
+    VncRepeatingButton(
+        onClick = onClick,
+        modifier = Modifier.padding(horizontal = 1.dp).width(VNC_NAV_CELL_WIDTH).height(32.dp),
+        contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
+    ) {
+        if (isArrow) {
+            val label = when (key) {
+                ToolbarKey.ARROW_UP -> "\u2191"
+                ToolbarKey.ARROW_DOWN -> "\u2193"
+                ToolbarKey.ARROW_LEFT -> "\u2190"
+                ToolbarKey.ARROW_RIGHT -> "\u2192"
+                else -> ""
+            }
+            Text(label, fontSize = 16.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold)
+        } else {
+            Text(key.label, fontSize = 11.sp, lineHeight = 11.sp)
+        }
+    }
+}
+
+@Composable
+private fun VncBuiltInKey(
+    key: ToolbarKey,
+    ctrlActive: Boolean,
+    altActive: Boolean,
+    shiftActive: Boolean,
+    onToggleCtrl: () -> Unit,
+    onToggleAlt: () -> Unit,
+    onToggleShift: () -> Unit,
+    onVncKey: (keySym: Int) -> Unit,
+    onToggleKeyboard: () -> Unit,
+    onPaste: () -> Unit,
+) {
+    when (key) {
+        ToolbarKey.KEYBOARD -> {
+            IconButton(
+                onClick = onToggleKeyboard,
+                modifier = Modifier.size(32.dp),
+            ) {
+                Icon(Icons.Default.Keyboard, contentDescription = stringResource(R.string.vnc_cd_toggle_keyboard), modifier = Modifier.size(18.dp))
+            }
+        }
+        ToolbarKey.PASTE -> VncTextButton(key.label, onPaste)
+        ToolbarKey.CTRL -> VncToggleButton("Ctrl", ctrlActive, onToggleCtrl)
+        ToolbarKey.ALT -> VncToggleButton("Alt", altActive, onToggleAlt)
+        ToolbarKey.ALTGR -> {
+            val altGrActive = ctrlActive && altActive
+            VncToggleButton("AltGr", altGrActive) {
+                if (altGrActive) {
+                    onToggleCtrl()
+                    onToggleAlt()
+                } else {
+                    if (!ctrlActive) onToggleCtrl()
+                    if (!altActive) onToggleAlt()
+                }
+            }
+        }
+        ToolbarKey.SHIFT -> VncToggleButton("Shift", shiftActive, onToggleShift)
+        ToolbarKey.ARROW_LEFT -> VncArrowButton("\u2190") { onVncKey(XK_LEFT) }
+        ToolbarKey.ARROW_UP -> VncArrowButton("\u2191") { onVncKey(XK_UP) }
+        ToolbarKey.ARROW_DOWN -> VncArrowButton("\u2193") { onVncKey(XK_DOWN) }
+        ToolbarKey.ARROW_RIGHT -> VncArrowButton("\u2192") { onVncKey(XK_RIGHT) }
+        else -> {
+            val keySym = toolbarKeyToKeySym(key)
+            if (keySym != null) {
+                VncTextButton(key.label) { onVncKey(keySym) }
+            }
+        }
+    }
+}
+
+@Composable
+private fun VncTextButton(label: String, onClick: () -> Unit) {
+    VncRepeatingButton(
+        onClick = onClick,
+        modifier = Modifier.padding(horizontal = 1.dp).height(32.dp),
+    ) {
+        Text(label, fontSize = 11.sp, lineHeight = 11.sp)
+    }
+}
+
+@Composable
+private fun VncArrowButton(label: String, onClick: () -> Unit) {
+    VncRepeatingButton(
+        onClick = onClick,
+        modifier = Modifier.padding(horizontal = 1.dp).height(32.dp),
+    ) {
+        Text(label, fontSize = 16.sp, lineHeight = 16.sp, fontWeight = FontWeight.Bold)
+    }
+}
+
+@Composable
+private fun VncToggleButton(label: String, active: Boolean, onClick: () -> Unit) {
+    FilledTonalButton(
+        onClick = onClick,
+        modifier = Modifier.padding(horizontal = 1.dp).height(32.dp),
+        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp),
+        colors = if (active) {
+            ButtonDefaults.filledTonalButtonColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            )
+        } else {
+            ButtonDefaults.filledTonalButtonColors()
+        },
+    ) {
+        Text(label, fontSize = 11.sp, lineHeight = 11.sp)
+    }
+}
+
+@Composable
+private fun VncSymbolButton(label: String, onClick: () -> Unit) {
+    VncRepeatingButton(
+        onClick = onClick,
+        modifier = Modifier.padding(horizontal = 1.dp).height(30.dp),
+        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 0.dp),
+    ) {
+        Text(label, fontSize = 12.sp, lineHeight = 12.sp)
+    }
+}
+
+// X11 KeySym constants for special keys
+private const val XK_BACKSPACE = 0xff08
+private const val XK_TAB = 0xff09
+private const val XK_RETURN = 0xff0d
+private const val XK_ESCAPE = 0xff1b
+private const val XK_DELETE = 0xffff
+private const val XK_HOME = 0xff50
+private const val XK_LEFT = 0xff51
+private const val XK_UP = 0xff52
+private const val XK_RIGHT = 0xff53
+private const val XK_DOWN = 0xff54
+private const val XK_PAGE_UP = 0xff55
+private const val XK_PAGE_DOWN = 0xff56
+private const val XK_END = 0xff57
+private const val XK_PRINT = 0xff61
+private const val XK_INSERT = 0xff63
+private const val XK_MENU = 0xff67
+private const val XK_NUM_LOCK = 0xff7f
+private const val XK_PAUSE = 0xff13
+private const val XK_SCROLL_LOCK = 0xff14
+private const val XK_SHIFT_L = 0xffe1
+private const val XK_SHIFT_R = 0xffe2
+private const val XK_CONTROL_L = 0xffe3
+private const val XK_CONTROL_R = 0xffe4
+private const val XK_CAPS_LOCK = 0xffe5
+private const val XK_ALT_L = 0xffe9
+private const val XK_ALT_R = 0xffea
+private const val XK_SUPER_L = 0xffeb
+private const val XK_SUPER_R = 0xffec
+private const val XK_F1 = 0xffbe
+private const val XK_F2 = 0xffbf
+private const val XK_F3 = 0xffc0
+private const val XK_F4 = 0xffc1
+private const val XK_F5 = 0xffc2
+private const val XK_F6 = 0xffc3
+private const val XK_F7 = 0xffc4
+private const val XK_F8 = 0xffc5
+private const val XK_F9 = 0xffc6
+private const val XK_F10 = 0xffc7
+private const val XK_F11 = 0xffc8
+private const val XK_F12 = 0xffc9
+
+/**
+ * Diff one IME commit against the text the field held before it, returning
+ * the characters to type and the number of backspaces to send.
+ *
+ * The hidden VNC text field mirrors whatever the IME reports, so the delta
+ * between two consecutive values is exactly what changed — but only if the
+ * baseline is the previous value. The old code reset the field to a `" "`
+ * sentinel after every commit and diffed against that, so a growing IME
+ * buffer was sliced at a fixed offset: characters were dropped and earlier
+ * ones re-emitted (bug #5 — the capture rig saw `a, c, A, AB, C, C1, C12`
+ * for `abcABC123`).
+ *
+ * Trimming the common prefix and common suffix handles every commit shape:
+ * append (the tail), backspace (the removed run), autocorrect word
+ * replacement (delete the old interior, type the new one), and mid-string
+ * edits.
+ */
+internal fun diffImeCommit(oldText: String, newText: String): Pair<String?, Int> {
+    if (oldText == newText) return null to 0
+    var prefix = 0
+    while (prefix < oldText.length && prefix < newText.length && oldText[prefix] == newText[prefix]) prefix++
+    var suffix = 0
+    while (
+        suffix < oldText.length - prefix &&
+        suffix < newText.length - prefix &&
+        oldText[oldText.length - 1 - suffix] == newText[newText.length - 1 - suffix]
+    ) suffix++
+    val added = newText.substring(prefix, newText.length - suffix)
+    val deleted = oldText.length - prefix - suffix
+    return (added.ifEmpty { null }) to deleted
+}
+
+/** Convert a printable character to its X11 KeySym. */
+fun charToKeySym(ch: Char): Int = when (ch) {
+    '\n', '\r' -> XK_RETURN
+    '\t' -> XK_TAB
+    '\b' -> XK_BACKSPACE
+    else -> ch.code // Latin-1 characters map directly to Unicode code point
+}
+
+/** Map Android Key to X11 KeySym for special (non-printable) keys. */
+/**
+ * Three-state orientation cycle for the session toolbar's rotate
+ * button. Defaults to Landscape (matches the pre-existing forced-
+ * landscape behaviour in DesktopScreen.kt for #109/surf5726). The
+ * button cycles Landscape -> Portrait -> Auto and back. `Auto` here
+ * means "follow the system / device orientation".
+ *
+ * Mirror of the same enum in feature/rdp/RdpScreen.kt — kept private
+ * in each module to avoid a cross-feature dependency for ~15 LOC.
+ */
+private enum class OrientationMode(
+    val activityValue: Int,
+    val icon: androidx.compose.ui.graphics.vector.ImageVector,
+    val description: String,
+) {
+    Landscape(
+        activityValue = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE,
+        icon = Icons.Default.ScreenLockLandscape,
+        description = "Lock landscape (tap to switch to portrait)",
+    ),
+    Portrait(
+        activityValue = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_PORTRAIT,
+        icon = Icons.Default.ScreenLockPortrait,
+        description = "Lock portrait (tap to switch to auto)",
+    ),
+    Auto(
+        activityValue = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED,
+        icon = Icons.Default.ScreenRotation,
+        description = "Auto rotate (tap to switch to landscape)",
+    );
+
+    fun next(): OrientationMode = entries[(ordinal + 1) % entries.size]
+
+    companion object {
+        fun fromActivityValue(value: Int): OrientationMode = entries.firstOrNull { it.activityValue == value } ?: Landscape
+    }
+}
+
+/**
+ * Cycle the activity-orientation constant `LANDSCAPE -> PORTRAIT ->
+ * UNSPECIFIED -> LANDSCAPE`. Public so external owners (e.g.
+ * DesktopViewModel) can use the same cycle order as the toolbar
+ * button.
+ */
+fun cycleVncOrientation(current: Int): Int =
+    OrientationMode.fromActivityValue(current).next().activityValue
+
+/**
+ * Convert a Unicode code point from [AndroidKeyEvent.getUnicodeChar] to its
+ * X11 RFB KeySym (#774).
+ *
+ * - Printable ASCII (`0x20..0x7e`) and Latin-1 (`0xa0..0xff`) map 1:1 to their
+ *   code point.
+ * - Other BMP / supplementary Unicode characters (`0x0100..0x10ffff`) use the
+ *   standard X11 Unicode keysym encoding `0x01000000 or codePoint`.
+ * - Control characters (`< 0x20`, `0x7f..0x9f`) and dead-key combining accents
+ *   ([android.view.KeyCharacterMap.COMBINING_ACCENT]) return `null`.
+ */
+internal fun unicodeToKeySym(codePoint: Int): Int? {
+    if (codePoint <= 0 || (codePoint and android.view.KeyCharacterMap.COMBINING_ACCENT) != 0) {
+        return null
+    }
+    return when (codePoint) {
+        in 0x20..0x7e, in 0xa0..0xff -> codePoint
+        in 0x0100..0x10ffff -> 0x01000000 or codePoint
+        else -> null
+    }
+}
+
+/**
+ * Resolve a physical/hardware [Key] event to its X11 KeySym (#774).
+ *
+ * Non-printable special keys (arrows, F1..F12, modifiers, Enter, Tab, Backspace,
+ * Escape, Delete, Home/End/PgUp/PgDn/Insert, NumPad Enter) are matched first via
+ * [androidKeyToKeySym] so they never depend on `getUnicodeChar`. Printable keys
+ * use [unicodeChar] (queried from the native `KeyEvent` with Ctrl/Alt/Meta
+ * stripped so `Ctrl+C` still resolves to `'c'` while `XK_CONTROL_L` is held on
+ * the wire), falling back to [androidPrintableKeyToKeySym] when the device's
+ * key character map reports `0`.
+ */
+internal fun hardwareKeyEventToKeySym(
+    key: Key,
+    unicodeChar: Int,
+    shiftHeld: Boolean = false,
+): Int? {
+    androidKeyToKeySym(key)?.let { return it }
+    unicodeToKeySym(unicodeChar)?.let { return it }
+    return androidPrintableKeyToKeySym(key, shiftHeld)
+}
+
+internal fun androidPrintableKeyToKeySym(key: Key, shiftHeld: Boolean = false): Int? = when (key) {
+    Key.A -> if (shiftHeld) 'A'.code else 'a'.code
+    Key.B -> if (shiftHeld) 'B'.code else 'b'.code
+    Key.C -> if (shiftHeld) 'C'.code else 'c'.code
+    Key.D -> if (shiftHeld) 'D'.code else 'd'.code
+    Key.E -> if (shiftHeld) 'E'.code else 'e'.code
+    Key.F -> if (shiftHeld) 'F'.code else 'f'.code
+    Key.G -> if (shiftHeld) 'G'.code else 'g'.code
+    Key.H -> if (shiftHeld) 'H'.code else 'h'.code
+    Key.I -> if (shiftHeld) 'I'.code else 'i'.code
+    Key.J -> if (shiftHeld) 'J'.code else 'j'.code
+    Key.K -> if (shiftHeld) 'K'.code else 'k'.code
+    Key.L -> if (shiftHeld) 'L'.code else 'l'.code
+    Key.M -> if (shiftHeld) 'M'.code else 'm'.code
+    Key.N -> if (shiftHeld) 'N'.code else 'n'.code
+    Key.O -> if (shiftHeld) 'O'.code else 'o'.code
+    Key.P -> if (shiftHeld) 'P'.code else 'p'.code
+    Key.Q -> if (shiftHeld) 'Q'.code else 'q'.code
+    Key.R -> if (shiftHeld) 'R'.code else 'r'.code
+    Key.S -> if (shiftHeld) 'S'.code else 's'.code
+    Key.T -> if (shiftHeld) 'T'.code else 't'.code
+    Key.U -> if (shiftHeld) 'U'.code else 'u'.code
+    Key.V -> if (shiftHeld) 'V'.code else 'v'.code
+    Key.W -> if (shiftHeld) 'W'.code else 'w'.code
+    Key.X -> if (shiftHeld) 'X'.code else 'x'.code
+    Key.Y -> if (shiftHeld) 'Y'.code else 'y'.code
+    Key.Z -> if (shiftHeld) 'Z'.code else 'z'.code
+    Key.Zero -> if (shiftHeld) ')'.code else '0'.code
+    Key.One -> if (shiftHeld) '!'.code else '1'.code
+    Key.Two -> if (shiftHeld) '@'.code else '2'.code
+    Key.Three -> if (shiftHeld) '#'.code else '3'.code
+    Key.Four -> if (shiftHeld) '$'.code else '4'.code
+    Key.Five -> if (shiftHeld) '%'.code else '5'.code
+    Key.Six -> if (shiftHeld) '^'.code else '6'.code
+    Key.Seven -> if (shiftHeld) '&'.code else '7'.code
+    Key.Eight -> if (shiftHeld) '*'.code else '8'.code
+    Key.Nine -> if (shiftHeld) '('.code else '9'.code
+    Key.Spacebar -> ' '.code
+    Key.Minus -> if (shiftHeld) '_'.code else '-'.code
+    Key.Equals -> if (shiftHeld) '+'.code else '='.code
+    Key.LeftBracket -> if (shiftHeld) '{'.code else '['.code
+    Key.RightBracket -> if (shiftHeld) '}'.code else ']'.code
+    Key.Backslash -> if (shiftHeld) '|'.code else '\\'.code
+    Key.Semicolon -> if (shiftHeld) ':'.code else ';'.code
+    Key.Apostrophe -> if (shiftHeld) '"'.code else '\''.code
+    Key.Grave -> if (shiftHeld) '~'.code else '`'.code
+    Key.Comma -> if (shiftHeld) '<'.code else ','.code
+    Key.Period -> if (shiftHeld) '>'.code else '.'.code
+    Key.Slash -> if (shiftHeld) '?'.code else '/'.code
+    Key.NumPad0 -> '0'.code
+    Key.NumPad1 -> '1'.code
+    Key.NumPad2 -> '2'.code
+    Key.NumPad3 -> '3'.code
+    Key.NumPad4 -> '4'.code
+    Key.NumPad5 -> '5'.code
+    Key.NumPad6 -> '6'.code
+    Key.NumPad7 -> '7'.code
+    Key.NumPad8 -> '8'.code
+    Key.NumPad9 -> '9'.code
+    Key.NumPadAdd -> '+'.code
+    Key.NumPadSubtract -> '-'.code
+    Key.NumPadMultiply -> '*'.code
+    Key.NumPadDivide -> '/'.code
+    Key.NumPadDot -> '.'.code
+    Key.NumPadEquals -> '='.code
+    else -> null
+}
+
+internal fun isModifierKeySym(keySym: Int): Boolean = when (keySym) {
+    XK_SHIFT_L, XK_SHIFT_R,
+    XK_CONTROL_L, XK_CONTROL_R,
+    XK_ALT_L, XK_ALT_R,
+    XK_SUPER_L, XK_SUPER_R,
+    XK_CAPS_LOCK, XK_NUM_LOCK, XK_SCROLL_LOCK,
+    -> true
+    else -> false
+}
+
+internal fun androidKeyToKeySym(key: Key): Int? = when (key) {
+    Key.Enter, Key.NumPadEnter -> XK_RETURN
+    Key.Tab -> XK_TAB
+    Key.Escape -> XK_ESCAPE
+    Key.Backspace -> XK_BACKSPACE
+    Key.Delete -> XK_DELETE
+    Key.DirectionLeft -> XK_LEFT
+    Key.DirectionRight -> XK_RIGHT
+    Key.DirectionUp -> XK_UP
+    Key.DirectionDown -> XK_DOWN
+    Key.MoveHome -> XK_HOME
+    Key.MoveEnd -> XK_END
+    Key.PageUp -> XK_PAGE_UP
+    Key.PageDown -> XK_PAGE_DOWN
+    Key.Insert -> XK_INSERT
+    Key.ShiftLeft -> XK_SHIFT_L
+    Key.ShiftRight -> XK_SHIFT_R
+    Key.CtrlLeft -> XK_CONTROL_L
+    Key.CtrlRight -> XK_CONTROL_R
+    Key.AltLeft -> XK_ALT_L
+    Key.AltRight -> XK_ALT_R
+    Key.MetaLeft -> XK_SUPER_L
+    Key.MetaRight -> XK_SUPER_R
+    Key.CapsLock -> XK_CAPS_LOCK
+    Key.NumLock -> XK_NUM_LOCK
+    Key.ScrollLock -> XK_SCROLL_LOCK
+    Key.PrintScreen -> XK_PRINT
+    Key.Break -> XK_PAUSE
+    Key.Menu -> XK_MENU
+    Key.F1 -> XK_F1
+    Key.F2 -> XK_F2
+    Key.F3 -> XK_F3
+    Key.F4 -> XK_F4
+    Key.F5 -> XK_F5
+    Key.F6 -> XK_F6
+    Key.F7 -> XK_F7
+    Key.F8 -> XK_F8
+    Key.F9 -> XK_F9
+    Key.F10 -> XK_F10
+    Key.F11 -> XK_F11
+    Key.F12 -> XK_F12
+    else -> null
+}
+

@@ -1,0 +1,5 @@
+Email accounts (Gmail and other IMAP/SMTP providers) now connect reliably in release builds, with a faster, compact message list you can pinch-to-zoom.
+
+Fixes SSH sessions freezing shortly after connecting over Haven's built-in WireGuard tunnel on mobile data — the tunnel now defaults to a 1280 MTU and honours an "MTU =" line in your config. (#232)
+
+More of the UI is now translated — the Tunnels screen, email setup, and the Local Linux desktop card. (#233)

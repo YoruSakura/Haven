@@ -1,0 +1,13 @@
+# Native or reflected entry points required by the remote client.
+sh.haven.et.transport.EtTransport
+org.openintents.ssh.authentication.ISshAuthenticationService
+org.openintents.ssh.authentication.SshAuthenticationApiError
+sh.haven.feature.sftp.root.RootFsDaemon
+sh.haven.core.rdp.RdpBitmapBridge
+sh.haven.rclone.binding.wgbridge.Wgbridge
+sh.haven.rclone.binding.tsbridge.Tsbridge
+sh.haven.rclone.binding.nbbridge.Nbbridge
+sh.haven.rclone.binding.ovpnbridge.Ovpnbridge
+sh.haven.rclone.binding.ocbridge.Ocbridge
+# SnakeYAML logger initialization requires a named package on Android.
+org.yaml.snakeyaml.TypeDescription

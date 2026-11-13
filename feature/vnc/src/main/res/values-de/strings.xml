@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- i18n sweep #210 -->
+    <string name="vnc_placeholder_title">VNC</string>
+    <string name="vnc_placeholder_hint">Verbindung im Tab „Verbindungen" hinzufügen</string>
+    <string name="vnc_action_close">Schließen</string>
+    <string name="vnc_action_retry">Erneut versuchen</string>
+    <string name="vnc_bandwidth_suggestion">Langsame Verbindung — für bessere Performance auf 256 Farben wechseln?</string>
+    <string name="vnc_action_switch">Wechseln</string>
+    <string name="vnc_action_dismiss">Schließen</string>
+    <string name="vnc_cd_disconnect">Trennen</string>
+    <string name="vnc_cd_toggle_keyboard">Tastatur ein-/ausblenden</string>
+    <string name="vnc_cd_background_to_edge">Hintergrund als Rand-Symbol</string>
+    <string name="vnc_cd_picture_in_picture">Bild-in-Bild</string>
+    <string name="vnc_cd_reset_zoom">Zoom zurücksetzen</string>
+    <string name="vnc_cd_fullscreen">Vollbild</string>
+    <string name="vnc_cd_session_menu">Sitzungsmenü</string>
+    <string name="vnc_cd_exit_fullscreen">Vollbild beenden</string>
+    <string name="vnc_cd_input_mode_trackpad_on">Trackpad-Modus aktiv (Tippen für direkte Berührung)</string>
+    <string name="vnc_cd_input_mode_direct">Direktberührungs-Modus (Tippen für Trackpad)</string>
+    <string name="vnc_cd_trackpad_sensitivity">Trackpad-Empfindlichkeit</string>
+    <string name="vnc_orientation_landscape_desc">Querformat sperren (Tippen zum Wechsel in Hochformat)</string>
+    <string name="vnc_orientation_portrait_desc">Hochformat sperren (Tippen zum Wechsel in Automatik)</string>
+    <string name="vnc_orientation_auto_desc">Automatisch drehen (Tippen zum Wechsel in Querformat)</string>
+    <!-- Touch gesture help (#250) -->
+    <string name="vnc_cd_gesture_help">Touch-Gesten</string>
+    <string name="vnc_cd_save_default">Aktuelle Größe als Standard dieser App speichern</string>
+    <string name="vnc_gesture_help_title">Touch-Gesten</string>
+    <string name="vnc_gesture_help_two_finger">Zwei Finger ziehen zum Scrollen; zum Zoomen zusammenziehen. Ein Finger ist die Maus.</string>
+    <string name="vnc_gesture_help_three_finger">Mit drei Fingern zusammenziehen, um die Größe der App zu ändern, ohne das Vollbild zu verlassen.</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="vnc_cd_two_finger_viewport">Zwei Finger verschieben die Ansicht (tippen, um den entfernten Bildschirm zu scrollen)</string>
+    <string name="vnc_cd_two_finger_scroll_on">Zwei Finger scrollen den entfernten Bildschirm (tippen, um die Ansicht zu verschieben)</string>
+    <string name="vnc_cd_paste">Zwischenablage einfügen</string>
+    <string name="vnc_compose_open">Text zum Senden eingeben</string>
+    <string name="vnc_compose_placeholder">Eingeben, prüfen, dann senden</string>
+    <string name="vnc_compose_send">Senden</string>
+    <string name="vnc_compose_press_enter">Nach dem Senden Enter drücken</string>
+    <string name="vnc_compose_show">Text anzeigen</string>
+    <string name="vnc_compose_hide">Text verbergen</string>
+    <string name="vnc_compose_untypeable">Hervorgehobene Zeichen lassen sich über VNC nicht tippen. Zum Senden „Einfügen“ verwenden.</string>
+</resources>

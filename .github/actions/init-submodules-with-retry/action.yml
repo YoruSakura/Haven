@@ -1,0 +1,48 @@
+name: Init submodules with retry
+description: Initialize the Mosh and ET submodules with bounded retries.
+
+inputs:
+  paths:
+    description: |
+      Newline-separated list of submodule paths to init. Empty (default)
+      means init every submodule recursively, matching the prior
+      behaviour. When non-empty the init is non-recursive.
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Init submodules with retry
+      shell: bash
+      env:
+        SUBMODULE_PATHS: ${{ inputs.paths }}
+      run: |
+        set +e
+        # Build the submodule update command. Empty paths → recursive
+        # init of everything (legacy behaviour). Non-empty → non-recursive
+        # init of just the listed paths.
+        if [ -z "$SUBMODULE_PATHS" ]; then
+          cmd=(git submodule update --init --recursive --jobs 4)
+        else
+          # shellcheck disable=SC2206
+          paths=( $(echo "$SUBMODULE_PATHS" | tr '\n' ' ') )
+          cmd=(git submodule update --init --jobs 4 -- "${paths[@]}")
+          echo "Initialising only: ${paths[*]}"
+        fi
+        for attempt in 1 2 3; do
+          echo "::group::Submodule init attempt $attempt"
+          "${cmd[@]}"
+          rc=$?
+          echo "::endgroup::"
+          if [ "$rc" -eq 0 ]; then
+            echo "Submodules ready on attempt $attempt"
+            exit 0
+          fi
+          if [ "$attempt" -lt 3 ]; then
+            echo "::warning::Submodule init failed (rc=$rc) on attempt $attempt; sleeping 15s before retry"
+            sleep 15
+          fi
+        done
+        echo "::error::Submodule init failed after 3 attempts; upstream likely down"
+        exit 1

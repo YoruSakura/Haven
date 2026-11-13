@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="pull_backup_now"
+        android:enabled="true"
+        android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/shortcut_pull_backup_label">
+        <intent
+            android:action="sh.haven.app.ACTION_PULL_BACKUP"
+            android:targetPackage="sh.haven.app"
+            android:targetClass="sh.haven.app.backup.PullBackupShortcutActivity" />
+    </shortcut>
+</shortcuts>

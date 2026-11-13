@@ -1,0 +1,5 @@
+🔑 Keys from OpenKeychain can be imported again. Haven was discarding the answer OpenKeychain hands back after each prompt, and only ever answering one prompt — so the key you picked never reached the provider and the whole thing came back as a bare "refused the request". A refusal with a real reason now says what that reason was. (#487)
+
+🖥️ A remote-desktop warning pointed at a settings section that does not exist — the switch it names is under Diagnostics, not RDP. (#496, #418)
+
+📊 Verbose connection logging now admits it covers RDP, which is where the frame timings for a slow remote desktop appear. (#477)

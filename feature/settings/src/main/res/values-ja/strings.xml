@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_save">保存</string>
+    <string name="common_done">完了</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">削除</string>
+    <string name="common_edit">編集</string>
+    <string name="common_rename">名前変更</string>
+    <string name="common_create">作成</string>
+    <string name="common_connect">接続</string>
+    <string name="common_disconnect">切断</string>
+    <string name="common_copy">コピー</string>
+    <string name="common_paste">貼り付け</string>
+    <string name="common_label">ラベル</string>
+    <string name="common_password">パスワード</string>
+    <string name="common_port">ポート</string>
+    <string name="common_host">ホスト</string>
+    <string name="common_username">ユーザー名</string>
+    <string name="common_install">インストール</string>
+    <string name="common_reset">リセット</string>
+    <string name="common_allow">許可</string>
+    <string name="common_not_now">後で</string>
+    <string name="common_import">インポート</string>
+    <string name="common_add">追加</string>
+    <string name="common_download">ダウンロード</string>
+    <string name="common_unlock">ロック解除</string>
+
+    <!-- Top-level screen -->
+    <string name="settings_title">設定</string>
+
+    <!-- Security section -->
+    <string name="settings_biometric_title">画面ロック</string>
+    <string name="settings_biometric_subtitle">Havenを開くときに認証を要求</string>
+    <string name="settings_lock_timeout_title">ロックまでの時間</string>
+    <string name="settings_prevent_screenshots_title">スクリーンショットを防止</string>
+    <string name="settings_prevent_screenshots_subtitle">画面キャプチャとタスクスイッチャーのプレビューをブロック</string>
+
+    <!-- Logging section -->
+    <string name="settings_exclude_recents_title">最近のアプリから隠す</string>
+    <string name="settings_exclude_recents_subtitle">最近のアプリ画面でHavenのカードを非表示にします。セッションは継続します。アプリアイコンから再度開けます。</string>
+    <string name="settings_connection_logging_title">接続ログ</string>
+    <string name="settings_connection_logging_subtitle">接続イベントを記録（接続、切断、エラー）。ローカルに保存、デバイス暗号化で保護</string>
+    <string name="settings_view_connection_log_title">接続ログを表示</string>
+    <string name="settings_view_connection_log_subtitle">接続履歴とイベント</string>
+    <string name="settings_verbose_logging_title">詳細な接続ログ</string>
+    <string name="settings_verbose_logging_subtitle">SSH、Mosh、ET、RDP、SPICE接続のプロトコル詳細をキャプチャ — 動作の遅い、または応答しないリモートデスクトップの診断に必要なRDPフレームタイミングとSPICE入力イベントを含みます。接続する前にオンにしてください。ホスト名やユーザー名を含む場合があります</string>
+
+    <!-- Terminal section -->
+    <string name="settings_session_persistence_title">セッション保持</string>
+    <string name="settings_session_persistence_none">なし</string>
+    <string name="settings_font_size_title">ターミナルのフォントサイズ</string>
+    <string name="settings_font_size_subtitle">%1$dsp</string>
+    <string name="settings_horizontal_padding_title">左右の余白</string>
+    <string name="settings_horizontal_padding_subtitle">%1$d dp</string>
+    <string name="settings_color_scheme_title">ターミナルの配色</string>
+    <string name="settings_toolbar_title">キーボードツールバー</string>
+    <string name="settings_toolbar_subtitle">ツールバーのキーとレイアウトを設定</string>
+    <string name="settings_search_button_title">検索ボタン</string>
+    <string name="settings_search_button_subtitle">タブバーに検索アイコンを表示 -- セッションマネージャのネイティブ検索キー（tmux/zellij/screen）またはシェルのCtrl+Rを送信</string>
+    <string name="settings_copy_output_title">最後の出力をコピー</string>
+    <string name="settings_copy_output_subtitle">タブバーにコピーアイコンを表示 -- 最後のコマンド出力をコピー。シェル統合が必要（タップしてセットアップ）</string>
+    <string name="settings_mouse_input_title">TUIアプリでのマウス入力</string>
+    <string name="settings_mouse_input_subtitle">htop、mc、vimなどのアプリがマウストラッキングを有効にしている場合、タップをクリック、長押しを右クリックとして転送</string>
+    <string name="settings_right_click_title">長押しで右クリック</string>
+    <string name="settings_right_click_subtitle">テキスト選択の代わりにターミナルに右クリックを送信。tmuxコンテキストメニューに便利</string>
+    <string name="settings_standard_keyboard_title">音声入力とオートコンプリート</string>
+    <string name="settings_standard_keyboard_subtitle">セキュアキーボードフラグを無効にします（パスワードモード、候補なし）。音声入力、スワイプ入力、単語予測を有効にしますが、IMEが入力したパスワードを学習する可能性があります</string>
+
+    <!-- Appearance section -->
+    <string name="settings_theme_title">テーマ</string>
+    <string name="settings_navigation_tabs_title">ナビゲーションタブ</string>
+    <string name="settings_navigation_tabs_subtitle">タブの順番を並べ替え、表示するタブを選びます</string>
+
+    <!-- Wayland section -->
+    <string name="settings_wayland_shell_title">Waylandデスクトップシェル</string>
+    <string name="settings_proot_idle_title">アイドル状態の Linux ゲストを自動停止</string>
+    <string name="settings_proot_idle_off">オフ — 手動で停止するまで Linux ゲストは動き続けます</string>
+    <string name="settings_proot_idle_on">Haven を離れて %1$d 分後にゲストを停止します（実行中のゲストサービスがあれば維持されます）</string>
+    <string name="settings_proot_idle_dialog_title">アイドル状態の Linux ゲストを自動停止</string>
+    <string name="settings_proot_idle_dialog_body">Haven がこの時間バックグラウンドにあったら、メモリを解放するために Linux ゲストのターミナルとデスクトップを停止します。実行中のゲストサービスがあれば維持されます。バックグラウンドのターミナルで実行中の長いジョブも停止されるため、アイドル時のリソース回収が不要ならオフのままにしてください。</string>
+    <string name="settings_proot_idle_off_label">オフ</string>
+    <string name="settings_shizuku_title">Shizuku連携</string>
+    <string name="settings_shizuku_enabled">有効 — バッテリー最適化の自動除外、Waylandソケット共有</string>
+    <string name="settings_shizuku_available">Shizukuインストール済み -- タップして権限を付与</string>
+    <string name="settings_shizuku_not_running">Shizukuはインストール済みだが未起動 — タップしてワイヤレスデバッグで起動</string>
+    <string name="settings_shizuku_not_installed">バッテリー除外とWaylandアクセスにShizukuをインストール</string>
+
+    <!-- Backup section -->
+    <string name="settings_backup_sync_title">リモートに同期</string>
+    <string name="settings_backup_sync_subtitle_set">%1$s : %2$s</string>
+    <string name="settings_backup_sync_subtitle_unset">暗号化バックアップを SFTP/SMB/rclone 接続にプッシュ/プル</string>
+    <string name="settings_backup_sync_description">暗号化バックアップを既存の接続にプッシュまたはプルします。ファイルは端末を離れる前にパスフレーズで AES-256-GCM 暗号化されます — リモートが設定を平文で見ることはありません。</string>
+    <string name="settings_backup_sync_no_remotes">SFTP、SMB、rclone 接続がまだありません。まず追加すると、そこにバックアップを保存できます。</string>
+    <string name="settings_backup_sync_choose_remote">接続を選択…</string>
+    <string name="settings_backup_sync_remote_label">保存先の接続</string>
+    <string name="settings_backup_sync_path_label">リモート上のファイルパス</string>
+    <string name="settings_backup_sync_connect_hint">先に保存先を接続してください（「ファイル」タブで開く）。その後プッシュまたはプルします。</string>
+    <string name="settings_backup_sync_push_button">プッシュ</string>
+    <string name="settings_backup_sync_pull_button">プル</string>
+    <string name="settings_backup_auto_sync_label">自動プッシュ</string>
+    <string name="settings_backup_auto_sync_hint">設定変更の数分後に暗号化バックアップを再送信し、毎日の追従も行います。バックグラウンドで送信するため、パスフレーズを（暗号化して）この端末に保存する必要があります。自動取得は下の別のオプションです。</string>
+    <string name="settings_backup_auto_sync_dialog_title">自動プッシュを有効にする</string>
+    <string name="settings_backup_auto_sync_dialog_description">自動バックアップごとに暗号化に使うパスワードを設定します。パスワードは暗号化してこの端末に保存され、自動プッシュをオフにすると削除されます。</string>
+    <string name="settings_export_backup_title">バックアップをエクスポート</string>
+    <string name="settings_export_backup_subtitle">鍵、接続、設定</string>
+    <string name="settings_restore_backup_title">バックアップを復元</string>
+    <string name="settings_restore_backup_subtitle">バックアップファイルからインポート</string>
+    <string name="settings_backup_working">処理中…</string>
+
+    <!-- About section -->
+    <string name="settings_about_title">Havenについて</string>
+    <string name="settings_support_title">Havenを支援</string>
+    <string name="settings_support_subtitle">開発者にコーヒーをおごる</string>
+    <string name="settings_version_unknown">不明</string>
+
+    <!-- Wayland shell dialog -->
+    <string name="settings_wayland_dialog_title">Waylandデスクトップシェル</string>
+    <string name="settings_wayland_dialog_description">Waylandデスクトップのfootターミナル内で実行するシェルコマンド。apkで追加シェルをインストール可能（例: apk add bash）。</string>
+    <string name="settings_wayland_shell_command_label">シェルコマンド</string>
+
+    <!-- Lock timeout dialog -->
+    <string name="settings_lock_timeout_dialog_title">ロックまでの時間</string>
+
+    <!-- OSC 133 shell integration dialog -->
+    <string name="settings_osc133_dialog_title">シェル統合のセットアップ</string>
+    <string name="settings_osc133_description">最後の出力をコピーするには、シェルがOSC 133マーカーを出力する必要があります。シェル設定に以下のスニペットを追加してください:</string>
+    <string name="settings_osc133_bash">Bash</string>
+    <string name="settings_osc133_zsh">Zsh</string>
+    <string name="settings_osc133_copied_bash">Bashスニペットをコピーしました</string>
+    <string name="settings_osc133_copied_zsh">Zshスニペットをコピーしました</string>
+    <string name="settings_osc133_footer">スニペットをタップしてコピー。多くのツール（iTerm2、VS Code、WezTerm）はデフォルトでこれらのマーカーを含みます。</string>
+    <string name="settings_osc133_learn_more">詳細</string>
+
+    <!-- Backup password dialog -->
+    <string name="settings_backup_export_dialog_title">バックアップをエクスポート</string>
+    <string name="settings_backup_restore_dialog_title">バックアップを復元</string>
+    <string name="settings_backup_password_min_length">6文字以上</string>
+    <string name="settings_backup_passwords_mismatch">パスワードが一致しません</string>
+    <string name="settings_backup_export_description">パスワードでバックアップを暗号化します。SSH鍵と接続データを保護します。</string>
+    <string name="settings_backup_restore_description">バックアップ作成時に使用したパスワードを入力してください。</string>
+    <string name="settings_backup_password_label">パスワード</string>
+    <string name="settings_backup_confirm_password_label">パスワード確認</string>
+    <string name="settings_backup_export_button">エクスポート</string>
+    <string name="settings_backup_restore_button">復元</string>
+
+    <!-- About dialog -->
+    <string name="settings_about_dialog_title">Havenについて</string>
+    <string name="settings_about_app_name">Haven</string>
+    <string name="settings_about_description">Android向けオープンソースSSH、VNC、RDP、クラウドストレージクライアント</string>
+    <string name="settings_about_version">バージョン %1$s（ビルド %2$d）</string>
+    <string name="settings_about_android">Android %1$s（API %2$d）</string>
+    <string name="settings_about_libraries_title">オープンソースライブラリ</string>
+
+    <!-- Theme dialog -->
+    <string name="settings_theme_dialog_title">テーマ</string>
+
+    <!-- Color scheme dialog -->
+    <string name="settings_color_scheme_dialog_title">ターミナルの配色</string>
+
+    <!-- Session manager dialog -->
+    <string name="settings_session_dialog_title">セッション保持</string>
+    <string name="settings_session_no_scrollback">タッチスクロールバックなし</string>
+    <string name="settings_session_custom_command_label">カスタムコマンド</string>
+    <string name="settings_session_custom_command_hint">セッション名には{name}を使用。デフォルトは空欄のまま。</string>
+    <string name="settings_session_save_command">コマンドを保存</string>
+
+    <!-- Font size dialog -->
+    <string name="settings_font_size_dialog_title">ターミナルのフォントサイズ</string>
+    <string name="settings_font_size_sample">サンプルテキスト</string>
+    <string name="settings_font_size_value">%1$dsp</string>
+    <string name="settings_horizontal_padding_dialog_title">ターミナルの左右の余白</string>
+    <string name="settings_horizontal_padding_sample">サンプルテキスト</string>
+    <string name="settings_horizontal_padding_value">%1$d dp</string>
+
+    <!-- Toolbar config dialog -->
+    <string name="settings_toolbar_dialog_title">キーボードツールバー</string>
+    <string name="settings_toolbar_assign_hint">各キーを行1、行2、またはオフに割り当て</string>
+    <string name="settings_toolbar_arrow_keys">矢印キーレイアウト</string>
+    <string name="settings_toolbar_edit_controls">編集モードのコントロール</string>
+    <string name="settings_edit_controls_split">分割</string>
+    <string name="settings_edit_controls_left">左</string>
+    <string name="settings_edit_controls_right">右</string>
+    <string name="settings_toolbar_function_keys">ファンクションキー</string>
+    <string name="settings_toolbar_symbols">記号</string>
+    <string name="settings_toolbar_custom_keys">カスタムキー</string>
+    <string name="settings_toolbar_add_custom_key">カスタムキーを追加</string>
+    <string name="settings_toolbar_edit_json">JSONを編集</string>
+    <string name="settings_toolbar_row1">R1</string>
+    <string name="settings_toolbar_row2">R2</string>
+    <string name="settings_toolbar_off">オフ</string>
+    <string name="settings_toolbar_paste_clipboard">クリップボードを貼り付け</string>
+
+    <!-- Custom key dialog -->
+    <string name="settings_custom_key_edit_title">カスタムキーを編集</string>
+    <string name="settings_custom_key_add_title">カスタムキーを追加</string>
+    <string name="settings_custom_key_presets">プリセット</string>
+    <string name="settings_custom_key_label">ラベル</string>
+    <string name="settings_custom_key_label_placeholder">例: ^C, Paste</string>
+    <string name="settings_custom_key_sequence_label">シーケンス</string>
+    <string name="settings_custom_key_sequence_placeholder">例: \\u0003</string>
+    <string name="settings_custom_key_escape_hint">Escapeは\\u001b、Ctrl+Cは\\u0003、Enterは\\nを使用</string>
+
+    <!-- JSON editor dialog -->
+    <string name="settings_json_editor_title">ツールバーJSONを編集</string>
+    <string name="settings_json_editor_format_hint">String = 組み込みキーID、Object = カスタムキー {\"label\": \"…\", \"send\": \"…\"}</string>
+    <string name="settings_json_editor_builtin_ids">Built-in IDs: keyboard, esc, tab, shift, ctrl, alt, arrow_left, arrow_up, arrow_down, arrow_right, home, end, pgup, pgdn, sym_pipe, sym_tilde, sym_slash, sym_dash, sym_underscore, sym_equals, sym_plus, sym_backslash, sym_squote, sym_dquote, sym_semicolon, sym_colon, sym_bang, sym_question, sym_at, sym_hash, sym_dollar, sym_percent, sym_caret, sym_amp, sym_star, sym_lparen, sym_rparen, sym_lbracket, sym_rbracket, sym_lbrace, sym_rbrace, sym_lt, sym_gt, sym_backtick</string>
+
+    <!-- Common strings -->
+    <string name="common_support">サポート</string>
+    <string name="common_github">GitHub</string>
+    <string name="common_simple">シンプル</string>
+    <string name="settings_language_title">言語</string>
+    <string name="settings_media_extensions_title">メディア ファイルの拡張子</string>
+    <string name="settings_media_extensions_description">ファイル ブラウザーでストリーミング可能なメディアとして扱う拡張子を、スペース区切りで指定します。</string>
+    <string name="settings_media_extensions_label">拡張子</string>
+    <string name="settings_show_desktops_title">デスクトップ カードを表示</string>
+    <string name="settings_show_desktops_subtitle">接続画面にデスクトップ環境マネージャーを表示する</string>
+    <string name="settings_show_linux_vm_title">Linux VM カードを表示</string>
+    <string name="settings_show_linux_vm_subtitle">接続画面に Android Linux VM のセットアップを表示する</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="settings_keep_screen_on_title">ターミナルで画面をオンに保つ</string>
+    <string name="settings_keep_screen_on_subtitle">ターミナルのタブが開いている間、画面はスリープしません。バッテリーを消費するため、長時間の出力を見守るときのみ有効です。</string>
+
+    <!-- #135 -->
+    <string name="settings_keyboard_mode_title">キーボードモード</string>
+    <string name="settings_dev_install_title">開発用インストール</string>
+    <string name="settings_dev_install_apk_url">APK の URL</string>
+    <string name="settings_font_install_title">URL からフォントをインストール</string>
+    <string name="settings_ime_flags_title">IME フラグ</string>
+    <!-- #133 phase 2b: SSH host CA pubkey field (en fallback) -->
+    <string name="settings_scrollback_rows_title">スクロールバック行数</string>
+    <string name="settings_scrollback_rows_subtitle">タブごとに%1$,d行保持 — 新しいタブに適用</string>
+    <string name="settings_scrollback_rows_dialog_title">タブごとのスクロールバック行数</string>
+    <string name="settings_scrollback_rows_dialog_body">スクロールバックが大きいほどメモリ使用量が増えます。一般的な列幅で1行あたり約2 KB、開いているタブ数に比例します。</string>
+    <string name="settings_scrollback_rows_value">%1$,d 行</string>
+    <string name="settings_tap_to_position_title">対応プロンプトでタップしてカーソル移動</string>
+    <string name="settings_tap_to_position_subtitle">シェルプロンプト内をタップしてその列にカーソルを移動。OSC 133プロンプトマーカーが必要です（starship、fish 3.6+、最近のbash/zshシェル統合設定）。これらを送信しないシェルでは効果なし</string>
+    <string name="settings_swipe_arrows_title">スワイプで矢印キー送信</string>
+    <string name="settings_swipe_arrows_subtitle">ターミナルでの横スワイプで、タブを切り替えず ← →（長押しで連続）を送ります。ツールバーのスワイプキーも同じモードを切り替えます</string>
+    <string name="settings_swipe_arrows_exit_hint">アプリのタブバーを非表示にしてセッションを開いている間は、ツールバーのスワイプキーを押すまでスワイプが矢印キーを送り続けます。いつでも使えるようスワイプキーをツールバーに追加してください</string>
+    <string name="settings_swipe_arrows_add_key">スワイプキーを追加</string>
+
+    <string name="settings_bandwidth_suggest_subtitle">数秒後にスループットが約1 Mbps未満になると検出し、ワンタップで256色での再接続を提案します。オフにすると通知が表示されません。</string>
+    <string name="settings_bandwidth_suggest_title">低速なVNC接続では256色を提案</string>
+    <string name="settings_section_about">アプリについて</string>
+    <string name="settings_section_advanced">詳細設定</string>
+    <string name="settings_section_appearance">外観</string>
+    <string name="settings_section_backup">バックアップ</string>
+    <string name="settings_section_connections_screen">接続画面</string>
+    <string name="settings_section_desktop">デスクトップ（VNC &amp; RDP）</string>
+    <string name="settings_section_diagnostics">診断</string>
+    <string name="settings_section_keyboard_input">キーボードと入力</string>
+    <string name="settings_section_security_privacy">セキュリティとプライバシー</string>
+    <string name="settings_section_terminal">ターミナル</string>
+    <string name="settings_show_terminal_tab_bar_subtitle">ターミナルの上にセッションタブを表示</string>
+    <string name="settings_show_terminal_tab_bar_title">ターミナルのタブバーを表示</string>
+    <string name="settings_touchpad_input_direct_subtitle">ダイレクトタッチ — 指の位置がポインターになります。トラックパッド風の入力にはオンにしてください。</string>
+    <string name="settings_touchpad_input_title">タッチパッド入力</string>
+    <string name="settings_touchpad_input_touchpad_subtitle">ドラッグでリモートカーソルを移動し、タップでカーソル位置をクリックします。ズーム時はビューポートがカーソルに追従します。</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="settings_color_scheme_auto_switch_title">システムテーマに合わせて自動切替</string>
+    <string name="settings_color_scheme_auto_switch_subtitle">ライトモードとダークモードで異なるターミナル配色を使用</string>
+    <string name="settings_color_scheme_light_title">ターミナル配色（ライト）</string>
+    <string name="settings_color_scheme_dark_title">ターミナル配色（ダーク）</string>
+    <string name="settings_color_scheme_light_dialog_title">ターミナル配色 — ライト</string>
+    <string name="settings_color_scheme_dark_dialog_title">ターミナル配色 — ダーク</string>
+    <string name="settings_color_scheme_apply_palette_title">スキームのANSIパレットを適用</string>
+    <string name="settings_color_scheme_apply_palette_subtitle">16色のANSIカラーをスキームに合わせて変更します。オフにすると標準色のままになり、muttのような全画面アプリが期待どおりに表示されます。</string>
+    <string name="settings_toolbar_min_key_width">最小キー幅: %1$d dp</string>
+    <string name="settings_toolbar_key_scale">キースケール: %1$d%%</string>
+    <string name="settings_toolbar_uniform_grid">キーを均等グリッドに</string>
+    <string name="settings_toolbar_uniform_grid_desc">Termux のように各キーが同じ幅のセルを占めます。長いラベルは折り返し。横スクロールなし。</string>
+    <string name="settings_terminal_font_title">ターミナルフォント</string>
+    <string name="settings_terminal_font_default_label">Hack Nerd Font Mono（デフォルト）</string>
+    <string name="settings_terminal_font_custom_fmt">カスタム: %1$s</string>
+    <string name="settings_terminal_font_subtitle_fmt">%1$s — タップして TTF/OTF を選択（Nerd Fonts 対応）</string>
+    <string name="settings_recommended_fonts_title">おすすめフォント</string>
+    <string name="settings_recommended_fonts_subtitle">ワンタップでインストール: Source Code Pro, JetBrains Mono, Hack, Inconsolata</string>
+    <string name="settings_font_from_url_title">URL からフォントをインストール…</string>
+    <string name="settings_font_from_url_subtitle">.ttf/.otf またはそれらを含む .zip を取得（エージェントの set_terminal_font_from_url ツールと同等）</string>
+    <string name="settings_reset_font_title">ターミナルフォントをリセット</string>
+    <string name="settings_reset_font_subtitle">バンドルされた Hack Nerd Font Mono に戻す</string>
+    <string name="settings_terminal_font_reset_toast">ターミナルフォントをリセットしました</string>
+    <string name="settings_terminal_font_set_toast">ターミナルフォントを %1$s に設定しました</string>
+    <string name="settings_terminal_font_decode_failed_toast">そのフォントを読み込めませんでした — Android がタイプフェイスとしてデコードできませんでした</string>
+    <string name="settings_font_installed_toast">インストールしました (%1$d KiB)</string>
+    <string name="settings_font_installing_toast">%1$s をインストール中…</string>
+    <string name="settings_font_named_installed_toast">%1$s をインストールしました (%2$d KiB)</string>
+    <string name="settings_language_system_default">システムデフォルト</string>
+    <string name="settings_keyboard_mode_subtitle_raw">Raw — 物理キーボードのみ</string>
+    <string name="settings_keyboard_mode_subtitle_standard">Standard — Gboard の全機能</string>
+    <string name="settings_keyboard_mode_subtitle_custom">Custom — ユーザー指定の EditorInfo フラグ</string>
+    <string name="settings_keyboard_mode_subtitle_secure">Secure — デフォルト、自動修正を抑制</string>
+    <string name="settings_keyboard_mode_secure_label">セキュア（デフォルト）</string>
+    <string name="settings_keyboard_mode_secure_desc">プライバシーフラグを設定した通常のソフトウェアキーボード: Gboard のマイク、自動修正、スワイプ入力、ライティングアシストを抑制。パスワード入力に最適。Bluetooth キーボードでも動作します。</string>
+    <string name="settings_keyboard_mode_standard_label">スタンダード</string>
+    <string name="settings_keyboard_mode_standard_desc">Gboard の全機能 — 音声入力、スワイプ入力、自動修正、単語予測。セキュアモードでソフトウェアキーボードが動作しない場合や自動修正を使いたい場合に選択してください。</string>
+    <string name="settings_keyboard_mode_raw_label">Raw — Bluetooth/USB のみ</string>
+    <string name="settings_keyboard_mode_raw_desc">ソフトウェアキーボードなし。物理キー（Bluetooth または USB）のみがターミナルに届きます。最強のプライバシー。ターミナルをタップしても画面キーボードは表示されません。</string>
+    <string name="settings_keyboard_mode_custom_label">カスタム — 独自のフラグを選択</string>
+    <string name="settings_keyboard_mode_custom_desc">上級者向け。IME の癖に合わせて EditorInfo ビットを選択して組み合わせられます（例: Gboard で自動修正なしの音声入力）。選択後は設定 → \"IME フラグ\" で設定します。</string>
+    <string name="settings_ime_flags_subtitle">ターミナルが設定する EditorInfo ビットを選択</string>
+    <string name="settings_ctrl_shift_v_title">Ctrl+Shift+V で貼り付け</string>
+    <string name="settings_ctrl_shift_v_subtitle">ハードウェアキーボードの Ctrl+Shift+V で Android クリップボードから貼り付け。オフにするとキーをリモートシェルに転送します。</string>
+    <string name="settings_auto_show_keyboard_title">ターミナル開時にキーボードを表示</string>
+    <string name="settings_auto_show_keyboard_subtitle">ターミナルセッションを開く、または切り替えたとき、ソフトウェアキーボードが自動的に現れます。閲覧専用のセッションではオフにしてください。ツールバーのキーボードキーやダブルタップでいつでも出せます</string>
+
+    <!-- Navigation Tabs dialog -->
+
+    <string name="settings_nav_tab_visibility_auto_title">自動</string>
+    <string name="settings_nav_tab_visibility_show_title">表示</string>
+    <string name="settings_nav_tab_visibility_hide_title">非表示</string>
+    <string name="settings_nav_tab_visibility_always_hint">常に表示</string>
+
+    <string name="settings_usb_guest_title">USB デバイスを Linux ゲストに公開</string>
+    <string name="settings_usb_guest_subtitle">接続した USB デバイスを haven-usb シム経由でゲストアプリから使用できるようにします。各接続には同意が必要です。</string>
+    <string name="settings_gps_guest_title">GPS を Linux ゲストに公開</string>
+    <string name="settings_gps_guest_subtitle">端末の GPS 位置情報を NMEA デバイス (haven-gps) としてゲストへストリームします。有効にするとゲスト内のどのプロセスでも位置情報を読めます。各接続には同意が必要です。</string>
+    <string name="settings_proot_install_log_title">PRoot インストールログを表示</string>
+    <string name="settings_proot_install_log_subtitle">Linux ディストリビューションインストールのフェーズごとのイベント（issue #162）</string>
+    <string name="settings_logcat_capture_title">Logcat キャプチャ</string>
+    <string name="settings_logcat_capture_subtitle_on">/sdcard/Download/haven-logcat.txt に記録中</string>
+    <string name="settings_logcat_capture_subtitle_off">リモートデバッグ用に logcat をキャプチャ</string>
+    <string name="settings_logcat_saved_toast">Logcat を保存しました</string>
+    <string name="settings_logcat_started_toast">Logcat キャプチャを開始しました</string>
+    <string name="settings_logcat_start_failed_toast">キャプチャの開始に失敗しました</string>
+    <string name="settings_agent_endpoint_title">エージェントエンドポイント (MCP)</string>
+    <string name="settings_agent_endpoint_subtitle_on">有効 — ループバック上のローカル MCP サーバー。書き込みツールには同意が必要です。</string>
+    <string name="settings_agent_endpoint_subtitle_off">無効 — オンにするとローカル AI エージェントが状態を読み取り（同意を得て）操作できます</string>
+    <string name="settings_agent_file_read_title">エージェントによるファイル内容の読み取りを許可</string>
+    <string name="settings_agent_file_read_subtitle_on">有効 — `serve_file` は呼び出しごとの同意後に使い捨てダウンロード URL を返します</string>
+    <string name="settings_agent_file_read_subtitle_off">無効 — `serve_file` のリクエストはプロンプトなしで即座に失敗します</string>
+    <string name="settings_agent_terminal_input_title">エージェントによるターミナル入力のキューを許可</string>
+    <string name="settings_agent_terminal_input_subtitle_on">有効 — `queue_terminal_input` は SSH セッションの出力を監視し、次のプロンプトでキューのテキストを入力します（呼び出しごとの同意）</string>
+    <string name="settings_agent_terminal_input_subtitle_off">無効 — `queue_terminal_input` のリクエストはプロンプトなしで即座に失敗します</string>
+    <string name="settings_reverse_tunnel_title">常時接続のMCP接続</string>
+    <string name="settings_reverse_tunnel_subtitle_set">\"%1$s\" へトンネル中 — WiFi 変更やアプリ再起動後も維持</string>
+    <string name="settings_reverse_tunnel_subtitle_unset">未設定 — エンドポイントはデバイス上のみでアクセス可能</string>
+    <string name="settings_reverse_tunnel_none">なし（デバイス上のみ）</string>
+    <string name="settings_mcp_wireguard_title">WireGuard トンネルで公開</string>
+    <string name="settings_mcp_wireguard_subtitle_on">有効 — アクティブな WireGuard トンネルの &lt;wg-ip&gt;:8730 でもアクセス可能</string>
+    <string name="settings_mcp_wireguard_subtitle_off">無効 — アクティブな WireGuard トンネル経由でエンドポイントにアクセスするにはオンにしてください</string>
+    <string name="settings_mcp_lan_title">Wi-Fi/LAN で公開</string>
+    <string name="settings_mcp_lan_subtitle_on">有効 — ローカルネットワークの &lt;device-lan-ip&gt;:8730 でもアクセス可能</string>
+    <string name="settings_mcp_lan_subtitle_off">無効 — 同じ Wi-Fi/LAN 上のデバイスから直接アクセスするにはオンにしてください</string>
+    <string name="settings_mcp_copy_url_title">エージェントエンドポイント URL をコピー</string>
+    <string name="settings_mcp_url_copied_toast">エンドポイントをコピーしました</string>
+    <string name="settings_mcp_copy_config_title">MCP クライアント設定をコピー</string>
+    <string name="settings_mcp_copy_config_subtitle">任意の MCP クライアントに貼り付けられる標準 JSON スニペット</string>
+    <string name="settings_mcp_config_copied_toast">設定をコピーしました</string>
+    <string name="settings_mcp_proot_title">PRoot でも利用可能</string>
+    <string name="settings_agent_activity_title">エージェントのアクティビティを表示</string>
+    <string name="settings_agent_activity_subtitle">引数を伏せたすべての MCP 呼び出しを記録</string>
+    <string name="settings_agent_confirm_destructive_title">破壊的なエージェント操作を確認</string>
+    <string name="settings_agent_confirm_destructive_subtitle">書き込み、削除、アップロード、切断を行うエージェント呼び出しの前に確認します。読み取り専用の呼び出しは確認しません。</string>
+    <string name="settings_agent_forget_allows_title">記憶した許可を消去</string>
+    <string name="settings_agent_forget_allows_subtitle">セッションごとに承認されたツールをすべて再確認します。</string>
+    <string name="settings_agent_allows_cleared_toast">記憶した許可をクリアしました</string>
+    <string name="settings_font_from_url_body">TTF または OTF フォントファイルへの直接リンクを貼り付けてください。一般的な Nerd Fonts の生の TTF は GitHub の github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/&lt;Name&gt;/Regular/&lt;Name&gt;NerdFont-Regular.ttf にあります — その URL をここにコピーしてください。</string>
+    <string name="settings_font_from_url_placeholder">https://…/font.ttf</string>
+    <string name="settings_recommended_fonts_dialog_body">タップして人気のモノスペースコーディングフォントをダウンロードして適用します。</string>
+    <string name="settings_ime_flags_dialog_body">各トグルで EditorInfo の 1 ビットを制御します。IME によって有効な組み合わせが異なります。ターミナルが正確に入力しつつ必要な IME 機能を通過させるまで調整してください。</string>
+    <string name="settings_cd_back">戻る</string>
+    <string name="settings_filter_all">すべて</string>
+    <string name="settings_action_clear">クリア</string>
+    <string name="settings_cannot_be_undone">この操作は取り消せません。</string>
+    <string name="settings_cd_collapse">折りたたむ</string>
+    <string name="settings_cd_expand">展開</string>
+    <string name="settings_cd_failed">失敗</string>
+    <string name="settings_audit_log_title">接続ログ</string>
+    <string name="settings_audit_log_cd_clear">ログをクリア</string>
+    <string name="settings_audit_log_cd_toggle_details">詳細を切り替え</string>
+    <string name="settings_audit_log_cd_copy">ログをコピー</string>
+    <string name="settings_audit_log_cd_share">ログを共有</string>
+    <string name="settings_audit_log_empty">接続イベントが記録されていません</string>
+    <string name="settings_audit_log_clear_dialog_title">すべてのログをクリアしますか？</string>
+    <string name="settings_audit_log_no_verbose">このエントリの詳細ログはありません</string>
+    <string name="settings_audit_log_share_chooser">ログを共有</string>
+    <string name="settings_audit_log_status_sync">同期</string>
+    <string name="settings_audit_log_status_sync_failed">同期に失敗</string>
+    <string name="settings_agent_activity_screen_title">エージェントのアクティビティ</string>
+    <string name="settings_agent_activity_cd_clear">履歴をクリア</string>
+    <string name="settings_agent_activity_empty">エージェントのアクティビティはまだありません。\n\nMCP クライアントがツールを呼び出すと、引数を伏せて結果を要約した呼び出しがここに表示されます。</string>
+    <string name="settings_agent_activity_clear_dialog_title">エージェントのアクティビティをクリアしますか？</string>
+    <string name="settings_agent_activity_clear_dialog_text">記録されたすべての MCP 呼び出しがこのデバイスから削除されます。この操作は取り消せません。</string>
+    <string name="settings_agent_activity_unknown_client">不明なクライアント</string>
+    <string name="settings_agent_activity_args_redacted">引数（伏せ字）</string>
+    <string name="settings_proot_install_log_screen_title">PRoot インストールログ</string>
+    <string name="settings_proot_install_log_cd_clear">ログをクリア</string>
+    <string name="settings_proot_install_log_empty">インストールイベントはまだ記録されていません。接続 → デスクトップからディストリビューションをインストールしてログを生成してください。</string>
+    <string name="settings_proot_install_log_clear_dialog_title">インストールログをクリアしますか？</string>
+    <string name="settings_proot_install_log_clear_dialog_text">記録されたすべてのインストールイベントが削除されます。</string>
+    <string name="settings_ime_flag_no_suggestions_title">候補ストリップを非表示</string>
+    <string name="settings_ime_flag_no_suggestions_detail">TYPE_TEXT_FLAG_NO_SUGGESTIONS — 広くサポートされています</string>
+    <string name="settings_ime_flag_visible_password_title">自動修正 / 自動大文字 / 自動スペースを抑制</string>
+    <string name="settings_ime_flag_visible_password_detail">TYPE_TEXT_VARIATION_VISIBLE_PASSWORD — 最も強いヒント。Gboard が対応。ほとんどの IME でフルエディターと相互排他（スワイプ/音声入力なし）。</string>
+    <string name="settings_ime_flag_auto_correct_title">自動修正プロトコルを有効化</string>
+    <string name="settings_ime_flag_auto_correct_detail">TYPE_TEXT_FLAG_AUTO_CORRECT — Samsung Honeyboard のコミットテートゲートに必要（#110）。Gboard で自動修正を明示的に有効化します。</string>
+    <string name="settings_ime_flag_full_editor_title">音声入力とスワイプ（フルエディター）</string>
+    <string name="settings_ime_flag_full_editor_detail">IME に実際の Editable を渡します。音声入力、スワイプ入力、CJK 変換に必要。上記の自動修正抑制ヒントと競合します。</string>
+    <string name="settings_ime_flag_no_extract_ui_title">全画面 IME を抑制</string>
+    <string name="settings_ime_flag_no_extract_ui_detail">IME_FLAG_NO_EXTRACT_UI — 横向き時の全画面 IME UI を非表示にします。</string>
+    <string name="settings_ime_flag_no_learning_title">IME の学習をブロック</string>
+    <string name="settings_ime_flag_no_learning_detail">IME_FLAG_NO_PERSONALIZED_LEARNING — プライバシー: IME の単語バンクが入力テキストを無視します。Gboard ではマイクも非表示になるほど強力です。</string>
+    <string name="settings_mcp_tools_title">MCPツール</string>
+    <string name="settings_mcp_tools_subtitle">エージェントに表示される内容を減らすため、個々のツールをオフにします</string>
+    <string name="settings_mcp_tools_screen_title">MCPツール</string>
+    <string name="settings_mcp_tools_empty">ツール一覧はエージェントエンドポイントの起動後に表示されます。</string>
+    <string name="settings_mcp_tools_intro">オフにしたツールはエージェントのツール一覧から完全に削除されます — 小さなモデルはノイズが減り、すべての呼び出しのトークン数が少なくなります。エンドポイントスイッチ、ペアリング、同意プロンプトは引き続き適用されます。</string>
+    <string name="settings_mcp_tools_consent_every_call">呼び出しごとに確認</string>
+    <string name="settings_mcp_tools_consent_once">セッションごとに1回確認</string>
+    <string name="settings_mcp_tools_consent_never">呼び出しごとの確認なし</string>
+    <string name="settings_paired_clients_title">ペアリング済み MCP クライアント</string>
+    <string name="settings_paired_clients_subtitle">ペアリング済みクライアントの確認、クライアントごとの確認のスキップ、ペアリング解除</string>
+    <string name="settings_paired_clients_screen_title">ペアリング済み MCP クライアント</string>
+    <string name="settings_paired_clients_empty">ペアリング済みの MCP クライアントはまだありません。クライアントの接続確認を承認すると、ここに表示されます。</string>
+    <string name="settings_paired_clients_bypass_label">承認の確認をスキップ</string>
+    <string name="settings_paired_clients_bypass_on">このクライアントからのすべての呼び出しを自動承認します（破壊的な操作を含む）。</string>
+    <string name="settings_paired_clients_bypass_off">破壊的な呼び出しは引き続き同意を求めます（デフォルト）。</string>
+    <string name="settings_paired_clients_cd_unpair">クライアントのペアリングを解除</string>
+    <string name="settings_paired_clients_unpair_title">\'%1$s\' のペアリングを解除しますか？</string>
+    <string name="settings_paired_clients_unpair_message">次回接続時に再度承認が必要になり、自動承認は取り消されます。</string>
+    <string name="settings_paired_clients_unpair_confirm">ペアリング解除</string>
+    <string name="settings_paired_clients_unpaired_toast">\'%1$s\' のペアリングを解除しました</string>
+
+    <!-- MCP WireGuard / loopback -->
+    <string name="settings_mcp_wireguard_collision">別の VPN（%1$s）が %2$s を使用しています — このエンドポイントがバインドするアドレスと同じため、隠されてピアから到達できません。その VPN を停止するか、MCP クライアントをループバック（127.0.0.1）エンドポイントに向けてください。</string>
+    <string name="settings_mcp_trust_loopback_title">ローカルクライアントを信頼</string>
+    <string name="settings_mcp_trust_loopback_subtitle_on">有効 — ローカルクライアント（127.0.0.1）はペアリングや承認プロンプトなしで接続します。Wi-Fi/LAN と WireGuard クライアントは引き続き確認を求めます。</string>
+    <string name="settings_mcp_trust_loopback_subtitle_off">無効 — ローカルクライアントでもペアリングが必要で、リクエストごとに承認します</string>
+
+    <!-- Terminal reflow, GPU stack, standing policies (#250) -->
+    <string name="settings_reflow_on_keyboard_title">キーボードに合わせて端末をリサイズ</string>
+    <string name="settings_reflow_on_keyboard_subtitle">キーボードが開いたとき、画面を上にスクロールする代わりに端末をその上に収まるようリサイズします。上部にステータス行を表示する全画面アプリに役立ちます。通常のシェルではオフのままにしてください。</string>
+    <string name="settings_tab_titles_follow_session_title">タブ名はセッション名を優先</string>
+    <string name="settings_tab_titles_follow_session_subtitle">tmux/zellij/screen に接続したタブは、プログラムが設定するタイトルではなくセッション名を表示し続けます。</string>
+    <string name="settings_gpu_venus_title">実験的な GPU スタック（venus + zink）</string>
+    <string name="settings_gpu_venus_subtitle">アクセラレーションされたデスクトップで、virgl（GL 2.1）の代わりに venus（GPU への Vulkan）+ zink を使って最新の OpenGL（約 3.2 core）を利用します。ネイティブの Vulkan アプリは表示されますが、OpenGL の描画は現在低速です。ゲストに mesa-vulkan-drivers が必要です。オフ = virgl（デフォルト）。</string>
+    <string name="settings_standing_policies_header">常設ポリシー — これらのツールは確認なしで実行されます</string>
+    <string name="settings_standing_policy_meta">%1$s・最大 %2$d 回/分・%3$s に期限切れ</string>
+    <string name="settings_standing_policy_revoke">取り消し</string>
+
+    <!-- Desktop key placement (#245.2) -->
+    <string name="settings_toolbar_desktop_key">デスクトップキー</string>
+    <string name="settings_desktop_key_left">左</string>
+    <string name="settings_desktop_key_right">右</string>
+    <string name="settings_desktop_key_hidden">非表示</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="settings_prompt_chars_title">シェルプロンプト文字</string>
+    <string name="settings_prompt_chars_subtitle">デフォルト: $ # % &gt; ❯</string>
+    <string name="settings_prompt_chars_description">シェルプロンプトの末尾に付く追加の文字です。プロンプトが再表示されたとき（再接続や tmux の再アタッチ後など）に、キューに入れたコマンドが送信されます。カスタムプロンプトの末尾文字を追加してください — 組み込みの $ # % &gt; ❯ は常に認識されます。</string>
+    <string name="settings_prompt_chars_label">追加のプロンプト文字</string>
+    <string name="settings_terminal_locale_title">ターミナルのロケール</string>
+    <string name="settings_terminal_locale_description">ローカル Linux シェルにエクスポートされる LANG の値です。en_US.UTF-8（デフォルト）と C.UTF-8 は常に機能します。その他のロケール（例: zh_CN.UTF-8）は、プログラムが使う前にゲスト内で locale-gen による生成が必要な場合があります。</string>
+    <string name="settings_terminal_locale_label">LANG</string>
+    <string name="settings_terminal_opacity_title">背景の不透明度</string>
+    <string name="settings_terminal_opacity_value">%1$d%%</string>
+    <string name="settings_terminal_opacity_hint" formatted="false">100% 未満にすると Haven が半透明になり、すべての画面（ターミナル、リスト、設定）の背後にデバイスの壁紙が表示されます。接続ごとの上書きはそのターミナルにのみ適用されます。</string>
+    <string name="settings_section_mcp">AI エージェント (MCP)</string>
+    <string name="settings_tailscale_discovery_title">Tailscale ピア検出</string>
+    <string name="settings_tailscale_discovery_subtitle">スキャン時にローカル API を介して Tailscale ネットワーク上のホストを検索します。オフにすると Haven はピアリストを読まなくなります。Tailscale 自体には影響ありません。</string>
+    <string name="settings_audio_bridge_title">Proot オーディオ（試験的）</string>
+    <string name="settings_audio_bridge_subtitle">ゲスト内の PulseAudio ブリッジ経由で、Linux アプリの音をデバイスのスピーカーから再生します。出力のみ。オンの間は常時ストリーミングされるため、使わないときはオフにしてください。</string>
+    <string name="settings_reverse_tunnel_status_active">Near (SSH): %1$s 経由 — 接続済み</string>
+    <string name="settings_reverse_tunnel_status_inactive">Near (SSH): 未接続 — 有効にするには %1$s を開いてください</string>
+    <string name="settings_remote_clipboard_title">リモートのクリップボードを同期</string>
+    <string name="settings_remote_clipboard_subtitle">リモートデスクトップ (VNC) がデバイスのクリップボードにコピーできるようにします。既定ではオフです。</string>
+    <string name="settings_rdp_progressive_upgrade_title">RDP：プログレッシブアップグレードタイルをデコード（実験的）</string>
+    <string name="settings_rdp_progressive_upgrade_subtitle">RemoteFX-Progressive の精細化タイルをデコードして、一部の Windows RDP デスクトップで見られる黒い四角を埋めます。実験的機能（#418）——画面がかえって悪化する場合はオフにしてください</string>
+    <string name="settings_rdp_avc_title">RDP：H.264/AVC420 デコード</string>
+    <string name="settings_rdp_avc_subtitle">既定でオン。H.264 グラフィックスをデコードし、H.264 のみに対応するサーバー——特に KRDP（KDE の RDP サーバー）——が黒画面ではなく正しく表示されるようにします。デバイス上で MediaCodec によりハードウェアデコードされます。Windows や xrdp のデスクトップが正しく表示されない場合はオフにしてください（#425）</string>
+    <string name="settings_backup_auto_pull_label">自動で取得</string>
+    <string name="settings_backup_auto_pull_hint">定期的に最新のバックアップを取得して復元します。この端末でも接続を編集している場合、保存していないローカルの変更が上書きされることがあります（リモートは最後の書き込みが優先されます）。</string>
+    <string name="settings_backup_auto_pull_dialog_title">自動取得を有効にする</string>
+    <string name="settings_backup_auto_pull_dialog_description">バックアップのパスフレーズを入力してください。バックグラウンドで取得するためこの端末に暗号化して保存されます。自動取得をオフにすると削除されます。</string>
+    <string name="settings_backup_auto_pull_interval_label">取得間隔</string>
+    <string name="settings_backup_auto_pull_interval_15m">15分</string>
+    <string name="settings_backup_auto_pull_interval_1h">1時間</string>
+    <string name="settings_backup_auto_pull_interval_6h">6時間</string>
+    <string name="settings_backup_auto_pull_interval_24h">24時間</string>
+    <string name="settings_backup_remember_password_label">このパスワードを保存する</string>
+    <string name="common_apply">適用</string>
+    <string name="settings_rdp_desktop_size_title">RDP デスクトップのサイズ</string>
+    <string name="settings_rdp_desktop_size_subtitle">%1$d × %2$d — サーバーに合わせてください。この範囲外の更新は破棄されます</string>
+    <string name="settings_rdp_desktop_size_hint">リモート マシンが実際に使用している解像度を設定します。VirtualBox の既定は 2560 × 1600 です。</string>
+    <string name="settings_rdp_desktop_size_width">幅</string>
+    <string name="settings_rdp_desktop_size_height">高さ</string>
+    <string name="settings_native_crash_title">アプリのクラッシュ</string>
+    <string name="settings_native_crash_subtitle">Haven が予期せず終了しました。下のレポートに発生箇所が記録されています。バグ報告に添付してください。</string>
+    <string name="settings_native_crash_subtitle_no_trace">Haven が予期せず終了しました。これらについて Android は詳細なレポートを残しておらず、時刻とシグナルのみが分かります。シグナルだけでも原因を絞り込めるため、バグ報告に添付してください。</string>
+    <string name="settings_native_crash_no_trace">このクラッシュの詳細なレポートは保存されていません。</string>
+    <string name="settings_native_crash_copy">レポートをコピー</string>
+    <string name="settings_native_crash_copied">クラッシュレポートをコピーしました</string>
+    <string name="settings_native_crash_dismiss">閉じる</string>
+    <plurals name="settings_proot_idle_minutes">
+        <item quantity="other">%1$d 分</item>
+    </plurals>
+    <string name="settings_hide_nav_bar_in_terminal_title">ターミナルでアプリのタブバーを非表示</string>
+    <string name="settings_hide_nav_bar_in_terminal_subtitle">ターミナル画面で Haven の下部タブバーを非表示にします。Android のステータスバーとナビゲーションバーは表示されたままです。</string>
+    <string name="settings_credential_keystore_broken_title">認証情報ストレージを利用できません</string>
+    <string name="settings_credential_keystore_broken_subtitle">この端末のキーストアが Haven の認証情報キーを失いました。保存済みのパスワードは読み取れず、新しいパスワードも保存できません。タップして修復してください。</string>
+    <string name="settings_credential_reset_title">認証情報ストレージを修復しますか?</string>
+    <string name="settings_credential_reset_body">新しい認証情報キーを作成し、再びパスワードを保存できるようにします。\n\nHaven に保存済みのパスワード、パスフレーズ、シークレットはすべて入力し直す必要があります。それらは既に読み取れません(保護していたキーが失われたため)。したがってこれは、さらに何かを失うのではなくアプリを復旧する操作です。</string>
+    <string name="settings_credential_reset_confirm">修復</string>
+    <string name="settings_credential_reset_cancel">キャンセル</string>
+    <string name="settings_update_check_title">アップデートを確認</string>
+    <string name="settings_update_check_subtitle">Haven の起動時に新しいリリースを探します（1 時間 1 回まで）。既定ではオフ。</string>
+    <string name="settings_update_check_now_title">今すぐ確認</string>
+    <string name="settings_update_check_now_subtitle">最新のリリースを GitHub に問い合わせます</string>
+    <string name="settings_update_checking">確認中…</string>
+    <string name="settings_update_open_release">バージョン %1$s が利用できます</string>
+    <string name="settings_update_check_available">タップしてリリースページを開く</string>
+    <string name="settings_update_check_up_to_date">最新です（%1$s）</string>
+    <string name="settings_update_check_failed">確認に失敗しました: %1$s</string>
+    <string name="settings_update_check_other_channel">このコピーは GitHub リリースからインストールされていないため、リリースをダウンロードしても上書きインストールできません。Haven を入手した場所から更新してください。</string>
+    <string name="settings_sshkey_keystore_broken_title">SSHキーの保存が利用できません</string>
+    <string name="settings_sshkey_keystore_broken_subtitle">このデバイスのキーストアが Haven の SSH キーを失いました。保存された秘密鍶は読み込めず、新しいものも生成できません。タップして修復します。</string>
+    <string name="settings_sshkey_reset_title">SSHキーの保存を修復しますか?</string>
+    <string name="settings_sshkey_reset_body">これにより新しいキーが作成され、SSHキーを再び生成できるようになります。
+
+Haven にすでに保存されているすべての秘密鍶は、再びインポートまたは生成し直す必要があります。それらはすでに読み取れません — それらを保護していたキーは失われており、通常はアプリを別のソースから再インストールしたためです — したがって、これはこれ以上何かを失うのではなくアプリを回復します。</string>
+    <string name="settings_sshkey_reset_confirm">修復</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="settings_inline_images_title">インライン画像</string>
+    <string name="settings_inline_images_subtitle">プログラムが端末に送る画像（Kitty グラフィック、iTerm2）。</string>
+    <string name="settings_inline_images_off">オフ</string>
+    <string name="settings_inline_images_ask">確認</string>
+    <string name="settings_inline_images_always">常に</string>
+    <string name="settings_ambiwidth_title">曖昧幅文字の処理方式</string>
+    <string name="settings_ambiwidth_subtitle">東アジアの曖昧幅文字（記号、ギリシャ文字など）の描画方法</string>
+    <string name="settings_ambiwidth_mode_narrow">Narrow (1セル)</string>
+    <string name="settings_ambiwidth_mode_narrow_desc">常に1セル（標準Unix / XTerm、デフォルト）</string>
+    <string name="settings_ambiwidth_mode_auto_narrow">Auto + Narrow</string>
+    <string name="settings_ambiwidth_mode_auto_narrow_desc">フォント幅を自動計測、未判定時は1セル</string>
+    <string name="settings_ambiwidth_mode_wide">Wide (2セル)</string>
+    <string name="settings_ambiwidth_mode_wide_desc">常に2セル（従来のCJK曖昧幅）</string>
+    <string name="settings_ambiwidth_mode_auto_wide">Auto + Wide</string>
+    <string name="settings_ambiwidth_mode_auto_wide_desc">フォント幅を自動計測、未判定時は2セル (CJK)</string>
+    <string name="settings_bell_notification_title">ベル通知</string>
+    <string name="settings_bell_notification_subtitle">Haven がバックグラウンドにある間にターミナルのプログラムがベルを鳴らすと、タブ名を記した通知を表示します。ターミナルを見ている間は何も表示されません。</string>
+    <string name="settings_mcp_tools_category_off_count">%1$d 件オフ</string>
+    <string name="settings_mcp_tools_cat_terminal">ターミナル</string>
+    <string name="settings_mcp_tools_cat_connections">接続</string>
+    <string name="settings_mcp_tools_cat_files">ファイル</string>
+    <string name="settings_mcp_tools_cat_desktop">デスクトップ</string>
+    <string name="settings_mcp_tools_cat_guest">Linuxゲスト</string>
+    <string name="settings_mcp_tools_cat_usb">USBとシリアル</string>
+    <string name="settings_mcp_tools_cat_keys">鍵と認証情報</string>
+    <string name="settings_mcp_tools_cat_mail">メール</string>
+    <string name="settings_mcp_tools_cat_rclone">クラウドストレージ</string>
+    <string name="settings_mcp_tools_cat_senses">センサーと位置情報</string>
+    <string name="settings_mcp_tools_cat_agent">エージェントとデバイス制御</string>
+    <string name="settings_mcp_tools_cat_other">その他</string>
+    <string name="settings_sudo_prompt_detection_title">sudo パスワードプロンプトを検出</string>
+    <string name="settings_sudo_prompt_detection_subtitle">[sudo] や doas のプロンプトで生体認証による自動入力を提案します。パスワードはこの端末の Android Keystore 内で暗号化されたまま保持され、使用ごとの生体認証ロック解除が必要であり、AI/MCP ツールには一切公開されません。</string>
+    <string name="settings_root_files_title">Root (/) ファイルブラウザー</string>
+    <string name="settings_root_files_subtitle">ファイル画面に「Root (/)」タブを表示し、開いたときのみ su を要求します。既定ではオフで、MCP ツールからは分離されています。</string>
+</resources>

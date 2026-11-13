@@ -1,0 +1,3 @@
+🖱️ RDP: the pointer now moves on the server the way it moves under your finger. While the remote screen was busy, a drag arrived as a handful of jumps — input was only sent as often as frames were decoded. Sending input no longer waits for decoding, and the picture arrives no more slowly for it. Most noticeable with H.264/AVC420 on. (#477)
+
+🖥️ RDP: a fix for sessions dropping on VirtualBox now also covers reconnection — which is when the desktop resizes or 3D acceleration is switched on. (#422)

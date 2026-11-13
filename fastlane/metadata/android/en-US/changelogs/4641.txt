@@ -1,0 +1,5 @@
+Faster Reticulum file browsing
+
+File operations over the Reticulum mesh now run an SFTP subsystem over a single long-lived link instead of a fresh connection per command. Browsing a folder, downloading, and uploading are quicker, and listings show real modified-times, owners, and permissions.
+
+Falls back automatically to the previous command-based mode for minimal listeners (such as a busybox OpenWRT router) that have no sftp-server. Download and upload were verified to arrive byte-for-byte intact over a real mesh link, including from the file picker.

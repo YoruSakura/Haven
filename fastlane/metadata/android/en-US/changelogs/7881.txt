@@ -1,0 +1,1 @@
+- RDP to a VirtualBox VM no longer starts as a permanent black screen after the guest idles (#422). The idle guest's virtual display was asleep, and only a keyboard event wakes it — touch input is all pointer-class, which the sleeping display ignores. Haven now sends one silent Ctrl tap if nothing has painted 1.5s after connecting; if anything painted, the nudge never fires.

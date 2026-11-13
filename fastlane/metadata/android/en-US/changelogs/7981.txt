@@ -1,0 +1,2 @@
+- Returning to zellij or tmux no longer repaints the whole screen when the keyboard was open (#554 — thanks paour)
+- Dependency updates: Compose BOM 2026.08.00, AppCompat 1.8.0, org.json 20260814, golang.org/x/crypto 0.55.0

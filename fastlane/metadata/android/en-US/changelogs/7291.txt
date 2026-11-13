@@ -1,0 +1,1 @@
+📜 Fixed terminal scrollback not being fully scrollable after pinch-zooming — the scroll limit was frozen at its pre-zoom value. (#478)

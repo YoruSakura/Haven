@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">Adicionar tecla personalizada</string>
+    <string name="toolbar_toggle_keyboard">Toggle keyboard</string>
+    <string name="toolbar_reorder_keys">Reordenar teclas da barra</string>
+    <string name="toolbar_done_reordering">Done reordering</string>
+    <string name="toolbar_vnc_desktop">VNC Desktop</string>
+    <string name="toolbar_settings">Toolbar settings</string>
+    <string name="toolbar_custom_key_dialog_title">Adicionar tecla personalizada</string>
+    <string name="toolbar_custom_key_label">Label</string>
+    <string name="toolbar_custom_key_sequence">Sequence</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">Cancel</string>
+    <string name="toolbar_snippet_add">Add snippet</string>
+    <string name="toolbar_snippet_search">Search snippets…</string>
+    <string name="toolbar_snippet_delete">Delete</string>
+    <string name="toolbar_snippet_dialog_title">Add snippet</string>
+    <string name="toolbar_snippet_label">Label</string>
+    <string name="toolbar_snippet_command">Command</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="toolbar_snippet_title">Trechos</string>
+    <string name="toolbar_snippet_empty">Nenhum trecho ainda. Adicione teclas personalizadas à barra ou toque em + acima.</string>
+    <string name="toolbar_snippet_empty_filtered">Nenhum trecho encontrado.</string>
+    <string name="toolbar_snippet_label_placeholder">ex. Deploy, Reiniciar</string>
+    <string name="toolbar_keyboard_standard_desc">Teclado padrão (voz, sugestões e autocorreção ativos)</string>
+    <string name="toolbar_keyboard_secure_desc">Teclado seguro (sem sugestões, sem autocorreção)</string>
+    <string name="toolbar_attach_desc">Anexar arquivo para enviar ao remoto</string>
+    <string name="toolbar_presets_label">Predefinições</string>
+    <string name="toolbar_custom_key_label_placeholder">ex. ^C, Colar</string>
+    <string name="toolbar_text_input_desc">Abrir entrada de texto flutuante</string>
+    <string name="toolbar_dictate_desc">Ditar: iniciar entrada de voz</string>
+</resources>

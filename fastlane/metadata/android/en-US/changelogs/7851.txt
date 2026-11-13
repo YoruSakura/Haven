@@ -1,0 +1,1 @@
+Hard links inside local Linux environments now survive and behave: link data lives in a store that outlives deleted directories, every name stays readable, and failures report their real error instead of "Operation not permitted" — ending years of intermittent dpkg errors. Nix flakes now work out of the box on a fresh install, no manual workaround.

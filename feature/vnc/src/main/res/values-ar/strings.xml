@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- i18n sweep #210 -->
+    <string name="vnc_placeholder_title">VNC</string>
+    <string name="vnc_placeholder_hint">أضِف اتصالًا في تبويب الاتصالات</string>
+    <string name="vnc_action_close">إغلاق</string>
+    <string name="vnc_action_retry">إعادة المحاولة</string>
+    <string name="vnc_bandwidth_suggestion">اتصال بطيء — التبديل إلى 256 لونًا لأداء مقبول؟</string>
+    <string name="vnc_action_switch">تبديل</string>
+    <string name="vnc_action_dismiss">إغلاق</string>
+    <string name="vnc_cd_disconnect">قطع الاتصال</string>
+    <string name="vnc_cd_toggle_keyboard">تبديل لوحة المفاتيح</string>
+    <string name="vnc_cd_background_to_edge">أيقونة الخلفية على الحافة</string>
+    <string name="vnc_cd_picture_in_picture">صورة داخل صورة</string>
+    <string name="vnc_cd_reset_zoom">إعادة ضبط التكبير</string>
+    <string name="vnc_cd_fullscreen">ملء الشاشة</string>
+    <string name="vnc_cd_session_menu">قائمة الجلسة</string>
+    <string name="vnc_cd_exit_fullscreen">الخروج من ملء الشاشة</string>
+    <string name="vnc_cd_input_mode_trackpad_on">وضع لوحة التتبع مفعّل (اضغط للمس المباشر)</string>
+    <string name="vnc_cd_input_mode_direct">وضع اللمس المباشر (اضغط للوحة التتبع)</string>
+    <string name="vnc_cd_trackpad_sensitivity">حساسية لوحة التتبع</string>
+    <string name="vnc_orientation_landscape_desc">تثبيت أفقي (اضغط للتبديل إلى عمودي)</string>
+    <string name="vnc_orientation_portrait_desc">تثبيت عمودي (اضغط للتبديل إلى تلقائي)</string>
+    <string name="vnc_orientation_auto_desc">دوران تلقائي (اضغط للتبديل إلى أفقي)</string>
+    <!-- Touch gesture help (#250) -->
+    <string name="vnc_cd_gesture_help">إيماءات اللمس</string>
+    <string name="vnc_cd_save_default">حفظ الحجم الحالي كافتراضي لهذا التطبيق</string>
+    <string name="vnc_gesture_help_title">إيماءات اللمس</string>
+    <string name="vnc_gesture_help_two_finger">اسحب بإصبعين للتمرير؛ واقرصهما للتكبير. إصبع واحد هو الفأرة.</string>
+    <string name="vnc_gesture_help_three_finger">اقرص بثلاثة أصابع لتغيير حجم التطبيق مع البقاء في ملء الشاشة.</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="vnc_cd_two_finger_viewport">إصبعان يحرّكان العرض (اضغط لتمرير الشاشة البعيدة)</string>
+    <string name="vnc_cd_two_finger_scroll_on">إصبعان يمرّران الشاشة البعيدة (اضغط لتحريك العرض)</string>
+    <string name="vnc_cd_paste">لصق الحافظة</string>
+    <string name="vnc_compose_open">اكتب نصًا لإرساله</string>
+    <string name="vnc_compose_placeholder">اكتب وتحقق ثم أرسل</string>
+    <string name="vnc_compose_send">إرسال</string>
+    <string name="vnc_compose_press_enter">اضغط Enter بعد الإرسال</string>
+    <string name="vnc_compose_show">إظهار النص</string>
+    <string name="vnc_compose_hide">إخفاء النص</string>
+    <string name="vnc_compose_untypeable">لا يمكن كتابة الأحرف المميزة عبر VNC. استخدم اللصق لإرسالها.</string>
+</resources>

@@ -1,0 +1,46 @@
+name: CI
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  client:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          submodules: false
+      - uses: ./.github/actions/init-submodules-with-retry
+      - uses: ./.github/actions/setup-toolchain
+      - name: Check source tree
+        run: |
+          ./scripts/check-no-committed-binaries.sh
+          if rg 'uses: [^.].+@(v[0-9]|main|master)' .github/workflows .github/actions; then
+            exit 1
+          fi
+      - name: Test retained client modules
+        run: ./gradlew testDebugUnitTest :app:testArm64FullDebugUnitTest -PtargetAbi=arm64 --max-workers=2
+      - name: Build release APK
+        run: ./gradlew :app:assembleArm64FullRelease -PtargetAbi=arm64 --max-workers=2
+      - name: Verify native and release contents
+        run: |
+          ./scripts/check-native-libs.sh arm64
+          ./scripts/check-r8-kept-classes.sh
+          python3 scripts/check-client-apk.py app/build/outputs/apk/arm64Full/release/*.apk --abi arm64-v8a
+      - name: Save build and test reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: client-arm64
+          path: |
+            app/build/outputs/apk/arm64Full/release/*.apk
+            app/build/outputs/mapping/arm64FullRelease/mapping.txt
+            **/build/reports/tests/

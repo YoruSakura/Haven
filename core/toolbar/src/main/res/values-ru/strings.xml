@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- #135 third pass: keyboard toolbar accessibility / dialog labels.
+         The core/toolbar module previously had no res/values at all —
+         every string was hardcoded. -->
+    <string name="toolbar_add_custom_key">Добавить свою клавишу</string>
+    <string name="toolbar_toggle_keyboard">Показать/скрыть клавиатуру</string>
+    <string name="toolbar_reorder_keys">Изменить порядок клавиш панели</string>
+    <string name="toolbar_done_reordering">Перестановка завершена</string>
+    <string name="toolbar_vnc_desktop">Рабочий стол VNC</string>
+    <string name="toolbar_settings">Настройки панели</string>
+    <string name="toolbar_custom_key_dialog_title">Добавить свою клавишу</string>
+    <string name="toolbar_custom_key_label">Метка</string>
+    <string name="toolbar_custom_key_sequence">Последовательность</string>
+    <string name="toolbar_custom_key_add">Add</string>
+    <string name="toolbar_custom_key_cancel">Отмена</string>
+    <string name="toolbar_snippet_add">Добавить сниппет</string>
+    <string name="toolbar_snippet_search">Поиск сниппетов…</string>
+    <string name="toolbar_snippet_delete">Удалить</string>
+    <string name="toolbar_snippet_dialog_title">Добавить сниппет</string>
+    <string name="toolbar_snippet_label">Метка</string>
+    <string name="toolbar_snippet_command">Команда</string>
+
+    <!-- #210 i18n sweep -->
+    <string name="toolbar_snippet_title">Сниппеты</string>
+    <string name="toolbar_snippet_empty">Сниппетов пока нет. Добавьте пользовательские клавиши на панель или нажмите + выше.</string>
+    <string name="toolbar_snippet_empty_filtered">Подходящих сниппетов не найдено.</string>
+    <string name="toolbar_snippet_label_placeholder">напр. Deploy, Restart</string>
+    <string name="toolbar_keyboard_standard_desc">Стандартная клавиатура (голос, подсказки, автокоррекция включены)</string>
+    <string name="toolbar_keyboard_secure_desc">Защищённая клавиатура (без подсказок, без автокоррекции)</string>
+    <string name="toolbar_attach_desc">Прикрепить файл для отправки на удалённый сервер</string>
+    <string name="toolbar_presets_label">Шаблоны</string>
+    <string name="toolbar_custom_key_label_placeholder">напр. ^C, Paste</string>
+    <string name="toolbar_text_input_desc">Открыть плавающее поле ввода</string>
+    <string name="toolbar_dictate_desc">Диктовка: начать голосовой ввод</string>
+</resources>

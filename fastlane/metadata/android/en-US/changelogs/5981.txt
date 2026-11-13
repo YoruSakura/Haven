@@ -1,0 +1,3 @@
+🔒 Connection security review: VNC and RDP now pin the server's TLS certificate on first use (previously any certificate was accepted), silent SSH connects fail closed on unknown host keys, TLS mail requires STARTTLS, and VNC clipboard sync is opt-in.
+
+🔒 Agent (MCP) endpoint hardening: a paired client is identified by a 256-bit secret token issued on approval, un-pairing revokes access immediately, tunnelled clients are never treated as on-device, and the endpoint self-heals after the OS trims the app. Existing clients re-approve once after updating.

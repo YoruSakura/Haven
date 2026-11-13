@@ -1,0 +1,2 @@
+- The mouse works over SPICE on older guests (#549, #543). A guest with only a PS/2 mouse expects relative pointer movement and discards absolute; Haven sent only absolute, so the pointer sat still while the keyboard worked. It now honours the mode the server asks for.
+- A failed port-knock or SPA packet now appears in the connection log with its reason (#557), instead of only in verbose logging. It used to die as a plain timeout with no hint the packet never left.

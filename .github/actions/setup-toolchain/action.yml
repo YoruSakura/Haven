@@ -1,0 +1,54 @@
+name: Set up Haven client toolchain
+description: Install Java, Android NDK, Go and Rust for the remote client.
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+      with:
+        java-version: '21'
+        distribution: temurin
+    - uses: android-actions/setup-android@40fd30fb8d7440372e1316f5d1809ec01dcd3699
+      with:
+        packages: platform-tools
+    - name: Install Android build tools
+      shell: bash
+      run: sdkmanager "platforms;android-36" "platforms;android-37.0" "build-tools;37.0.0" "cmake;3.31.6" "ndk;29.0.14206865"
+    - uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
+      with:
+        go-version: '1.27.3'
+        cache-dependency-path: rclone-android/go/go.sum
+    - name: Cache native tools
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      with:
+        path: |
+          ~/go/bin/gomobile
+          ~/go/bin/gobind
+          ~/.cargo/bin/cargo-ndk
+        key: haven-client-native-${{ runner.os }}-go1.27.3-mobile188f512ec823-ndk3.5.4
+    - name: Install Go binding tools
+      shell: bash
+      run: |
+        if [ ! -x ~/go/bin/gomobile ] || [ ! -x ~/go/bin/gobind ]; then
+          go install golang.org/x/mobile/cmd/gomobile@v0.0.0-20251021151156-188f512ec823
+          go install golang.org/x/mobile/cmd/gobind@v0.0.0-20251021151156-188f512ec823
+        fi
+        echo "$HOME/go/bin" >> "$GITHUB_PATH"
+    - name: Install RDP Rust toolchain
+      shell: bash
+      run: |
+        rustup toolchain install 1.94.1 --profile minimal
+        rustup default 1.94.1
+        rustup target add aarch64-linux-android x86_64-linux-android armv7-linux-androideabi
+        if [ ! -x ~/.cargo/bin/cargo-ndk ]; then
+          cargo install cargo-ndk --locked --version 3.5.4
+        fi
+        echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+        echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/29.0.14206865" >> "$GITHUB_ENV"
+    - name: Cache Gradle
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: haven-client-gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', 'gradle/libs.versions.toml') }}
+        restore-keys: haven-client-gradle-${{ runner.os }}-

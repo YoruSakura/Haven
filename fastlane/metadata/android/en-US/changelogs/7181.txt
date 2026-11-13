@@ -1,0 +1,1 @@
+🖥️ High-resolution RDP desktops (KRDP at 2560x1440, 4K servers) no longer render only the top-left crop — the framebuffer now follows the size the server announces over the graphics channel, and the whole desktop fit-scales into view. (#474, #467)

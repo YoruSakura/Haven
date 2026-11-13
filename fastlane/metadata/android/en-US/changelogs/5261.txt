@@ -1,0 +1,1 @@
+SMB media now works like the other backends: tap to play, stream, play in browser, open with an external app, and the media sheet (convert / trim / extract audio / contact sheet) — all reading over a Range-capable bridge instead of downloading the whole file first. Convert over SFTP streams too. Builds on the v5.59.72 streaming work plus the agent-install reliability fixes.

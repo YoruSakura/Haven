@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">Cancelar</string>
+    <string name="common_save">Guardar</string>
+    <string name="common_done">Listo</string>
+    <string name="common_close">Cerrar</string>
+    <string name="common_ok">Aceptar</string>
+    <string name="common_delete">Eliminar</string>
+    <string name="common_edit">Editar</string>
+    <string name="common_rename">Renombrar</string>
+    <string name="common_create">Crear</string>
+    <string name="common_connect">Conectar</string>
+    <string name="common_disconnect">Desconectar</string>
+    <string name="common_copy">Copiar</string>
+    <string name="common_paste">Pegar</string>
+    <string name="common_label">Etiqueta</string>
+    <string name="common_password">Contraseña</string>
+    <string name="common_port">Puerto</string>
+    <string name="common_host">Host</string>
+    <string name="common_username">Usuario</string>
+    <string name="common_install">Instalar</string>
+    <string name="common_reset">Restablecer</string>
+    <string name="common_allow">Permitir</string>
+    <string name="common_not_now">Ahora no</string>
+    <string name="common_import">Importar</string>
+    <string name="common_add">Agregar</string>
+    <string name="common_download">Descargar</string>
+    <string name="common_unlock">Desbloquear</string>
+
+    <!-- Top-level screen -->
+    <string name="settings_title">Ajustes</string>
+
+    <!-- Security section -->
+    <string name="settings_biometric_title">Bloqueo de pantalla</string>
+    <string name="settings_biometric_subtitle">Requerir autenticación para abrir Haven</string>
+    <string name="settings_lock_timeout_title">Tiempo de bloqueo</string>
+    <string name="settings_prevent_screenshots_title">Evitar capturas de pantalla</string>
+    <string name="settings_prevent_screenshots_subtitle">Bloquear capturas de pantalla y vista previa del selector de apps</string>
+
+    <!-- Logging section -->
+    <string name="settings_exclude_recents_title">Ocultar de apps recientes</string>
+    <string name="settings_exclude_recents_subtitle">Oculta la tarjeta de Haven en recientes; las sesiones siguen activas. Reábrela desde el icono.</string>
+    <string name="settings_connection_logging_title">Registro de conexiones</string>
+    <string name="settings_connection_logging_subtitle">Registrar eventos de conexión (conectar, desconectar, errores). Almacenado localmente, protegido por cifrado del dispositivo</string>
+    <string name="settings_view_connection_log_title">Ver registro de conexiones</string>
+    <string name="settings_view_connection_log_subtitle">Historial y eventos de conexión</string>
+    <string name="settings_verbose_logging_title">Registro detallado de conexiones</string>
+    <string name="settings_verbose_logging_subtitle">Capturar detalles de protocolo para conexiones SSH, Mosh, ET, RDP y SPICE — incluidos los tiempos de fotograma de RDP y los eventos de entrada de SPICE, que son los que necesita un escritorio remoto lento o que no responde. Actívalo antes de conectar. Puede incluir nombres de host y usuarios</string>
+
+    <!-- Terminal section -->
+    <string name="settings_session_persistence_title">Persistencia de sesión</string>
+    <string name="settings_session_persistence_none">Ninguna</string>
+    <string name="settings_font_size_title">Tamaño de fuente del terminal</string>
+    <string name="settings_font_size_subtitle">%1$dsp</string>
+    <string name="settings_horizontal_padding_title">Relleno horizontal</string>
+    <string name="settings_horizontal_padding_subtitle">%1$d dp</string>
+    <string name="settings_color_scheme_title">Esquema de colores del terminal</string>
+    <string name="settings_toolbar_title">Barra de herramientas</string>
+    <string name="settings_toolbar_subtitle">Configurar teclas y diseño de la barra</string>
+    <string name="settings_search_button_title">Botón de búsqueda</string>
+    <string name="settings_search_button_subtitle">Mostrar icono de búsqueda en la barra de pestañas — envía las teclas nativas del gestor de sesiones (tmux/zellij/screen) o Ctrl+R del shell</string>
+    <string name="settings_copy_output_title">Copiar última salida</string>
+    <string name="settings_copy_output_subtitle">Mostrar icono de copia en la barra de pestañas — copia la salida del último comando. Requiere integración del shell (toca para configurar)</string>
+    <string name="settings_mouse_input_title">Entrada de ratón en apps TUI</string>
+    <string name="settings_mouse_input_subtitle">Reenviar toques como clics y pulsación larga como clic derecho cuando apps como htop, mc o vim activan el seguimiento del ratón</string>
+    <string name="settings_right_click_title">Pulsación larga envía clic derecho</string>
+    <string name="settings_right_click_subtitle">Enviar clic derecho al terminal en vez de iniciar selección de texto. Útil para menús contextuales de tmux</string>
+    <string name="settings_standard_keyboard_title">Entrada de voz y autocompletar</string>
+    <string name="settings_standard_keyboard_subtitle">Desactiva los indicadores de teclado seguro (modo contraseña, sin sugerencias). Habilita entrada de voz, escritura por deslizamiento y predicción de palabras — pero el teclado puede aprender las contraseñas escritas</string>
+
+    <!-- Appearance section -->
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_navigation_tabs_title">Pestañas de navegación</string>
+    <string name="settings_navigation_tabs_subtitle">Reordena las pestañas y elige cuáles se muestran</string>
+
+    <!-- Wayland section -->
+    <string name="settings_wayland_shell_title">Shell de escritorio Wayland</string>
+    <string name="settings_proot_idle_title">Detener el invitado Linux inactivo</string>
+    <string name="settings_proot_idle_off">Desactivado — el invitado Linux sigue en ejecución hasta que lo detengas</string>
+    <string name="settings_proot_idle_on">Detiene el invitado %1$d min después de salir de Haven (un servicio del invitado en ejecución lo mantiene activo)</string>
+    <string name="settings_proot_idle_dialog_title">Detener el invitado Linux inactivo</string>
+    <string name="settings_proot_idle_dialog_body">Cuando Haven haya estado en segundo plano este tiempo, detiene las terminales y escritorios del invitado Linux para liberar memoria. Un servicio del invitado en ejecución lo mantiene activo. Un trabajo largo en una terminal en segundo plano también se detendría; déjalo desactivado salvo que quieras liberar recursos por inactividad.</string>
+    <string name="settings_proot_idle_off_label">Desactivado</string>
+    <string name="settings_shizuku_title">Integración Shizuku</string>
+    <string name="settings_shizuku_enabled">Activado — exención automática de batería, socket Wayland compartido</string>
+    <string name="settings_shizuku_available">Shizuku instalado — toca para conceder permiso</string>
+    <string name="settings_shizuku_not_running">Shizuku instalado pero no activo — toca para abrir e iniciar con Depuración inalámbrica</string>
+    <string name="settings_shizuku_not_installed">Instalar Shizuku para exención de batería y acceso Wayland</string>
+
+    <!-- Backup section -->
+    <string name="settings_backup_sync_title">Sincronizar con un remoto</string>
+    <string name="settings_backup_sync_subtitle_set">%1$s : %2$s</string>
+    <string name="settings_backup_sync_subtitle_unset">Enviar/traer la copia cifrada a una conexión SFTP/SMB/rclone</string>
+    <string name="settings_backup_sync_description">Envía o trae la copia de seguridad cifrada a una conexión que ya tengas. El archivo se cifra con AES-256-GCM usando tu contraseña antes de salir del dispositivo; el remoto nunca ve tu configuración en claro.</string>
+    <string name="settings_backup_sync_no_remotes">Aún no hay conexiones SFTP, SMB ni rclone. Añade una primero para que pueda alojar tu copia.</string>
+    <string name="settings_backup_sync_choose_remote">Elige una conexión…</string>
+    <string name="settings_backup_sync_remote_label">Conexión de destino</string>
+    <string name="settings_backup_sync_path_label">Ruta del archivo en el remoto</string>
+    <string name="settings_backup_sync_connect_hint">Conecta primero el destino (ábrelo en la pestaña Archivos) y luego pulsa Enviar o Traer.</string>
+    <string name="settings_backup_sync_push_button">Enviar</string>
+    <string name="settings_backup_sync_pull_button">Traer</string>
+    <string name="settings_backup_auto_sync_label">Enviar automáticamente</string>
+    <string name="settings_backup_auto_sync_hint">Vuelve a enviar la copia cifrada unos minutos después de cambiar los ajustes, más una puesta al día diaria. Requiere guardar tu contraseña de copia (cifrada) en este dispositivo para que los envíos se ejecuten en segundo plano. La descarga automática es una opción aparte, más abajo.</string>
+    <string name="settings_backup_auto_sync_dialog_title">Activar el envío automático</string>
+    <string name="settings_backup_auto_sync_dialog_description">Define la contraseña que cifrará cada respaldo automático. Se guarda cifrada en este dispositivo — al desactivar el envío automático se elimina.</string>
+    <string name="settings_export_backup_title">Exportar respaldo</string>
+    <string name="settings_export_backup_subtitle">Claves, conexiones y ajustes</string>
+    <string name="settings_restore_backup_title">Restaurar respaldo</string>
+    <string name="settings_restore_backup_subtitle">Importar desde un archivo de respaldo</string>
+    <string name="settings_backup_working">Procesando…</string>
+
+    <!-- About section -->
+    <string name="settings_about_title">Acerca de Haven</string>
+    <string name="settings_support_title">Apoyar Haven</string>
+    <string name="settings_support_subtitle">Invita un café al desarrollador</string>
+    <string name="settings_version_unknown">desconocido</string>
+
+    <!-- Wayland shell dialog -->
+    <string name="settings_wayland_dialog_title">Shell de escritorio Wayland</string>
+    <string name="settings_wayland_dialog_description">Comando shell a ejecutar dentro del terminal foot del escritorio Wayland. Instala shells adicionales con apk (ej. apk add bash).</string>
+    <string name="settings_wayland_shell_command_label">Comando shell</string>
+
+    <!-- Lock timeout dialog -->
+    <string name="settings_lock_timeout_dialog_title">Tiempo de bloqueo</string>
+
+    <!-- OSC 133 shell integration dialog -->
+    <string name="settings_osc133_dialog_title">Configuración de integración del shell</string>
+    <string name="settings_osc133_description">Copiar última salida requiere que tu shell emita marcadores OSC 133. Agrega uno de estos fragmentos a la configuración de tu shell:</string>
+    <string name="settings_osc133_bash">Bash</string>
+    <string name="settings_osc133_zsh">Zsh</string>
+    <string name="settings_osc133_copied_bash">Fragmento de bash copiado</string>
+    <string name="settings_osc133_copied_zsh">Fragmento de zsh copiado</string>
+    <string name="settings_osc133_footer">Toca un fragmento para copiarlo. Muchas herramientas (iTerm2, VS Code, WezTerm) incluyen estos marcadores por defecto.</string>
+    <string name="settings_osc133_learn_more">Más información</string>
+
+    <!-- Backup password dialog -->
+    <string name="settings_backup_export_dialog_title">Exportar respaldo</string>
+    <string name="settings_backup_restore_dialog_title">Restaurar respaldo</string>
+    <string name="settings_backup_password_min_length">Al menos 6 caracteres</string>
+    <string name="settings_backup_passwords_mismatch">Las contraseñas no coinciden</string>
+    <string name="settings_backup_export_description">Cifra tu respaldo con una contraseña. Esto protege tus claves SSH y datos de conexión.</string>
+    <string name="settings_backup_restore_description">Ingresa la contraseña usada al crear el respaldo.</string>
+    <string name="settings_backup_password_label">Contraseña</string>
+    <string name="settings_backup_confirm_password_label">Confirmar contraseña</string>
+    <string name="settings_backup_export_button">Exportar</string>
+    <string name="settings_backup_restore_button">Restaurar</string>
+
+    <!-- About dialog -->
+    <string name="settings_about_dialog_title">Acerca de Haven</string>
+    <string name="settings_about_app_name">Haven</string>
+    <string name="settings_about_description">Cliente de código abierto de SSH, VNC, RDP y almacenamiento en la nube para Android</string>
+    <string name="settings_about_version">Versión %1$s (compilación %2$d)</string>
+    <string name="settings_about_android">Android %1$s (API %2$d)</string>
+    <string name="settings_about_libraries_title">Bibliotecas de código abierto</string>
+
+    <!-- Theme dialog -->
+    <string name="settings_theme_dialog_title">Tema</string>
+
+    <!-- Color scheme dialog -->
+    <string name="settings_color_scheme_dialog_title">Esquema de colores del terminal</string>
+
+    <!-- Session manager dialog -->
+    <string name="settings_session_dialog_title">Persistencia de sesión</string>
+    <string name="settings_session_no_scrollback">Sin desplazamiento táctil</string>
+    <string name="settings_session_custom_command_label">Comando personalizado</string>
+    <string name="settings_session_custom_command_hint">Usa {name} para el nombre de sesión. Deja vacío para el predeterminado.</string>
+    <string name="settings_session_save_command">Guardar comando</string>
+
+    <!-- Font size dialog -->
+    <string name="settings_font_size_dialog_title">Tamaño de fuente del terminal</string>
+    <string name="settings_font_size_sample">Texto de ejemplo</string>
+    <string name="settings_font_size_value">%1$dsp</string>
+    <string name="settings_horizontal_padding_dialog_title">Relleno horizontal del terminal</string>
+    <string name="settings_horizontal_padding_sample">Texto de ejemplo</string>
+    <string name="settings_horizontal_padding_value">%1$d dp</string>
+
+    <!-- Toolbar config dialog -->
+    <string name="settings_toolbar_dialog_title">Barra de herramientas</string>
+    <string name="settings_toolbar_assign_hint">Asigna cada tecla a Fila 1, Fila 2 o Desactivado</string>
+    <string name="settings_toolbar_arrow_keys">Disposición de flechas</string>
+    <string name="settings_toolbar_edit_controls">Controles del modo de edición</string>
+    <string name="settings_edit_controls_split">Dividir</string>
+    <string name="settings_edit_controls_left">Izquierda</string>
+    <string name="settings_edit_controls_right">Derecha</string>
+    <string name="settings_toolbar_function_keys">Teclas de función</string>
+    <string name="settings_toolbar_symbols">Símbolos</string>
+    <string name="settings_toolbar_custom_keys">Teclas personalizadas</string>
+    <string name="settings_toolbar_add_custom_key">Agregar tecla personalizada</string>
+    <string name="settings_toolbar_edit_json">Editar JSON</string>
+    <string name="settings_toolbar_row1">F1</string>
+    <string name="settings_toolbar_row2">F2</string>
+    <string name="settings_toolbar_off">No</string>
+    <string name="settings_toolbar_paste_clipboard">Pegar portapapeles</string>
+
+    <!-- Custom key dialog -->
+    <string name="settings_custom_key_edit_title">Editar tecla personalizada</string>
+    <string name="settings_custom_key_add_title">Agregar tecla personalizada</string>
+    <string name="settings_custom_key_presets">Presets</string>
+    <string name="settings_custom_key_label">Etiqueta</string>
+    <string name="settings_custom_key_label_placeholder">ej. ^C, Paste</string>
+    <string name="settings_custom_key_sequence_label">Secuencia</string>
+    <string name="settings_custom_key_sequence_placeholder">ej. \\u0003</string>
+    <string name="settings_custom_key_escape_hint">Usa \\u001b para Escape, \\u0003 para Ctrl+C, \\n para Enter</string>
+
+    <!-- JSON editor dialog -->
+    <string name="settings_json_editor_title">Editar JSON de la barra</string>
+    <string name="settings_json_editor_format_hint">Cadena = ID de tecla integrada, Objeto = tecla personalizada {\"label\": \"…\", \"send\": \"…\"}</string>
+    <string name="settings_json_editor_builtin_ids">IDs integrados: keyboard, esc, tab, shift, ctrl, alt, arrow_left, arrow_up, arrow_down, arrow_right, home, end, pgup, pgdn, sym_pipe, sym_tilde, sym_slash, sym_dash, sym_underscore, sym_equals, sym_plus, sym_backslash, sym_squote, sym_dquote, sym_semicolon, sym_colon, sym_bang, sym_question, sym_at, sym_hash, sym_dollar, sym_percent, sym_caret, sym_amp, sym_star, sym_lparen, sym_rparen, sym_lbracket, sym_rbracket, sym_lbrace, sym_rbrace, sym_lt, sym_gt, sym_backtick</string>
+
+    <!-- Common strings -->
+    <string name="common_support">Soporte</string>
+    <string name="common_github">GitHub</string>
+    <string name="common_simple">Simple</string>
+    <string name="settings_language_title">Idioma</string>
+    <string name="settings_media_extensions_title">Extensiones de archivos multimedia</string>
+    <string name="settings_media_extensions_description">Extensiones de archivo separadas por espacios que se tratarán como medios reproducibles en el explorador de archivos.</string>
+    <string name="settings_media_extensions_label">Extensions</string>
+    <string name="settings_show_desktops_title">Mostrar la tarjeta Escritorios</string>
+    <string name="settings_show_desktops_subtitle">Mostrar el gestor de entornos de escritorio en la pantalla de Conexiones</string>
+    <string name="settings_show_linux_vm_title">Mostrar la tarjeta de VM Linux</string>
+    <string name="settings_show_linux_vm_subtitle">Mostrar la configuración de la VM Linux de Android en la pantalla de Conexiones</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="settings_keep_screen_on_title">Mantener pantalla encendida en el terminal</string>
+    <string name="settings_keep_screen_on_subtitle">La pantalla permanece encendida mientras una pestaña de terminal está abierta. Consume batería; solo conviene activarlo si vas a observar salidas prolongadas.</string>
+
+    <!-- #135 -->
+    <string name="settings_keyboard_mode_title">Keyboard mode</string>
+    <string name="settings_dev_install_title">Dev Install</string>
+    <string name="settings_dev_install_apk_url">APK URL</string>
+    <string name="settings_font_install_title">Instalar fuente desde URL</string>
+    <string name="settings_ime_flags_title">IME flags</string>
+    <!-- #133 phase 2b: SSH host CA pubkey field (en fallback) -->
+    <string name="settings_scrollback_rows_title">Líneas de historial</string>
+    <string name="settings_scrollback_rows_subtitle">%1$,d líneas guardadas por pestaña — se aplica a pestañas nuevas</string>
+    <string name="settings_scrollback_rows_dialog_title">Líneas de historial por pestaña</string>
+    <string name="settings_scrollback_rows_dialog_body">Más historial usa más memoria. Aproximadamente 2 KB por línea con anchos de columna típicos, multiplicado por el número de pestañas abiertas.</string>
+    <string name="settings_scrollback_rows_value">%1$,d líneas</string>
+    <string name="settings_tap_to_position_title">Tocar para mover el cursor en avisos compatibles</string>
+    <string name="settings_tap_to_position_subtitle">Toca dentro de un aviso de shell para mover el cursor a esa columna. Requiere marcadores OSC 133 (starship, fish 3.6+, configuraciones recientes de bash/zsh). Sin efecto en shells que no los emiten</string>
+    <string name="settings_swipe_arrows_title">Deslizar envía flechas</string>
+    <string name="settings_swipe_arrows_subtitle">Los deslizamientos horizontales en la terminal envían ← → (mantén para repetir) en lugar de cambiar de pestaña. La tecla Deslizar de la barra activa el mismo modo</string>
+    <string name="settings_swipe_arrows_exit_hint">Con la barra de pestañas de la aplicación oculta y una sesión abierta, los deslizamientos siguen enviando flechas hasta tocar la tecla Deslizar de la barra. Añade la tecla Deslizar a la barra para tenerla siempre a mano</string>
+    <string name="settings_swipe_arrows_add_key">Añadir tecla Deslizar</string>
+
+    <string name="settings_bandwidth_suggest_subtitle">Detecta un rendimiento inferior a ~1 Mbps tras unos segundos y ofrece reconectar con 256 colores con un toque. Desactivado silencia el aviso.</string>
+    <string name="settings_bandwidth_suggest_title">Sugerir 256 colores en conexiones VNC lentas</string>
+    <string name="settings_section_about">Acerca de</string>
+    <string name="settings_section_advanced">Avanzado</string>
+    <string name="settings_section_appearance">Apariencia</string>
+    <string name="settings_section_backup">Copia de seguridad</string>
+    <string name="settings_section_connections_screen">Pantalla de conexiones</string>
+    <string name="settings_section_desktop">Escritorio (VNC &amp; RDP)</string>
+    <string name="settings_section_diagnostics">Diagnóstico</string>
+    <string name="settings_section_keyboard_input">Teclado y entrada</string>
+    <string name="settings_section_security_privacy">Seguridad y privacidad</string>
+    <string name="settings_section_terminal">Terminal</string>
+    <string name="settings_show_terminal_tab_bar_subtitle">Mostrar pestañas de sesión sobre el terminal</string>
+    <string name="settings_show_terminal_tab_bar_title">Mostrar barra de pestañas del terminal</string>
+    <string name="settings_touchpad_input_direct_subtitle">Toque directo: la posición del dedo es el puntero. Actívalo para una entrada tipo trackpad.</string>
+    <string name="settings_touchpad_input_title">Entrada de panel táctil</string>
+    <string name="settings_touchpad_input_touchpad_subtitle">Arrastrar mueve el cursor remoto; tocar hace clic en el cursor. La vista sigue al cursor al ampliar.</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="settings_color_scheme_auto_switch_title">Cambio automático con el tema del sistema</string>
+    <string name="settings_color_scheme_auto_switch_subtitle">Usar esquemas de colores distintos en modo claro y oscuro</string>
+    <string name="settings_color_scheme_light_title">Esquema de colores del terminal (claro)</string>
+    <string name="settings_color_scheme_dark_title">Esquema de colores del terminal (oscuro)</string>
+    <string name="settings_color_scheme_light_dialog_title">Esquema de colores del terminal — claro</string>
+    <string name="settings_color_scheme_dark_dialog_title">Esquema de colores del terminal — oscuro</string>
+    <string name="settings_color_scheme_apply_palette_title">Aplicar la paleta ANSI del esquema</string>
+    <string name="settings_color_scheme_apply_palette_subtitle">Recolorea los 16 colores ANSI para que coincidan con el esquema. Desactivado mantiene los colores estándar, para que las apps de pantalla completa como mutt se vean como se espera.</string>
+    <string name="settings_toolbar_min_key_width">Anchura mínima de tecla: %1$d dp</string>
+    <string name="settings_toolbar_key_scale">Escala de teclas: %1$d%%</string>
+    <string name="settings_toolbar_uniform_grid">Cuadrícula uniforme de teclas</string>
+    <string name="settings_toolbar_uniform_grid_desc">Cada tecla ocupa una celda de igual ancho, al estilo Termux; las etiquetas largas se ajustan. Sin desplazamiento lateral.</string>
+    <string name="settings_terminal_font_title">Fuente del terminal</string>
+    <string name="settings_terminal_font_default_label">Hack Nerd Font Mono (predeterminada)</string>
+    <string name="settings_terminal_font_custom_fmt">Personalizada: %1$s</string>
+    <string name="settings_terminal_font_subtitle_fmt">%1$s — toca para elegir una TTF/OTF (las Nerd Fonts funcionan)</string>
+    <string name="settings_recommended_fonts_title">Fuentes recomendadas</string>
+    <string name="settings_recommended_fonts_subtitle">Instalación con un toque: Source Code Pro, JetBrains Mono, Hack, Inconsolata</string>
+    <string name="settings_font_from_url_title">Instalar fuente desde URL…</string>
+    <string name="settings_font_from_url_subtitle">Descarga un .ttf/.otf, o un .zip con ellos (equivalente a la herramienta set_terminal_font_from_url del agente)</string>
+    <string name="settings_reset_font_title">Restablecer fuente del terminal</string>
+    <string name="settings_reset_font_subtitle">Volver a la Hack Nerd Font Mono incluida</string>
+    <string name="settings_terminal_font_reset_toast">Fuente del terminal restablecida</string>
+    <string name="settings_terminal_font_set_toast">Fuente del terminal establecida a %1$s</string>
+    <string name="settings_terminal_font_decode_failed_toast">No se pudo cargar esa fuente — Android no pudo decodificarla como tipografía</string>
+    <string name="settings_font_installed_toast">Instalada (%1$d KiB)</string>
+    <string name="settings_font_installing_toast">Instalando %1$s…</string>
+    <string name="settings_font_named_installed_toast">%1$s instalada (%2$d KiB)</string>
+    <string name="settings_language_system_default">Predeterminado del sistema</string>
+    <string name="settings_keyboard_mode_subtitle_raw">Raw — solo teclado físico</string>
+    <string name="settings_keyboard_mode_subtitle_standard">Estándar — funciones completas de Gboard</string>
+    <string name="settings_keyboard_mode_subtitle_custom">Personalizado — indicadores EditorInfo elegidos por el usuario</string>
+    <string name="settings_keyboard_mode_subtitle_secure">Seguro — predeterminado, suprime autocorrección</string>
+    <string name="settings_keyboard_mode_secure_label">Seguro (predeterminado)</string>
+    <string name="settings_keyboard_mode_secure_desc">Teclado de software real con indicadores de privacidad: micrófono de Gboard, autocorrección, escritura por deslizamiento y asistencia de escritura suprimidos. Ideal para escribir contraseñas; funciona también con teclados Bluetooth.</string>
+    <string name="settings_keyboard_mode_standard_label">Estándar</string>
+    <string name="settings_keyboard_mode_standard_desc">Funciones completas de Gboard — entrada de voz, escritura por deslizamiento, autocorrección, predicciones. Elige esto si el teclado de software no funciona en modo Seguro o si quieres autocorrección.</string>
+    <string name="settings_keyboard_mode_raw_label">Raw — solo Bluetooth/USB</string>
+    <string name="settings_keyboard_mode_raw_desc">Sin teclado de software. Solo las teclas físicas (Bluetooth o USB) llegan al terminal. Mayor privacidad; el teclado en pantalla no aparece al tocar el terminal.</string>
+    <string name="settings_keyboard_mode_custom_label">Personalizado — elige tus propios indicadores</string>
+    <string name="settings_keyboard_mode_custom_desc">Avanzado. Elige qué bits de EditorInfo establece el terminal para combinar según las particularidades de tu IME (p. ej. entrada de voz en Gboard sin autocorrección). Configúralo en Ajustes → \"Indicadores IME\" una vez seleccionado.</string>
+    <string name="settings_ime_flags_subtitle">Elige qué bits de EditorInfo establece el terminal</string>
+    <string name="settings_ctrl_shift_v_title">Ctrl+Shift+V pega</string>
+    <string name="settings_ctrl_shift_v_subtitle">El teclado físico Ctrl+Shift+V pega desde el portapapeles de Android. Desactivado reenvía las teclas al shell remoto.</string>
+    <string name="settings_auto_show_keyboard_title">Mostrar el teclado al abrir un terminal</string>
+    <string name="settings_auto_show_keyboard_subtitle">El teclado virtual aparece automáticamente al abrir o cambiar a una sesión de terminal. Desactívalo para mantenerlo oculto en sesiones de solo lectura; la tecla de teclado de la barra de herramientas y un doble toque lo siguen mostrando</string>
+
+    <!-- Navigation Tabs dialog -->
+
+    <string name="settings_nav_tab_visibility_auto_title">Auto</string>
+    <string name="settings_nav_tab_visibility_show_title">Mostrar</string>
+    <string name="settings_nav_tab_visibility_hide_title">Ocultar</string>
+    <string name="settings_nav_tab_visibility_always_hint">Siempre visible</string>
+
+    <string name="settings_usb_guest_title">Exponer dispositivos USB al invitado Linux</string>
+    <string name="settings_usb_guest_subtitle">Permite que los dispositivos USB conectados lleguen a las apps del invitado mediante el shim haven-usb. Cada conexión sigue solicitando consentimiento.</string>
+    <string name="settings_gps_guest_title">Exponer el GPS al invitado Linux</string>
+    <string name="settings_gps_guest_subtitle">Transmite la posición GPS del teléfono al invitado como dispositivo NMEA (haven-gps). Una vez activado, cualquier proceso del invitado puede leer la posición. Cada conexión sigue solicitando consentimiento.</string>
+    <string name="settings_proot_install_log_title">Ver registro de instalación de PRoot</string>
+    <string name="settings_proot_install_log_subtitle">Eventos por fase de las instalaciones de distribuciones Linux (issue #162)</string>
+    <string name="settings_logcat_capture_title">Captura de Logcat</string>
+    <string name="settings_logcat_capture_subtitle_on">Grabando en /sdcard/Download/haven-logcat.txt</string>
+    <string name="settings_logcat_capture_subtitle_off">Capturar logcat para depuración remota</string>
+    <string name="settings_logcat_saved_toast">Logcat guardado</string>
+    <string name="settings_logcat_started_toast">Captura de logcat iniciada</string>
+    <string name="settings_logcat_start_failed_toast">Error al iniciar la captura</string>
+    <string name="settings_agent_endpoint_title">Endpoint del agente (MCP)</string>
+    <string name="settings_agent_endpoint_subtitle_on">Activado — servidor MCP local en loopback. Las herramientas de escritura solicitan consentimiento.</string>
+    <string name="settings_agent_endpoint_subtitle_off">Desactivado — activa para que los agentes IA locales lean el estado y (con consentimiento) actúen sobre él</string>
+    <string name="settings_agent_file_read_title">Permitir a los agentes leer contenido de archivos</string>
+    <string name="settings_agent_file_read_subtitle_on">Activado — `serve_file` devuelve una URL de descarga de un solo uso tras consentimiento por llamada</string>
+    <string name="settings_agent_file_read_subtitle_off">Desactivado — las solicitudes de `serve_file` fallan inmediatamente, sin aviso</string>
+    <string name="settings_agent_terminal_input_title">Permitir a los agentes poner en cola entrada de terminal</string>
+    <string name="settings_agent_terminal_input_subtitle_on">Activado — `queue_terminal_input` monitoriza la salida de la sesión SSH y escribe el texto en cola en el siguiente prompt (consentimiento por llamada)</string>
+    <string name="settings_agent_terminal_input_subtitle_off">Desactivado — las solicitudes de `queue_terminal_input` fallan inmediatamente, sin aviso</string>
+    <string name="settings_reverse_tunnel_title">Conexión MCP siempre activa</string>
+    <string name="settings_reverse_tunnel_subtitle_set">Tunelizado a \"%1$s\" — persiste ante cambios de WiFi y reinicios de la app</string>
+    <string name="settings_reverse_tunnel_subtitle_unset">No configurado — endpoint solo accesible en el dispositivo</string>
+    <string name="settings_reverse_tunnel_none">Ninguno (solo en el dispositivo)</string>
+    <string name="settings_mcp_wireguard_title">Exponer en el túnel WireGuard</string>
+    <string name="settings_mcp_wireguard_subtitle_on">Activado — también accesible en &lt;wg-ip&gt;:8730 en el túnel WireGuard activo</string>
+    <string name="settings_mcp_wireguard_subtitle_off">Desactivado — activa para alcanzar el endpoint por un túnel WireGuard activo</string>
+    <string name="settings_mcp_lan_title">Exponer en Wi-Fi/LAN</string>
+    <string name="settings_mcp_lan_subtitle_on">Activado — también accesible en &lt;device-lan-ip&gt;:8730 en la red local</string>
+    <string name="settings_mcp_lan_subtitle_off">Desactivado — activa para alcanzar directamente desde un dispositivo en el mismo Wi-Fi/LAN</string>
+    <string name="settings_mcp_copy_url_title">Copiar URL del endpoint del agente</string>
+    <string name="settings_mcp_url_copied_toast">Endpoint copiado</string>
+    <string name="settings_mcp_copy_config_title">Copiar configuración del cliente MCP</string>
+    <string name="settings_mcp_copy_config_subtitle">Fragmento JSON estándar para pegar en cualquier cliente MCP</string>
+    <string name="settings_mcp_config_copied_toast">Configuración copiada</string>
+    <string name="settings_mcp_proot_title">También disponible en PRoot</string>
+    <string name="settings_agent_activity_title">Ver actividad del agente</string>
+    <string name="settings_agent_activity_subtitle">Cada llamada MCP registrada con argumentos redactados</string>
+    <string name="settings_agent_confirm_destructive_title">Confirmar acciones destructivas del agente</string>
+    <string name="settings_agent_confirm_destructive_subtitle">Solicitar confirmación antes de cualquier llamada del agente que escriba, elimine, suba o desconecte. Las llamadas de solo lectura nunca preguntan.</string>
+    <string name="settings_agent_forget_allows_title">Olvidar permisos recordados</string>
+    <string name="settings_agent_forget_allows_subtitle">Volver a preguntar por cada herramienta que recibió aprobación de una vez por sesión.</string>
+    <string name="settings_agent_allows_cleared_toast">Permisos recordados borrados</string>
+    <string name="settings_font_from_url_body">Pega un enlace directo a un archivo de fuente TTF u OTF. Las Nerd Fonts habituales tienen TTFs sin procesar en GitHub en github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/&lt;Name&gt;/Regular/&lt;Name&gt;NerdFont-Regular.ttf — copia esa URL aquí.</string>
+    <string name="settings_font_from_url_placeholder">https://…/font.ttf</string>
+    <string name="settings_recommended_fonts_dialog_body">Toca para descargar y aplicar una fuente monoespaciada popular para programar.</string>
+    <string name="settings_ime_flags_dialog_body">Cada interruptor controla un bit de EditorInfo. Los distintos IMEs respetan combinaciones diferentes; ajusta hasta que tu terminal escriba literalmente pero siga permitiendo las funciones del IME que necesitas.</string>
+    <string name="settings_cd_back">Atrás</string>
+    <string name="settings_filter_all">Todo</string>
+    <string name="settings_action_clear">Borrar</string>
+    <string name="settings_cannot_be_undone">Esta acción no se puede deshacer.</string>
+    <string name="settings_cd_collapse">Contraer</string>
+    <string name="settings_cd_expand">Expandir</string>
+    <string name="settings_cd_failed">Error</string>
+    <string name="settings_audit_log_title">Registro de conexiones</string>
+    <string name="settings_audit_log_cd_clear">Borrar registros</string>
+    <string name="settings_audit_log_cd_toggle_details">Mostrar/ocultar detalles</string>
+    <string name="settings_audit_log_cd_copy">Copiar registro</string>
+    <string name="settings_audit_log_cd_share">Compartir registro</string>
+    <string name="settings_audit_log_empty">No hay eventos de conexión registrados</string>
+    <string name="settings_audit_log_clear_dialog_title">¿Borrar todos los registros?</string>
+    <string name="settings_audit_log_no_verbose">No hay registro detallado para esta entrada</string>
+    <string name="settings_audit_log_share_chooser">Compartir registro</string>
+    <string name="settings_audit_log_status_sync">Sync</string>
+    <string name="settings_audit_log_status_sync_failed">Sync fallido</string>
+    <string name="settings_agent_activity_screen_title">Actividad del agente</string>
+    <string name="settings_agent_activity_cd_clear">Borrar historial</string>
+    <string name="settings_agent_activity_empty">Aún no hay actividad del agente.\n\nCuando un cliente MCP llame a una herramienta, la llamada aparecerá aquí con los argumentos redactados y el resultado resumido.</string>
+    <string name="settings_agent_activity_clear_dialog_title">¿Borrar actividad del agente?</string>
+    <string name="settings_agent_activity_clear_dialog_text">Se eliminarán de este dispositivo todas las llamadas MCP registradas. Esta acción no se puede deshacer.</string>
+    <string name="settings_agent_activity_unknown_client">cliente desconocido</string>
+    <string name="settings_agent_activity_args_redacted">args (redactados)</string>
+    <string name="settings_proot_install_log_screen_title">Registro de instalación de PRoot</string>
+    <string name="settings_proot_install_log_cd_clear">Borrar registro</string>
+    <string name="settings_proot_install_log_empty">Aún no hay eventos de instalación. Instala una distribución en Conexiones → Escritorios para rellenar este registro.</string>
+    <string name="settings_proot_install_log_clear_dialog_title">¿Borrar registro de instalación?</string>
+    <string name="settings_proot_install_log_clear_dialog_text">Se eliminarán todos los eventos de instalación registrados.</string>
+    <string name="settings_ime_flag_no_suggestions_title">Ocultar banda de sugerencias</string>
+    <string name="settings_ime_flag_no_suggestions_detail">TYPE_TEXT_FLAG_NO_SUGGESTIONS — respetado universalmente</string>
+    <string name="settings_ime_flag_visible_password_title">Suprimir autocorrección / mayúsculas auto / espaciado auto</string>
+    <string name="settings_ime_flag_visible_password_detail">TYPE_TEXT_VARIATION_VISIBLE_PASSWORD — indicación más fuerte; Gboard la respeta. Mutuamente exclusivo con el editor completo en la mayoría de IMEs (sin deslizamiento / voz).</string>
+    <string name="settings_ime_flag_auto_correct_title">Activar protocolo de autocorrección</string>
+    <string name="settings_ime_flag_auto_correct_detail">TYPE_TEXT_FLAG_AUTO_CORRECT — requerido por la barrera commit-text de Samsung Honeyboard (#110); activa explícitamente la autocorrección en Gboard.</string>
+    <string name="settings_ime_flag_full_editor_title">Voz y deslizamiento (editor completo)</string>
+    <string name="settings_ime_flag_full_editor_detail">Proporciona al IME un Editable real. Necesario para entrada de voz, escritura por deslizamiento y composición CJK. Conflicto con el indicador de supresión de autocorrección anterior.</string>
+    <string name="settings_ime_flag_no_extract_ui_title">Suprimir IME en pantalla completa</string>
+    <string name="settings_ime_flag_no_extract_ui_detail">IME_FLAG_NO_EXTRACT_UI — evita que la interfaz de IME en pantalla completa aparezca en horizontal.</string>
+    <string name="settings_ime_flag_no_learning_title">Bloquear aprendizaje del IME</string>
+    <string name="settings_ime_flag_no_learning_detail">IME_FLAG_NO_PERSONALIZED_LEARNING — privacidad: el banco de palabras del IME ignora el texto escrito. Lo suficientemente fuerte en Gboard para ocultar también el micrófono.</string>
+    <string name="settings_mcp_tools_title">Herramientas MCP</string>
+    <string name="settings_mcp_tools_subtitle">Desactiva herramientas individuales del agente para reducir lo que ven</string>
+    <string name="settings_mcp_tools_screen_title">Herramientas MCP</string>
+    <string name="settings_mcp_tools_empty">La lista de herramientas aparece cuando el endpoint del agente se ha iniciado.</string>
+    <string name="settings_mcp_tools_intro">Las herramientas desactivadas salen por completo de la lista del agente: los modelos pequeños ven menos y cada llamada cuesta menos tokens. El interruptor del endpoint, el emparejamiento y los permisos siguen aplicando.</string>
+    <string name="settings_mcp_tools_consent_every_call">Pide en cada llamada</string>
+    <string name="settings_mcp_tools_consent_once">Pide una vez por sesión</string>
+    <string name="settings_mcp_tools_consent_never">Sin solicitud por llamada</string>
+    <string name="settings_paired_clients_title">Clientes MCP emparejados</string>
+    <string name="settings_paired_clients_subtitle">Revisa los clientes emparejados, omite las solicitudes por cliente o desempareja</string>
+    <string name="settings_paired_clients_screen_title">Clientes MCP emparejados</string>
+    <string name="settings_paired_clients_empty">Aún no hay clientes MCP emparejados. Un cliente aparece aquí después de que apruebes su solicitud de conexión.</string>
+    <string name="settings_paired_clients_bypass_label">Omitir solicitudes de aprobación</string>
+    <string name="settings_paired_clients_bypass_on">Aprueba automáticamente cada llamada de este cliente, incluidas las destructivas.</string>
+    <string name="settings_paired_clients_bypass_off">Cada llamada destructiva sigue pidiendo consentimiento (predeterminado).</string>
+    <string name="settings_paired_clients_cd_unpair">Desemparejar cliente</string>
+    <string name="settings_paired_clients_unpair_title">¿Desemparejar \'%1$s\'?</string>
+    <string name="settings_paired_clients_unpair_message">Tendrá que volver a aprobarse la próxima vez que se conecte, y se revoca cualquier aprobación automática.</string>
+    <string name="settings_paired_clients_unpair_confirm">Desemparejar</string>
+    <string name="settings_paired_clients_unpaired_toast">\'%1$s\' desemparejado</string>
+
+    <!-- MCP WireGuard collision + trust loopback -->
+    <string name="settings_mcp_wireguard_collision">Otra VPN (%1$s) está usando %2$s — la misma dirección a la que se enlaza este endpoint, así que queda eclipsado e inaccesible desde los peers. Detén esa VPN, o apunta tu cliente MCP al endpoint de loopback (127.0.0.1).</string>
+    <string name="settings_mcp_trust_loopback_title">Confiar en clientes locales</string>
+    <string name="settings_mcp_trust_loopback_subtitle_on">Activado — los clientes locales (127.0.0.1) se conectan sin emparejamiento ni avisos de aprobación. Los clientes de Wi-Fi/LAN y WireGuard siguen pidiendo aprobación.</string>
+    <string name="settings_mcp_trust_loopback_subtitle_off">Desactivado — incluso los clientes locales deben emparejarse y aprobar cada solicitud</string>
+
+    <!-- Terminal reflow, GPU stack, standing policies (#250) -->
+    <string name="settings_reflow_on_keyboard_title">Ajustar el terminal al teclado</string>
+    <string name="settings_reflow_on_keyboard_subtitle">Cuando se abre el teclado, ajusta el tamaño del terminal para que quepa encima en lugar de desplazar la vista hacia arriba. Ayuda a las apps de pantalla completa que muestran una línea de estado arriba; déjalo desactivado para shells normales.</string>
+    <string name="settings_tab_titles_follow_session_title">Preferir nombres de sesión en las pestañas</string>
+    <string name="settings_tab_titles_follow_session_subtitle">Las pestañas conectadas a tmux/zellij/screen mantienen el nombre de la sesión en lugar de los títulos que establecen los programas en ejecución.</string>
+    <string name="settings_gpu_venus_title">Pila de GPU experimental (venus + zink)</string>
+    <string name="settings_gpu_venus_subtitle">Usa venus (Vulkan hacia la GPU) + zink para OpenGL moderno (~3.2 core) en escritorios acelerados, en lugar de virgl (GL 2.1). Las apps Vulkan nativas se muestran; la presentación de OpenGL es lenta por ahora. Requiere mesa-vulkan-drivers instalado en el guest. Desactivado = virgl predeterminado.</string>
+    <string name="settings_standing_policies_header">Políticas permanentes — estas herramientas se ejecutan sin preguntar</string>
+    <string name="settings_standing_policy_meta">%1$s · hasta %2$d llamadas/min · caduca %3$s</string>
+    <string name="settings_standing_policy_revoke">Revocar</string>
+
+    <!-- Desktop key placement (#245.2) -->
+    <string name="settings_toolbar_desktop_key">Tecla de escritorio</string>
+    <string name="settings_desktop_key_left">Izquierda</string>
+    <string name="settings_desktop_key_right">Derecha</string>
+    <string name="settings_desktop_key_hidden">Oculta</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="settings_prompt_chars_title">Caracteres del prompt del shell</string>
+    <string name="settings_prompt_chars_subtitle">Predeterminado: $ # % &gt; ❯</string>
+    <string name="settings_prompt_chars_description">Caracteres adicionales con los que termina tu prompt del shell, para que un comando en cola se envíe en cuanto el prompt reaparezca (p. ej. tras reconectar o volver a adjuntar tmux). Añade el o los caracteres finales de tu prompt personalizado — los integrados $ # % &gt; ❯ se reconocen siempre.</string>
+    <string name="settings_prompt_chars_label">Caracteres de prompt adicionales</string>
+    <string name="settings_terminal_locale_title">Configuración regional del terminal</string>
+    <string name="settings_terminal_locale_description">El valor LANG exportado al shell Linux local. en_US.UTF-8 (predeterminado) y C.UTF-8 funcionan siempre; otras locales (p. ej. zh_CN.UTF-8) pueden requerir generarse en el invitado con locale-gen antes de que los programas las usen.</string>
+    <string name="settings_terminal_locale_label">LANG</string>
+    <string name="settings_terminal_opacity_title">Opacidad del fondo</string>
+    <string name="settings_terminal_opacity_value">%1$d%%</string>
+    <string name="settings_terminal_opacity_hint" formatted="false">Por debajo del 100%, Haven se vuelve translúcido y muestra tu fondo de pantalla detrás de cada pantalla (terminal, listas, ajustes). Un ajuste por conexión solo se aplica a ese terminal.</string>
+    <string name="settings_section_mcp">Agente de IA (MCP)</string>
+    <string name="settings_tailscale_discovery_title">Detección de pares de Tailscale</string>
+    <string name="settings_tailscale_discovery_subtitle">Buscar hosts de tu red Tailscale a través de su API local al escanear. Desactívalo para evitar que Haven lea la lista de pares; Tailscale no se ve afectado.</string>
+    <string name="settings_audio_bridge_title">Audio de proot (experimental)</string>
+    <string name="settings_audio_bridge_subtitle">Reproduce el sonido de las apps de Linux por el altavoz del dispositivo mediante un puente PulseAudio en el invitado. Solo salida. Transmite continuamente mientras está activado — desactívalo cuando no lo uses.</string>
+    <string name="settings_reverse_tunnel_status_active">Near (SSH): a través de %1$s — conectado</string>
+    <string name="settings_reverse_tunnel_status_inactive">Near (SSH): no conectado — abre %1$s para activarlo</string>
+    <string name="settings_remote_clipboard_title">Sincronizar portapapeles remoto</string>
+    <string name="settings_remote_clipboard_subtitle">Permite que un escritorio remoto (VNC) copie al portapapeles del dispositivo. Desactivado por defecto.</string>
+    <string name="settings_rdp_progressive_upgrade_title">RDP: decodificar mosaicos de mejora progresiva (experimental)</string>
+    <string name="settings_rdp_progressive_upgrade_subtitle">Rellena los cuadros negros que aparecen en algunos escritorios RDP de Windows decodificando los mosaicos de refinamiento RemoteFX-Progressive. Experimental (#418): si la imagen se ve peor, desactiva esto</string>
+    <string name="settings_rdp_avc_title">RDP: decodificación H.264/AVC420</string>
+    <string name="settings_rdp_avc_subtitle">Activado de forma predeterminada. Decodifica gráficos H.264 para que los servidores que solo hablan H.264 —en especial KRDP (el servidor RDP de KDE)— se muestren en lugar de una pantalla negra; decodificación por hardware en el dispositivo mediante MediaCodec. Desactívalo si un escritorio de Windows o xrdp se muestra mal (#425)</string>
+    <string name="settings_backup_auto_pull_label">Descargar automáticamente</string>
+    <string name="settings_backup_auto_pull_hint">Descarga periódicamente la copia más reciente y la restaura. Si además editas conexiones en este dispositivo, los cambios locales sin guardar pueden sobrescribirse (en el remoto prevalece la última escritura).</string>
+    <string name="settings_backup_auto_pull_dialog_title">Activar descarga automática</string>
+    <string name="settings_backup_auto_pull_dialog_description">Introduce la contraseña de la copia. Se guarda cifrada en este dispositivo para descargar copias en segundo plano; al desactivar la descarga automática se elimina.</string>
+    <string name="settings_backup_auto_pull_interval_label">Intervalo de descarga</string>
+    <string name="settings_backup_auto_pull_interval_15m">15 minutos</string>
+    <string name="settings_backup_auto_pull_interval_1h">1 hora</string>
+    <string name="settings_backup_auto_pull_interval_6h">6 horas</string>
+    <string name="settings_backup_auto_pull_interval_24h">24 horas</string>
+    <string name="settings_backup_remember_password_label">Recordar esta contraseña</string>
+    <string name="common_apply">Aplicar</string>
+    <string name="settings_rdp_desktop_size_title">Tamaño del escritorio RDP</string>
+    <string name="settings_rdp_desktop_size_subtitle">%1$d × %2$d — haz que coincida con tu servidor, o sus actualizaciones fuera de esta área se descartan</string>
+    <string name="settings_rdp_desktop_size_hint">Ajusta esto a la resolución que usa realmente la máquina remota. VirtualBox usa 2560 × 1600 por defecto.</string>
+    <string name="settings_rdp_desktop_size_width">Ancho</string>
+    <string name="settings_rdp_desktop_size_height">Alto</string>
+    <string name="settings_native_crash_title">Fallos de la app</string>
+    <string name="settings_native_crash_subtitle">Haven se cerró inesperadamente. El informe siguiente indica dónde: adjúntalo a un informe de error.</string>
+    <string name="settings_native_crash_subtitle_no_trace">Haven se cerró inesperadamente. Android no guardó un informe detallado de estos, así que solo se conocen la hora y la señal: adjúntalos igualmente a un informe de error, ya que la señal acota la causa.</string>
+    <string name="settings_native_crash_no_trace">No se guardó un informe detallado de este fallo.</string>
+    <string name="settings_native_crash_copy">Copiar informe</string>
+    <string name="settings_native_crash_copied">Informe de fallo copiado</string>
+    <string name="settings_native_crash_dismiss">Descartar</string>
+    <plurals name="settings_proot_idle_minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minutos</item>
+    </plurals>
+    <string name="settings_hide_nav_bar_in_terminal_title">Ocultar la barra de pestañas de la app en el terminal</string>
+    <string name="settings_hide_nav_bar_in_terminal_subtitle">Oculta la barra de pestañas inferior de Haven en la pantalla del terminal. Las barras de estado y navegación de Android permanecen visibles.</string>
+    <string name="settings_credential_keystore_broken_title">Almacenamiento de credenciales no disponible</string>
+    <string name="settings_credential_keystore_broken_subtitle">El almacén de claves de este dispositivo perdió la clave de credenciales de Haven. Las contraseñas guardadas no se pueden leer ni se pueden guardar nuevas. Toca para reparar.</string>
+    <string name="settings_credential_reset_title">¿Reparar el almacenamiento de credenciales?</string>
+    <string name="settings_credential_reset_body">Esto crea una nueva clave de credenciales para poder guardar contraseñas de nuevo.\n\nHabrá que volver a introducir todas las contraseñas, frases de contraseña y secretos ya guardados en Haven. Ya son ilegibles — la clave que los protegía se perdió — así que esto recupera la aplicación en lugar de perder algo más.</string>
+    <string name="settings_credential_reset_confirm">Reparar</string>
+    <string name="settings_credential_reset_cancel">Cancelar</string>
+    <string name="settings_update_check_title">Buscar actualizaciones</string>
+    <string name="settings_update_check_subtitle">Busca una versión más reciente al iniciar Haven, como máximo una vez por hora. Desactivado por defecto.</string>
+    <string name="settings_update_check_now_title">Buscar ahora</string>
+    <string name="settings_update_check_now_subtitle">Consultar la última versión en GitHub</string>
+    <string name="settings_update_checking">Comprobando…</string>
+    <string name="settings_update_open_release">La versión %1$s está disponible</string>
+    <string name="settings_update_check_available">Toca para abrir la página de la versión</string>
+    <string name="settings_update_check_up_to_date">Actualizado a %1$s</string>
+    <string name="settings_update_check_failed">Error al comprobar: %1$s</string>
+    <string name="settings_update_check_other_channel">Esta copia no se instaló desde una versión de GitHub, así que una descarga de GitHub no puede reemplazarla. Actualiza desde donde instalaste Haven.</string>
+    <string name="settings_sshkey_keystore_broken_title">Almacenamiento de claves SSH no disponible</string>
+    <string name="settings_sshkey_keystore_broken_subtitle">El llavero de este dispositivo perdió la clave SSH de Haven. Las claves privadas almacenadas no se pueden leer y no se pueden generar nuevas. Toque para reparar.</string>
+    <string name="settings_sshkey_reset_title">¿Reparar el almacenamiento de claves SSH?</string>
+    <string name="settings_sshkey_reset_body">Esto crea una nueva clave para que se puedan generar claves SSH de nuevo.
+
+Cada clave privada ya almacenada en Haven deberá importarse o generarse de nuevo. Ya son ilegibles — la clave que las protegía se ha perdido, normalmente porque la aplicación se reinstaló desde una fuente distinta — así que esto recupera la aplicación en lugar de perder nada más.</string>
+    <string name="settings_sshkey_reset_confirm">Reparar</string>
+
+    <!-- Inline-image consent (#583) -->
+    <string name="settings_inline_images_title">Imágenes integradas</string>
+    <string name="settings_inline_images_subtitle">Imágenes que los programas muestran en el terminal (gráficos Kitty, iTerm2).</string>
+    <string name="settings_inline_images_off">Desactivado</string>
+    <string name="settings_inline_images_ask">Preguntar</string>
+    <string name="settings_inline_images_always">Siempre</string>
+    <string name="settings_ambiwidth_title">Gestión de caracteres de ancho ambiguo</string>
+    <string name="settings_ambiwidth_subtitle">Cómo se representan los caracteres ambiguos de Asia oriental (símbolos, griego)</string>
+    <string name="settings_ambiwidth_mode_narrow">Estrecho (1 celda)</string>
+    <string name="settings_ambiwidth_mode_narrow_desc">Siempre 1 celda (Unix estándar / XTerm, predeterminado)</string>
+    <string name="settings_ambiwidth_mode_auto_narrow">Automático + Estrecho</string>
+    <string name="settings_ambiwidth_mode_auto_narrow_desc">Medir la fuente activa; reserva en 1 celda</string>
+    <string name="settings_ambiwidth_mode_wide">Ancho (2 celdas)</string>
+    <string name="settings_ambiwidth_mode_wide_desc">Siempre 2 celdas (ambiwidth CJK heredado)</string>
+    <string name="settings_ambiwidth_mode_auto_wide">Automático + Ancho</string>
+    <string name="settings_ambiwidth_mode_auto_wide_desc">Medir la fuente activa; reserva en 2 celdas (CJK)</string>
+    <string name="settings_bell_notification_title">Notificación de campana</string>
+    <string name="settings_bell_notification_subtitle">Cuando un programa de terminal hace sonar la campana mientras Haven está en segundo plano, se publica una notificación con el nombre de la pestaña. No aparece nada mientras miras la terminal.</string>
+    <string name="settings_mcp_tools_category_off_count">%1$d desactivadas</string>
+    <string name="settings_mcp_tools_cat_terminal">Terminal</string>
+    <string name="settings_mcp_tools_cat_connections">Conexiones</string>
+    <string name="settings_mcp_tools_cat_files">Archivos</string>
+    <string name="settings_mcp_tools_cat_desktop">Escritorio</string>
+    <string name="settings_mcp_tools_cat_guest">Invitado Linux</string>
+    <string name="settings_mcp_tools_cat_usb">USB y serie</string>
+    <string name="settings_mcp_tools_cat_keys">Claves y credenciales</string>
+    <string name="settings_mcp_tools_cat_mail">Correo</string>
+    <string name="settings_mcp_tools_cat_rclone">Almacenamiento en la nube</string>
+    <string name="settings_mcp_tools_cat_senses">Sensores y ubicación</string>
+    <string name="settings_mcp_tools_cat_agent">Agente y control del dispositivo</string>
+    <string name="settings_mcp_tools_cat_other">Otros</string>
+    <string name="settings_sudo_prompt_detection_title">Detectar solicitudes de contraseña de sudo</string>
+    <string name="settings_sudo_prompt_detection_subtitle">Ofrecer autocompletado biométrico en solicitudes de [sudo] y doas. Las contraseñas permanecen cifradas en Android Keystore en este dispositivo, requieren desbloqueo biométrico en cada uso y nunca se exponen a herramientas de IA/MCP.</string>
+    <string name="settings_root_files_title">Explorador de archivos Root (/)</string>
+    <string name="settings_root_files_subtitle">Muestra una pestaña Root (/) en Archivos que solicita su solo al abrirse. Desactivado por defecto y aislado de las herramientas MCP.</string>
+</resources>

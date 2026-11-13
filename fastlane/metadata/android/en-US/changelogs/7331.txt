@@ -1,0 +1,3 @@
+🗂️ Terminal tabs are wider and easier to hit. The strip sized each tab to its label, so a short name like "cctv" gave a target barely wider than the four letters. Tabs now share the strip evenly, falling back to scrolling once there are more than fit comfortably.
+
+↔️ Reordering a tab no longer closes the menu each time. The move arrows leave it open and it follows the tab, so you can walk a tab across the strip in one go.

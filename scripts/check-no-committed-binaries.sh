@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+# Fail if any tracked file is a compiled binary.
+#
+# Why this gate exists
+# -------------------
+# A committed binary is unauditable: nobody reviewing a diff can tell what is
+# inside it, it does not correspond to any reviewable source change, and it
+# ships straight into the APK. Three separate failures came out of that:
+#
+#   #469  a committed liblabwc_android.so went three versions stale because
+#         nothing rebuilt it — the cage crashed and the source looked correct.
+#   rdp   armeabi-v7a was missing from the cargo target list, so armv7 users
+#         ran whatever binary happened to be checked in.
+#   wayland  F-Droid `scandelete`d core/wayland/src/main/jniLibs and rebuilt
+#         only liblabwc_android.so, so their APK silently shipped without the
+#         GPU renderer, the XWayland wrapper and the GLES benchmark.
+#
+# Every native artefact must therefore be produced by a build step from source
+# in the tree. Detection is by content (ELF/Mach-O/PE/dex/zip magic), not by
+# file extension, so renaming a blob does not get it past this.
+#
+# Usage:
+#   scripts/check-no-committed-binaries.sh            # check tracked files
+#   scripts/check-no-committed-binaries.sh --staged   # check the index (hooks)
+
+set -uo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+# The permitted binaries are Gradle wrapper jars, which cannot bootstrap themselves and are
+# an accepted prebuilt on F-Droid's trusted-source list.
+#
+# gradle/actions/wrapper-validation in CI proves it is an official Gradle
+# release jar. It does NOT check WHICH release, and that gap is not theoretical:
+# the jar committed in 6b4ad367 was Gradle 8.12's and stayed there while
+# distributionUrl moved 8.11.1 -> 9.4.1, because bumping the URL does not touch
+# the jar. Validation passed the whole time, correctly — the jar was genuine,
+# just for a different Gradle than the one this project declares.
+# check_gradle_wrapper below closes that.
+ALLOWLIST=(
+    "gradle/wrapper/gradle-wrapper.jar"
+    "termlib/gradle/wrapper/gradle-wrapper.jar"
+)
+
+# Pinned rather than fetched from services.gradle.org on purpose: a gate that
+# needs the network fails when the network does, which is exactly how an
+# unreachable bitbucket.org took down CI run 30887507336.
+#
+# To bump Gradle, regenerate the jar rather than editing the URL by hand:
+#   ./gradlew wrapper --gradle-version <v> --distribution-type bin \
+#       --gradle-distribution-sha256-sum <sha of gradle-<v>-bin.zip>
+# then set both values here from
+#   https://services.gradle.org/distributions/gradle-<v>-wrapper.jar.sha256
+WRAPPER_VERSION="9.7.1"
+WRAPPER_JAR_SHA256="7a9ce74cff467ca1bf60a4fcd9f05185acceda4d0f382434d393e17864262c5d"
+
+# Assert the allowed jar is the jar for the distribution we actually declare.
+check_gradle_wrapper() {
+    local wrapper_root="${1:-.}"
+    local expected_version="${2:-$WRAPPER_VERSION}"
+    local expected_sha="${3:-$WRAPPER_JAR_SHA256}"
+    local props="$wrapper_root/gradle/wrapper/gradle-wrapper.properties"
+    local jar="$wrapper_root/gradle/wrapper/gradle-wrapper.jar"
+    [ -f "$props" ] && [ -f "$jar" ] || return 0
+
+    local declared
+    declared="$(sed -n 's|^distributionUrl=.*/gradle-\(.*\)-bin\.zip$|\1|p' "$props")"
+    if [ "$declared" != "$expected_version" ]; then
+        echo "✗ $props declares Gradle '$declared', this gate pins '$expected_version'" >&2
+        echo "  Bumping the version means regenerating the jar — see the comment in $0" >&2
+        return 1
+    fi
+
+    local got
+    got="$(sha256sum "$jar" | cut -d' ' -f1)"
+    if [ "$got" != "$expected_sha" ]; then
+        echo "✗ $jar is not the Gradle $expected_version wrapper jar" >&2
+        echo "    expected $expected_sha" >&2
+        echo "    got      $got" >&2
+        echo "  Regenerate it with the ./gradlew wrapper command in $0 rather than" >&2
+        echo "  updating this hash — a jar that does not match its own release is" >&2
+        echo "  the failure this check exists for." >&2
+        return 1
+    fi
+}
+
+is_allowed() {
+    local f="$1"
+    for a in "${ALLOWLIST[@]}"; do [ "$f" = "$a" ] && return 0; done
+    return 1
+}
+
+if [ "${1:-}" = "--staged" ]; then
+    mapfile -t FILES < <(git diff --cached --name-only --diff-filter=ACM)
+    READ_FROM_INDEX=1
+else
+    mapfile -t FILES < <(git ls-files)
+    READ_FROM_INDEX=0
+fi
+
+violations=()
+for f in "${FILES[@]}"; do
+    [ -n "$f" ] || continue
+    is_allowed "$f" && continue
+    if [ "$READ_FROM_INDEX" = "1" ]; then
+        magic=$(git show ":$f" 2>/dev/null | head -c 4 | od -An -tx1 -v 2>/dev/null | tr -d ' \n')
+    else
+        [ -f "$f" ] || continue
+        magic=$(head -c 4 "$f" 2>/dev/null | od -An -tx1 -v 2>/dev/null | tr -d ' \n')
+    fi
+    case "$magic" in
+        7f454c46)  violations+=("$f  (ELF)") ;;          # .so / executable
+        feedface|feedfacf|cffaedfe|cafebabe) violations+=("$f  (Mach-O or Java class)") ;;
+        4d5a*)     violations+=("$f  (PE/DLL)") ;;
+        6465780a)  violations+=("$f  (Android dex)") ;;
+        504b0304)  # zip container — only flag the ones that carry code
+                   case "$f" in
+                       *.jar|*.aar|*.apk|*.aab|*.war) violations+=("$f  (Java/Android archive)") ;;
+                   esac ;;
+    esac
+done
+
+if [ ${#violations[@]} -gt 0 ]; then
+    echo "✗ ${#violations[@]} committed binary file(s) found:" >&2
+    printf '    %s\n' "${violations[@]}" >&2
+    cat >&2 <<'EOF'
+
+Binaries must not be committed — they are unauditable in review and go stale
+silently (#469). Build them from source instead:
+
+    core/local/src/main/jniLibs/   build-proot/build.sh
+    core/ffmpeg/src/main/jniLibs/  build-ffmpeg/build.sh
+    core/wayland/src/main/jniLibs/ wayland-android/build_liblabwc_android.sh
+                                   wayland-android/build-native-helpers.sh
+    rdp-kotlin/jniLibs/            cargo-ndk (rdp-kotlin:buildRdpNative)
+    core/prns/src/main/jniLibs/    cargo-ndk (:core:prns:buildPrnsNative)
+    rclone-android/build/          gomobile (buildRcloneNative)
+
+then add the output path to .gitignore. If a binary genuinely must be tracked,
+add it to ALLOWLIST in this script with a comment saying why.
+EOF
+    exit 1
+fi
+
+check_gradle_wrapper || exit 1
+# Preserve the vendored library's standalone wrapper at its recorded upstream revision.
+check_gradle_wrapper termlib "9.8.1" "3b8a25775a69158b5ad2b1d17a80a88dc7b40a352a73eb27d06c612a7ce68e98" || exit 1
+
+echo "✓ no committed binaries (${#FILES[@]} tracked files checked)"
+echo "✓ gradle-wrapper.jar is the Gradle $WRAPPER_VERSION wrapper jar"

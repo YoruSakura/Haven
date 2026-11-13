@@ -1,0 +1,143 @@
+[package]
+name = "rdp-transport"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+name = "rdp_transport"
+
+[dependencies]
+ironrdp-blocking = "0.10"
+ironrdp-connector = "0.10"
+ironrdp-session = "0.11"
+ironrdp-input = "0.7"
+ironrdp-cliprdr = "0.7"
+ironrdp-graphics = "0.9"
+ironrdp-tls = { version = "0.2", features = ["rustls"] }
+ironrdp-pdu = "0.9"
+ironrdp-dvc = "0.8"
+ironrdp-displaycontrol = "0.8"
+ironrdp-svc = "0.8"
+ironrdp-core = "0.2"
+ironrdp-egfx = "0.3"
+x509-cert = { version = "0.3", default-features = false }
+bitflags = "2"
+smallvec = "1"
+log = "0.4"
+android_logger = "0.15"
+# uniffi 0.32's cargo_metadata dep would pull cargo-platform 0.3.3, which needs
+# rustc 1.91 — but rust-toolchain.toml pins 1.89 for reproducible .so builds.
+# Cargo.lock therefore pins cargo-platform to 0.3.2 (the last patch that builds
+# on 1.89). If you `cargo update` and hit "cargo-platform@0.3.3 requires rustc
+# 1.91", re-pin with `cargo update -p cargo-platform --precise 0.3.2` (or raise
+# the toolchain to 1.91 and drop this note).
+uniffi = { version = "0.32", features = ["cli"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "logging", "std", "tls12"] }
+# rustls-webpki's RawPublicKeyEntity verifies a TLS handshake signature against a
+# bare SubjectPublicKeyInfo. We use it so X.509 v1 server certs — which webpki's
+# full-cert parser rejects with UnsupportedCertVersion (VirtualBox VRDP presents
+# one) — still pass our TOFU pin. See PinnedCertVerifier in lib.rs. (#422)
+webpki = { package = "rustls-webpki", version = "0.103", default-features = false, features = ["ring", "std"] }
+sha2 = "0.11"
+
+[[bin]]
+name = "uniffi-bindgen"
+path = "uniffi-bindgen.rs"
+
+# Host-side smoke driver for the same RdpClient the Kotlin AAR uses.
+# Lets us iterate on the protocol without rebuilding the AAR + redeploying
+# to the device. Linux/macOS only — depends on env_logger for log output.
+[[bin]]
+name = "rdp-cli"
+path = "src/bin/rdp-cli.rs"
+required-features = ["host-cli"]
+
+[[bin]]
+name = "clear-trace"
+path = "src/bin/clear-trace.rs"
+required-features = ["host-cli"]
+
+# Decode an EGFX_PDU_DUMP_DIR capture and print a one-line summary per
+# file. Use as a triage step on captures before sending them upstream
+# (e.g. to Devolutions/IronRDP#1238).
+[[bin]]
+name = "replay-egfx-pdu"
+path = "src/bin/replay-egfx-pdu.rs"
+required-features = ["host-cli"]
+
+[features]
+default = []
+host-cli = ["env_logger"]
+
+[dependencies.env_logger]
+version = "0.11"
+optional = true
+
+[build-dependencies]
+uniffi = { version = "0.32", features = ["build"] }
+
+# IronRDP comes from git, not crates.io.
+#
+# Two of the three patches the vendored connector fork carried are now upstream
+# — the server Input capability flags (#1488) and the lenient Server Font Map
+# (#1506, which superseded our #1472 with a better-scoped fix) — so the fork is
+# down to one patch: the SUPPORT_DYN_VC_GFX_PROTOCOL early-capability flag,
+# still open as #1237. That one patch is what `GlassOnTin/IronRDP` adds on top
+# of upstream master.
+#
+# What the released crates cost us: ironrdp-session 0.11.0 panics out of bounds
+# on a bitmap taller than its own destination rectangle, which is the crash in
+# #422 that closes Haven outright. Upstream fixed it in #1521 (merged
+# 2026-08-02) and there is no release carrying it. Waiting for one means
+# shipping a known app-killing crash.
+#
+# Pinned to an immutable tag, not a branch: `haven-pin-20260805d` marks
+# 6261ef91 = upstream e9e0bb49 + the #1237 patch + tolerating the under-declared
+# Share Data totalLength that VirtualBox's VRDP sends (#422, upstream PR #1541)
+# + sspi 0.22 (upstream sspi-rs#719: accept '@' in down-level account names,
+# the #461 MSA+NLA fix; picky pin moved to =7.0.0-rc.26 with it).
+# The `b` revision narrows that relaxation: upstream review caught that the
+# first cut also accepted a *zero* totalLength on a non-output Data PDU, which
+# an existing regression test forbids. The tag exists precisely so
+# the object survives force-pushes of feat/egfx-early-cap-flag, which is an
+# open PR and gets rebased. A `rev` alone would eventually be unreachable.
+#
+# ALL ironrdp crates must come from the same source. Mixing git and crates.io
+# links two copies of ironrdp-pdu and the types stop matching.
+#
+# To move the pin: rebase the fork branch, re-tag, update the tag here, then
+# rebuild the 3-ABI .so — the bump is inert until they are rebuilt.
+# To drop it entirely: once #1237 merges and a connector release carries it,
+# delete this block and set support_dyn_vc_gfx_protocol on ConnectorConfig.
+[patch.crates-io]
+ironrdp-blocking = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-cliprdr = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-connector = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-core = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-displaycontrol = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-dvc = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-egfx = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-graphics = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-input = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-pdu = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-session = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-svc = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+ironrdp-tls = { git = "https://github.com/GlassOnTin/IronRDP", tag = "haven-pin-20260805d" }
+
+[profile.release]
+opt-level = "z"
+lto = true
+# NB: strip removes UniFFI metadata symbols needed by uniffi-bindgen.
+# build-android.sh uses a debug host build for bindgen to work around this.
+strip = true
+codegen-units = 1
+# unwind, not abort: with abort, a panic anywhere in the decode path takes the
+# whole app down with a native tombstone and no Java stack — which is what
+# #422's "complete crash with closing Haven" is. IronRDP's bitmap paths index
+# the framebuffer directly (DecodedImage::apply_bgr24_bitmap derives its row
+# count from the decompressed buffer length, not the destination rectangle), so
+# a server sending a bitmap taller than its own dest rect panics out of bounds.
+# We cannot fix that from here, but a decoder bug should cost the session, not
+# the process — connect() catches the unwind and reports it through on_error.
+panic = "unwind"

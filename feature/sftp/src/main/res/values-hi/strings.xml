@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">रद्द करें</string>
+    <string name="common_save">सहेजें</string>
+    <string name="common_done">हो गया</string>
+    <string name="common_close">बंद करें</string>
+    <string name="common_ok">ठीक है</string>
+    <string name="common_delete">हटाएँ</string>
+    <string name="common_edit">संपादित करें</string>
+    <string name="common_rename">नाम बदलें</string>
+    <string name="common_create">बनाएँ</string>
+    <string name="common_connect">कनेक्ट करें</string>
+    <string name="common_disconnect">डिस्कनेक्ट करें</string>
+    <string name="common_copy">कॉपी करें</string>
+    <string name="common_paste">पेस्ट करें</string>
+    <string name="common_label">लेबल</string>
+    <string name="common_password">पासवर्ड</string>
+    <string name="common_port">पोर्ट</string>
+    <string name="common_host">होस्ट</string>
+    <string name="common_username">उपयोगकर्ता नाम</string>
+    <string name="common_install">इंस्टॉल करें</string>
+    <string name="common_reset">रीसेट करें</string>
+    <string name="common_allow">अनुमति दें</string>
+    <string name="common_not_now">अभी नहीं</string>
+    <string name="common_import">आयात करें</string>
+    <string name="common_add">जोड़ें</string>
+    <string name="common_download">डाउनलोड करें</string>
+    <string name="common_unlock">अनलॉक करें</string>
+
+    <!-- SftpScreen navigation -->
+    <string name="sftp_navigate_up">ऊपर जाएँ</string>
+    <string name="sftp_hide_hidden_files">छिपी फ़ाइलें छुपाएँ</string>
+    <string name="sftp_show_hidden_files">छिपी फ़ाइलें दिखाएँ</string>
+    <string name="sftp_sort">क्रमबद्ध करें</string>
+    <string name="sftp_refresh">रिफ़्रेश करें</string>
+
+    <!-- FAB actions -->
+    <string name="sftp_new_folder">नया फ़ोल्डर</string>
+    <string name="sftp_upload_folder">फ़ोल्डर अपलोड करें</string>
+    <string name="sftp_upload_file">फ़ाइल अपलोड करें</string>
+    <string name="sftp_paste">पेस्ट करें</string>
+    <string name="sftp_fab_close">बंद करें</string>
+    <string name="sftp_fab_actions">कार्रवाइयाँ</string>
+
+    <!-- Clipboard banner -->
+    <string name="sftp_items_cut">%d आइटम कट किया</string>
+    <string name="sftp_items_cut_plural">%d आइटम कट किए</string>
+    <string name="sftp_items_copied">%d आइटम कॉपी किया</string>
+    <string name="sftp_items_copied_plural">%d आइटम कॉपी किए</string>
+
+    <!-- Empty states -->
+    <string name="sftp_empty_directory">खाली निर्देशिका</string>
+    <string name="sftp_parent_directory">मूल निर्देशिका</string>
+    <string name="sftp_navigate_up_icon">ऊपर</string>
+
+    <!-- Snackbar messages -->
+    <string name="sftp_downloaded">%s डाउनलोड हुआ</string>
+    <string name="sftp_open">खोलें</string>
+    <string name="sftp_no_app_to_open">इस फ़ाइल को खोलने के लिए कोई ऐप नहीं मिला</string>
+    <string name="sftp_path_copied">पथ कॉपी हुआ</string>
+
+    <!-- FileListItem -->
+    <string name="sftp_directory">निर्देशिका</string>
+    <string name="sftp_directory_icon">निर्देशिका</string>
+    <string name="sftp_folder_item_count">%d आइटम</string>
+    <string name="sftp_folder_item_count_plural">%d आइटम</string>
+    <string name="sftp_file_icon">फ़ाइल</string>
+    <string name="sftp_download">डाउनलोड करें</string>
+    <string name="sftp_cut">कट करें</string>
+    <string name="sftp_copy_path">पथ कॉपी करें</string>
+
+    <!-- SortDropdown -->
+    <string name="sftp_sort_name_asc">नाम A-Z</string>
+    <string name="sftp_sort_name_desc">नाम Z-A</string>
+    <string name="sftp_sort_size_asc">आकार (सबसे छोटा)</string>
+    <string name="sftp_sort_size_desc">आकार (सबसे बड़ा)</string>
+    <string name="sftp_sort_date_asc">तिथि (सबसे पुरानी)</string>
+    <string name="sftp_sort_date_desc">तिथि (सबसे नई)</string>
+
+    <!-- EmptyState -->
+    <string name="sftp_file_browser_title">SFTP फ़ाइल ब्राउज़र</string>
+    <string name="sftp_connect_to_browse">फ़ाइलें ब्राउज़ करने के लिए सर्वर से कनेक्ट करें</string>
+
+    <!-- New Folder dialog -->
+    <string name="sftp_new_folder_title">नया फ़ोल्डर</string>
+    <string name="sftp_folder_name">फ़ोल्डर का नाम</string>
+    <string name="sftp_create">बनाएँ</string>
+
+    <!-- Upload conflict dialog -->
+    <string name="sftp_file_already_exists">फ़ाइल पहले से मौजूद है</string>
+    <string name="sftp_file_exists_message">इस स्थान पर \"%s\" पहले से मौजूद है।</string>
+    <string name="sftp_replace">बदलें</string>
+    <string name="sftp_replace_all">सभी बदलें</string>
+    <string name="sftp_skip">छोड़ें</string>
+    <string name="sftp_skip_all">सभी छोड़ें</string>
+    <string name="sftp_play">चलाएँ</string>
+    <string name="sftp_play_folder">फ़ोल्डर चलाएँ</string>
+    <string name="sftp_sync">सिंक</string>
+    <string name="sftp_folder_sync">फ़ोल्डर सिंक</string>
+    <string name="sftp_source">स्रोत</string>
+    <string name="sftp_destination">गंतव्य</string>
+    <string name="sftp_destination_path">पथ</string>
+    <string name="sftp_mode_copy">कॉपी</string>
+    <string name="sftp_mode_sync">मिरर</string>
+    <string name="sftp_mode_move">स्थानांतरित करें</string>
+    <string name="sftp_mode_copy_desc">नई और अपडेट हुई फ़ाइलें कॉपी करता है। कुछ नहीं हटाता।</string>
+    <string name="sftp_mode_sync_desc">गंतव्य को स्रोत के समान बनाता है। अतिरिक्त हटा देता है।</string>
+    <string name="sftp_mode_move_desc">फ़ाइलें गंतव्य में ले जाता है। स्रोत से हटा देता है।</string>
+    <string name="sftp_advanced_filters">उन्नत फ़िल्टर</string>
+    <string name="sftp_include_patterns">समावेशन पैटर्न (हर पंक्ति में एक)</string>
+    <string name="sftp_exclude_patterns">बहिष्करण पैटर्न (हर पंक्ति में एक)</string>
+    <string name="sftp_min_size">न्यूनतम आकार</string>
+    <string name="sftp_max_size">अधिकतम आकार</string>
+    <string name="sftp_bandwidth_limit">बैंडविड्थ सीमा</string>
+    <string name="sftp_dry_run">ड्राई रन (केवल पूर्वावलोकन)</string>
+    <string name="sftp_start_sync">शुरू करें</string>
+    <string name="sftp_preview">पूर्वावलोकन</string>
+    <string name="sftp_dry_run_results">ड्राई रन परिणाम</string>
+    <string name="sftp_start_for_real">वास्तव में शुरू करें</string>
+    <string name="sftp_sync_cancelled">सिंक रद्द किया गया</string>
+    <!-- Rename dialog -->
+    <string name="sftp_rename_title">नाम बदलें</string>
+    <string name="sftp_new_name">नया नाम</string>
+
+    <!-- Share link -->
+    <string name="sftp_share_link">लिंक साझा करें</string>
+    <string name="sftp_link_copied">लिंक कॉपी हुआ</string>
+
+    <!-- Folder size -->
+    <string name="sftp_folder_size">फ़ोल्डर आकार</string>
+    <string name="sftp_folder_size_title">फ़ोल्डर आकार</string>
+    <string name="sftp_calculating_size">गणना हो रही है…</string>
+
+    <!-- DLNA -->
+    <string name="sftp_start_dlna">DLNA सर्वर शुरू करें</string>
+    <string name="sftp_stop_dlna">DLNA सर्वर रोकें</string>
+    <!-- Convert -->
+    <string name="sftp_convert">बदलें</string>
+    <string name="sftp_convert_title">मीडिया बदलें</string>
+    <string name="sftp_convert_format">आउटपुट प्रारूप</string>
+    <string name="sftp_converting">%s बदला जा रहा है</string>
+    <string name="sftp_convert_done">%s में सहेजा गया</string>
+    <!-- Stream -->
+    <string name="sftp_stream">स्ट्रीम</string>
+    <string name="sftp_streaming">%s पर स्ट्रीम हो रहा है</string>
+    <string name="sftp_stream_stop">रोकें</string>
+    <string name="sftp_downloading_for_convert">बदलने के लिए डाउनलोड हो रहा है…</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="sftp_play_in_browser">ब्राउज़र में चलाएँ</string>
+    <string name="sftp_stream_to_network">नेटवर्क पर स्ट्रीम करें</string>
+    <string name="sftp_selection_enter">चुनें</string>
+    <string name="sftp_selection_selected">चयनित</string>
+    <string name="sftp_selection_unselected">अचयनित</string>
+    <string name="sftp_selection_clear">चयन साफ़ करें</string>
+    <string name="sftp_selection_select_all">सभी चुनें</string>
+    <string name="sftp_selection_count">%1$d चयनित</string>
+    <string name="sftp_delete_selection_title">चयनित आइटम हटाएँ?</string>
+    <string name="sftp_delete_selection_message">%1$d आइटम हटाए जाएँगे। इसे पूर्ववत् नहीं किया जा सकता।</string>
+    <string name="sftp_filter">फ़ाइलें फ़िल्टर करें</string>
+    <string name="sftp_permissions">अनुमतियाँ…</string>
+    <string name="sftp_permissions_dialog_title">अनुमतियाँ</string>
+    <string name="sftp_permissions_dialog_title_batch">अनुमतियाँ — %1$d आइटम</string>
+    <string name="sftp_permissions_octal">ऑक्टल (जैसे 0755)</string>
+    <string name="sftp_permissions_owner">स्वामी</string>
+    <string name="sftp_permissions_group">समूह</string>
+    <string name="sftp_permissions_other">अन्य</string>
+    <string name="sftp_permissions_read">पढ़ें</string>
+    <string name="sftp_permissions_write">लिखें</string>
+    <string name="sftp_permissions_execute">निष्पादित करें</string>
+    <string name="sftp_permissions_apply">लागू करें</string>
+    <string name="sftp_ownership">स्वामी…</string>
+    <string name="sftp_ownership_dialog_title">स्वामी</string>
+    <string name="sftp_ownership_dialog_title_batch">स्वामी — %1$d आइटम</string>
+    <string name="sftp_ownership_label">स्वामी</string>
+    <string name="sftp_ownership_hint">उपयोगकर्ता, समूह, या उपयोगकर्ता:समूह दर्ज करें। नाम समाधान रिमोट पर होता है। आमतौर पर root चाहिए।</string>
+    <string name="sftp_ownership_apply">लागू करें</string>
+    <string name="sftp_media">मीडिया…</string>
+    <string name="sftp_stream_folder">फ़ोल्डर प्लेलिस्ट स्ट्रीम करें</string>
+    <string name="sftp_output_filename">आउटपुट फ़ाइल का नाम</string>
+    <string name="sftp_convert_sub">फ़िल्टर के साथ वीडियो या ऑडियो री-एनकोड करें</string>
+    <string name="sftp_media_info">मीडिया जानकारी</string>
+    <string name="sftp_media_info_sub">कोडेक, अवधि, स्ट्रीम</string>
+    <string name="sftp_media_info_probing">जाँच हो रही है…</string>
+    <string name="sftp_media_info_failed">ffprobe विफल: %s</string>
+    <string name="sftp_media_info_container">कंटेनर</string>
+    <string name="sftp_media_info_duration">अवधि</string>
+    <string name="sftp_media_info_bitrate">बिटरेट</string>
+    <string name="sftp_media_info_size">आकार</string>
+    <string name="sftp_media_info_video_streams">वीडियो</string>
+    <string name="sftp_media_info_audio_streams">ऑडियो</string>
+    <string name="sftp_media_info_subtitle_streams">उपशीर्षक</string>
+    <string name="sftp_media_info_video">वीडियो</string>
+    <string name="sftp_media_info_audio">ऑडियो</string>
+    <string name="sftp_media_info_subtitle">उपशीर्षक</string>
+    <string name="sftp_media_info_chapters">अध्याय: %d</string>
+    <string name="sftp_media_info_copy">JSON कॉपी करें</string>
+    <string name="sftp_trim">ट्रिम (हानिरहित)</string>
+    <string name="sftp_trim_sub">बिना री-एनकोड किए क्लिप काटें</string>
+    <string name="sftp_trim_title">क्लिप ट्रिम करें</string>
+    <string name="sftp_trim_explain">शुरू और अंत H:MM:SS के रूप में। स्ट्रीम-कॉपी, कोई री-एनकोड नहीं।</string>
+    <string name="sftp_trim_start">शुरू</string>
+    <string name="sftp_trim_end">अंत</string>
+    <string name="sftp_trim_action">ट्रिम करें</string>
+    <string name="sftp_extract_audio">ऑडियो निकालें</string>
+    <string name="sftp_extract_audio_sub">साउंडट्रैक को MP3/AAC/Opus/FLAC के रूप में सहेजें</string>
+    <string name="sftp_extract_audio_title">ऑडियो निकालें</string>
+    <string name="sftp_extract_audio_format">प्रारूप</string>
+    <string name="sftp_extract_audio_bitrate">बिटरेट: %d kbps</string>
+    <string name="sftp_extract_audio_action">निकालें</string>
+    <string name="sftp_contact_sheet">कांटैक्ट शीट</string>
+    <string name="sftp_contact_sheet_sub">फ़ाइल भर से लिए गए थंबनेल का ग्रिड</string>
+    <string name="sftp_contact_sheet_title">कांटैक्ट शीट</string>
+    <string name="sftp_contact_sheet_explain">क्लिप भर से बराबर अंतराल पर फ़्रेम लेकर टाइल किए गए PNG में जोड़ता है।</string>
+    <string name="sftp_contact_sheet_cols">स्तंभ</string>
+    <string name="sftp_contact_sheet_rows">पंक्तियाँ</string>
+    <string name="sftp_contact_sheet_tile">टाइल आकार: %1$d × %2$d</string>
+    <string name="sftp_contact_sheet_action">शीट बनाएँ</string>
+
+    <!-- #135 third pass -->
+    <string name="sftp_attach_use_folder">यह फ़ोल्डर उपयोग करें</string>
+    <string name="sftp_paste_discard">छोड़ें</string>
+    <string name="sftp_paste_resume">फिर से शुरू करें</string>
+    <string name="sftp_paste_discard_title">अधूरा पेस्ट छोड़ें?</string>
+    <string name="sftp_paste_discard_body">लंबित फ़ाइलें कतार से हटा दी जाएँगी। इसे पूर्ववत नहीं किया जा सकता।</string>
+    <string name="sftp_paste_keep">रखें</string>
+    <string name="sftp_preview_frame_desc">पूर्वावलोकन फ़्रेम — पूर्णस्क्रीन के लिए टैप करें</string>
+        <string name="sftp_convert_container">कंटेनर</string>
+    <string name="sftp_convert_video_encoder">वीडियो एन्कोडर</string>
+    <string name="sftp_convert_audio_encoder">ऑडियो एन्कोडर</string>
+    <string name="sftp_convert_save_to">यहाँ सहेजें</string>
+    <string name="sftp_preview_stop">रोकें</string>
+    <string name="sftp_preview_preparing">तैयार हो रहा है…</string>
+    <string name="sftp_preview_play5s">5 सेकंड का पूर्वावलोकन चलाएँ</string>
+    <string name="sftp_fullscreen_preview">पूर्णस्क्रीन पूर्वावलोकन</string>
+    <string name="sftp_conflict_title">फ़ाइल पहले से मौजूद है</string>
+    <string name="sftp_conflict_overwrite">अधिलेखित करें</string>
+    <string name="sftp_conflict_keep_both">दोनों रखें (नाम बदलें)</string>
+    <string name="sftp_conflict_skip">छोड़ें</string>
+    <string name="sftp_compression_quick_presets">त्वरित प्रीसेट</string>
+    <string name="sftp_compression_resolution">रिज़ॉल्यूशन</string>
+    <string name="sftp_compression_quality">गुणवत्ता (CRF %1$d)</string>
+    <string name="sftp_compression_speed">एन्कोड गति</string>
+    <string name="sftp_compression_audio_bitrate">ऑडियो बिटरेट</string>
+    <string name="sftp_filter_title">फ़िल्टर</string>
+    <string name="sftp_filter_rotation">घुमाव</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="sftp_open_with">इससे खोलें…</string>
+    <string name="sftp_saved_sync_label">सहेजा गया configuration</string>
+    <string name="sftp_saved_sync_pick">सहेजा गया configuration चुनें</string>
+    <string name="sftp_saved_sync_save">सहेजें</string>
+    <string name="sftp_saved_sync_save_as">इस रूप में सहेजें…</string>
+    <string name="sftp_saved_sync_save_as_title">Sync configuration सहेजें</string>
+    <string name="sftp_saved_sync_name">नाम</string>
+    <string name="sftp_attach_choose_folder">%1$s के लिए फ़ोल्डर चुनें</string>
+    <string name="sftp_attach_pick_profile">उपयोग के लिए कनेक्टेड profile चुनें</string>
+    <string name="sftp_attach_local_no_upload">रिमोट profile चुनें — local uploads नहीं ले सकता</string>
+    <string name="sftp_attach_will_upload_into">इसमें upload होगा: %1$s</string>
+    <string name="sftp_chat_attach_pick_file">चैट में फ़ाइल संलग्न करें</string>
+    <string name="sftp_chat_attach_will_pick_from">इनमें से चुनें: %1$s</string>
+    <string name="sftp_attach_sending">%1$s भेजा जा रहा है…</string>
+    <string name="sftp_storage_permission_title">Storage access आवश्यक</string>
+    <string name="sftp_storage_permission_body">Local files तक पहुँच देने के लिए टैप करें — media features, browsing, और transfers के लिए यह अनुमति ज़रूरी है।</string>
+    <string name="sftp_paste_unfinished">अधूरा paste</string>
+    <string name="sftp_agent_chip">Agent</string>
+    <string name="sftp_convert_dest_downloads">Downloads (यह डिवाइस)</string>
+    <string name="sftp_convert_dest_same_folder_local">Source के समान फ़ोल्डर</string>
+    <string name="sftp_convert_dest_same_folder_cloud">Cloud पर वापस (समान फ़ोल्डर)</string>
+    <string name="sftp_convert_dest_same_folder_server">Server पर वापस (समान फ़ोल्डर)</string>
+    <string name="sftp_convert_download_first">पहले download करें</string>
+    <string name="sftp_convert_download_first_on">Transcode से पहले पूरी फ़ाइल download होती है</string>
+    <string name="sftp_convert_download_first_off">Cloud से stream करता है (बड़ी files के लिए तेज़)</string>
+    <string name="sftp_preview_preparing_long">Preview तैयार हो रहा है…</string>
+    <string name="sftp_preview_fetching_cloud">☁ Cloud से fetch हो रहा है…</string>
+    <string name="sftp_preview_tap_to_refresh">रिफ़्रेश करने के लिए Preview टैप करें</string>
+    <string name="sftp_filter_mode_glob">Glob</string>
+    <string name="sftp_filter_mode_regex">Regex</string>
+    <string name="sftp_saved_file">%1$s सहेजी गई</string>
+    <string name="sftp_saved_file_to">%1$s को %2$s में सहेजा गया</string>
+    <string name="sftp_downloaded_file">%1$s download हुई</string>
+    <string name="sftp_location_downloads">Downloads</string>
+    <string name="sftp_file_too_large_for_editor">संपादक में खोलने के लिए फ़ाइल बहुत बड़ी है (%1$s)। सीमा 20 MB है।</string>
+    <string name="sftp_processing_perspective">Perspective लागू हो रहा है…</string>
+    <string name="sftp_processing_crop">Crop हो रहा है…</string>
+    <string name="sftp_processing_rotate">Rotate हो रहा है…</string>
+    <string name="sftp_conflict_size_summary">मौजूदा: %1$s  ·  नई: %2$s</string>
+    <string name="sftp_conflict_resume_hint">मौजूदा फ़ाइल source से छोटी है — resume वर्तमान offset से जारी रहती है।</string>
+    <string name="sftp_conflict_apply_to_all">शेष सभी फ़ाइलों पर लागू करें</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="sftp_new_sync">नया rclone सिंक</string>
+    <string name="sftp_encrypt">एन्क्रिप्ट करें (age)</string>
+    <string name="sftp_encrypt_sub">किसी age कुंजी के लिए एन्क्रिप्ट करें — age टूल से कहीं भी पढ़ा जा सकता है</string>
+    <string name="sftp_decrypt">डिक्रिप्ट करें (age)</string>
+    <string name="sftp_decrypt_sub">संग्रहीत age पहचान से डिक्रिप्ट करें</string>
+    <string name="sftp_encrypt_title">age से एन्क्रिप्ट करें</string>
+    <string name="sftp_encrypt_recipient_hint">या कोई प्राप्तकर्ता पेस्ट करें (age1…)</string>
+    <string name="sftp_encrypt_action">एन्क्रिप्ट करें</string>
+    <string name="sftp_age_no_identity">कोई age पहचान नहीं। कुंजियाँ टैब में एक बनाएँ, या कोई प्राप्तकर्ता पेस्ट करें।</string>
+    <string name="sftp_age_failed">age ऑपरेशन विफल — गलत कुंजी या खराब फ़ाइल</string>
+    <string name="sftp_open_usb_drive">USB ड्राइव खोलें…</string>
+    <string name="sftp_add_folder_location">फ़ोल्डर स्थान जोड़ें</string>
+    <string name="sftp_saf_grant_failed">उस फ़ोल्डर तक पहुँच बनाए नहीं रखी जा सकी</string>
+    <string name="sftp_remove_folder_location">फ़ोल्डर स्थान हटाएँ</string>
+    <string name="sftp_remove_folder_title">फ़ोल्डर स्थान हटाएँ?</string>
+    <string name="sftp_remove_folder_message">%1$s को फ़ाइलें से हटा दिया जाएगा। आपकी फ़ाइलें नहीं हटतीं — केवल इस फ़ोल्डर तक Haven की पहुँच।</string>
+    <string name="sftp_remove_folder_confirm">हटाएँ</string>
+    <string name="sftp_rename_not_supported">यह स्थान नाम बदलने का समर्थन नहीं करता</string>
+</resources>

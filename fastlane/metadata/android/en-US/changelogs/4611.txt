@@ -1,0 +1,5 @@
+Reconnect: tunnel-routed connections recover on their own
+
+SSH sessions routed through a per-app WireGuard or Tailscale tunnel (or a SOCKS/HTTP proxy) now re-apply that routing when they auto-reconnect. Previously, a dropped connection to a host reachable only through the tunnel — for example when you are away from your home network — could get stuck retrying forever and only recover if you reconnected by hand. It now reconnects on its own, the same way the first connection did.
+
+Also: a session that carries both a tunnel and an interactive terminal now reattaches its shell when it reconnects, instead of leaving the terminal frozen.

@@ -1,0 +1,1 @@
+📐 Terminal sessions use the full height of your screen again. v5.86.23 stopped the phone being cut off on the right when a computer shares the tmux session, but the setting it used takes the smaller of the two devices in each direction separately — so the phone got its own width and the computer's height. Reverted: the session now matches whichever device you last used. (#479)

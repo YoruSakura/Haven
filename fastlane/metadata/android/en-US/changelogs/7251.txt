@@ -1,0 +1,1 @@
+🖼️ Fixed rectangular patches of a Windows RDP desktop staying blank — uncompressed graphics regions were being discarded instead of drawn. (#462)

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Common -->
+    <string name="common_cancel">キャンセル</string>
+    <string name="common_save">保存</string>
+    <string name="common_done">完了</string>
+    <string name="common_close">閉じる</string>
+    <string name="common_ok">OK</string>
+    <string name="common_delete">削除</string>
+    <string name="common_edit">編集</string>
+    <string name="common_rename">名前変更</string>
+    <string name="common_create">作成</string>
+    <string name="common_connect">接続</string>
+    <string name="common_disconnect">切断</string>
+    <string name="common_copy">コピー</string>
+    <string name="common_paste">貼り付け</string>
+    <string name="common_label">ラベル</string>
+    <string name="common_password">パスワード</string>
+    <string name="common_port">ポート</string>
+    <string name="common_host">ホスト</string>
+    <string name="common_username">ユーザー名</string>
+    <string name="common_install">インストール</string>
+    <string name="common_reset">リセット</string>
+    <string name="common_allow">許可</string>
+    <string name="common_not_now">後で</string>
+    <string name="common_import">インポート</string>
+    <string name="common_add">追加</string>
+    <string name="common_download">ダウンロード</string>
+    <string name="common_unlock">ロック解除</string>
+
+    <!-- SftpScreen navigation -->
+    <string name="sftp_navigate_up">上に移動</string>
+    <string name="sftp_hide_hidden_files">隠しファイルを非表示</string>
+    <string name="sftp_show_hidden_files">隠しファイルを表示</string>
+    <string name="sftp_sort">並び替え</string>
+    <string name="sftp_refresh">更新</string>
+
+    <!-- FAB actions -->
+    <string name="sftp_new_folder">新しいフォルダ</string>
+    <string name="sftp_upload_folder">フォルダをアップロード</string>
+    <string name="sftp_upload_file">ファイルをアップロード</string>
+    <string name="sftp_paste">貼り付け</string>
+    <string name="sftp_fab_close">閉じる</string>
+    <string name="sftp_fab_actions">アクション</string>
+
+    <!-- Clipboard banner -->
+    <string name="sftp_items_cut">%d件を切り取り</string>
+    <string name="sftp_items_cut_plural">%d件を切り取り</string>
+    <string name="sftp_items_copied">%d件をコピー</string>
+    <string name="sftp_items_copied_plural">%d件をコピー</string>
+
+    <!-- Empty states -->
+    <string name="sftp_empty_directory">空のディレクトリ</string>
+    <string name="sftp_parent_directory">親ディレクトリ</string>
+    <string name="sftp_navigate_up_icon">上へ</string>
+
+    <!-- Snackbar messages -->
+    <string name="sftp_downloaded">%sをダウンロードしました</string>
+    <string name="sftp_open">開く</string>
+    <string name="sftp_no_app_to_open">このファイルを開くアプリが見つかりません</string>
+    <string name="sftp_path_copied">パスをコピーしました</string>
+
+    <!-- FileListItem -->
+    <string name="sftp_directory">ディレクトリ</string>
+    <string name="sftp_directory_icon">ディレクトリ</string>
+    <string name="sftp_folder_item_count">%d項目</string>
+    <string name="sftp_folder_item_count_plural">%d項目</string>
+    <string name="sftp_file_icon">ファイル</string>
+    <string name="sftp_download">ダウンロード</string>
+    <string name="sftp_cut">切り取り</string>
+    <string name="sftp_copy_path">パスをコピー</string>
+
+    <!-- SortDropdown -->
+    <string name="sftp_sort_name_asc">名前 A-Z</string>
+    <string name="sftp_sort_name_desc">名前 Z-A</string>
+    <string name="sftp_sort_size_asc">サイズ（小さい順）</string>
+    <string name="sftp_sort_size_desc">サイズ（大きい順）</string>
+    <string name="sftp_sort_date_asc">日付（古い順）</string>
+    <string name="sftp_sort_date_desc">日付（新しい順）</string>
+
+    <!-- EmptyState -->
+    <string name="sftp_file_browser_title">SFTPファイルブラウザ</string>
+    <string name="sftp_connect_to_browse">サーバーに接続してファイルを閲覧</string>
+
+    <!-- New Folder dialog -->
+    <string name="sftp_new_folder_title">新しいフォルダ</string>
+    <string name="sftp_folder_name">フォルダ名</string>
+    <string name="sftp_create">作成</string>
+
+    <!-- Upload conflict dialog -->
+    <string name="sftp_file_already_exists">ファイルが既に存在します</string>
+    <string name="sftp_file_exists_message">この場所に\"%s\"が既に存在します。</string>
+    <string name="sftp_replace">置き換え</string>
+    <string name="sftp_replace_all">すべて置き換え</string>
+    <string name="sftp_skip">スキップ</string>
+    <string name="sftp_skip_all">すべてスキップ</string>
+    <string name="sftp_play">再生</string>
+    <string name="sftp_play_folder">フォルダーを再生</string>
+    <string name="sftp_sync">同期</string>
+    <string name="sftp_folder_sync">フォルダー同期</string>
+    <string name="sftp_source">元</string>
+    <string name="sftp_destination">宛先</string>
+    <string name="sftp_destination_path">パス</string>
+    <string name="sftp_mode_copy">コピー</string>
+    <string name="sftp_mode_sync">ミラー</string>
+    <string name="sftp_mode_move">移動</string>
+    <string name="sftp_mode_copy_desc">新規・更新されたファイルをコピーします。削除は行いません。</string>
+    <string name="sftp_mode_sync_desc">宛先を元と同一にします。余分なファイルは削除されます。</string>
+    <string name="sftp_mode_move_desc">ファイルを宛先へ移動します。元の場所からは削除されます。</string>
+    <string name="sftp_advanced_filters">詳細フィルター</string>
+    <string name="sftp_include_patterns">対象パターン (1 行に 1 つ)</string>
+    <string name="sftp_exclude_patterns">除外パターン (1 行に 1 つ)</string>
+    <string name="sftp_min_size">最小サイズ</string>
+    <string name="sftp_max_size">最大サイズ</string>
+    <string name="sftp_bandwidth_limit">帯域制限</string>
+    <string name="sftp_dry_run">ドライラン (プレビューのみ)</string>
+    <string name="sftp_start_sync">開始</string>
+    <string name="sftp_preview">プレビュー</string>
+    <string name="sftp_dry_run_results">ドライランの結果</string>
+    <string name="sftp_start_for_real">実際に開始</string>
+    <string name="sftp_sync_cancelled">同期をキャンセルしました</string>
+    <!-- Rename dialog -->
+    <string name="sftp_rename_title">名前を変更</string>
+    <string name="sftp_new_name">新しい名前</string>
+
+    <!-- Share link -->
+    <string name="sftp_share_link">リンクを共有</string>
+    <string name="sftp_link_copied">リンクをコピーしました</string>
+
+    <!-- Folder size -->
+    <string name="sftp_folder_size">フォルダーのサイズ</string>
+    <string name="sftp_folder_size_title">フォルダーのサイズ</string>
+    <string name="sftp_calculating_size">計算中…</string>
+
+    <!-- DLNA -->
+    <string name="sftp_start_dlna">DLNA サーバーを開始</string>
+    <string name="sftp_stop_dlna">DLNA サーバーを停止</string>
+    <!-- Convert -->
+    <string name="sftp_convert">変換</string>
+    <string name="sftp_convert_title">メディアを変換</string>
+    <string name="sftp_convert_format">出力形式</string>
+    <string name="sftp_converting">%s を変換中</string>
+    <string name="sftp_convert_done">%s に保存しました</string>
+    <!-- Stream -->
+    <string name="sftp_stream">ストリーム</string>
+    <string name="sftp_streaming">%s でストリーミング中</string>
+    <string name="sftp_stream_stop">停止</string>
+    <string name="sftp_downloading_for_convert">変換のためダウンロード中…</string>
+    <!-- Backfilled translations (i18n drift fix) -->
+    <string name="sftp_play_in_browser">ブラウザで再生</string>
+    <string name="sftp_stream_to_network">ネットワークへストリーム</string>
+    <string name="sftp_selection_enter">選択</string>
+    <string name="sftp_selection_selected">選択中</string>
+    <string name="sftp_selection_unselected">未選択</string>
+    <string name="sftp_selection_clear">選択をクリア</string>
+    <string name="sftp_selection_select_all">すべて選択</string>
+    <string name="sftp_selection_count">%1$d 件選択中</string>
+    <string name="sftp_delete_selection_title">選択した項目を削除しますか？</string>
+    <string name="sftp_delete_selection_message">%1$d 件の項目が削除されます。元に戻すことはできません。</string>
+    <string name="sftp_filter">ファイルを絞り込む</string>
+    <string name="sftp_permissions">権限…</string>
+    <string name="sftp_permissions_dialog_title">権限</string>
+    <string name="sftp_permissions_dialog_title_batch">権限 — %1$d 件</string>
+    <string name="sftp_permissions_octal">8 進数（例: 0755）</string>
+    <string name="sftp_permissions_owner">所有者</string>
+    <string name="sftp_permissions_group">グループ</string>
+    <string name="sftp_permissions_other">その他</string>
+    <string name="sftp_permissions_read">読み取り</string>
+    <string name="sftp_permissions_write">書き込み</string>
+    <string name="sftp_permissions_execute">実行</string>
+    <string name="sftp_permissions_apply">適用</string>
+    <string name="sftp_ownership">所有者…</string>
+    <string name="sftp_ownership_dialog_title">所有者</string>
+    <string name="sftp_ownership_dialog_title_batch">所有者 — %1$d 件</string>
+    <string name="sftp_ownership_label">所有者</string>
+    <string name="sftp_ownership_hint">ユーザー、グループ、またはユーザー:グループを入力します。名前解決はリモート側で行われ、通常は root 権限が必要です。</string>
+    <string name="sftp_ownership_apply">適用</string>
+    <string name="sftp_media">メディア…</string>
+    <string name="sftp_stream_folder">フォルダーをプレイリストとしてストリーム</string>
+    <string name="sftp_output_filename">出力ファイル名</string>
+    <string name="sftp_convert_sub">フィルターを使って動画または音声を再エンコード</string>
+    <string name="sftp_media_info">メディア情報</string>
+    <string name="sftp_media_info_sub">コーデック、長さ、ストリーム</string>
+    <string name="sftp_media_info_probing">解析中…</string>
+    <string name="sftp_media_info_failed">ffprobe に失敗: %s</string>
+    <string name="sftp_media_info_container">コンテナ</string>
+    <string name="sftp_media_info_duration">長さ</string>
+    <string name="sftp_media_info_bitrate">ビットレート</string>
+    <string name="sftp_media_info_size">サイズ</string>
+    <string name="sftp_media_info_video_streams">ビデオ</string>
+    <string name="sftp_media_info_audio_streams">オーディオ</string>
+    <string name="sftp_media_info_subtitle_streams">字幕</string>
+    <string name="sftp_media_info_video">ビデオ</string>
+    <string name="sftp_media_info_audio">オーディオ</string>
+    <string name="sftp_media_info_subtitle">字幕</string>
+    <string name="sftp_media_info_chapters">チャプター: %d</string>
+    <string name="sftp_media_info_copy">JSON をコピー</string>
+    <string name="sftp_trim">トリミング（無劣化）</string>
+    <string name="sftp_trim_sub">再エンコードなしで切り出し</string>
+    <string name="sftp_trim_title">クリップをトリミング</string>
+    <string name="sftp_trim_explain">開始と終了は H:MM:SS 形式。ストリームコピーで再エンコードしません。</string>
+    <string name="sftp_trim_start">開始</string>
+    <string name="sftp_trim_end">終了</string>
+    <string name="sftp_trim_action">トリミング</string>
+    <string name="sftp_extract_audio">音声を抽出</string>
+    <string name="sftp_extract_audio_sub">サウンドトラックを MP3/AAC/Opus/FLAC で保存</string>
+    <string name="sftp_extract_audio_title">音声を抽出</string>
+    <string name="sftp_extract_audio_format">フォーマット</string>
+    <string name="sftp_extract_audio_bitrate">ビットレート: %d kbps</string>
+    <string name="sftp_extract_audio_action">抽出</string>
+    <string name="sftp_contact_sheet">コンタクトシート</string>
+    <string name="sftp_contact_sheet_sub">ファイル全体からサンプリングしたサムネイルのグリッド</string>
+    <string name="sftp_contact_sheet_title">コンタクトシート</string>
+    <string name="sftp_contact_sheet_explain">クリップから等間隔でフレームをサンプリングし、タイル状の PNG にまとめます。</string>
+    <string name="sftp_contact_sheet_cols">列</string>
+    <string name="sftp_contact_sheet_rows">行</string>
+    <string name="sftp_contact_sheet_tile">タイルサイズ: %1$d × %2$d</string>
+    <string name="sftp_contact_sheet_action">シートを作成</string>
+
+    <!-- #135 third pass -->
+    <string name="sftp_attach_use_folder">このフォルダーを使う</string>
+    <string name="sftp_paste_discard">破棄</string>
+    <string name="sftp_paste_resume">再開</string>
+    <string name="sftp_paste_discard_title">未完了の貼り付けを破棄しますか？</string>
+    <string name="sftp_paste_discard_body">保留中のファイルはキューから削除されます。この操作は元に戻せません。</string>
+    <string name="sftp_paste_keep">保持</string>
+    <string name="sftp_preview_frame_desc">プレビュー フレーム — タップで全画面</string>
+        <string name="sftp_convert_container">コンテナー</string>
+    <string name="sftp_convert_video_encoder">映像エンコーダー</string>
+    <string name="sftp_convert_audio_encoder">音声エンコーダー</string>
+    <string name="sftp_convert_save_to">保存先</string>
+    <string name="sftp_preview_stop">停止</string>
+    <string name="sftp_preview_preparing">準備中…</string>
+    <string name="sftp_preview_play5s">5 秒プレビューを再生</string>
+    <string name="sftp_fullscreen_preview">全画面プレビュー</string>
+    <string name="sftp_conflict_title">ファイルは既に存在します</string>
+    <string name="sftp_conflict_overwrite">上書き</string>
+    <string name="sftp_conflict_keep_both">両方保持 (名前変更)</string>
+    <string name="sftp_conflict_skip">スキップ</string>
+    <string name="sftp_compression_quick_presets">クイック プリセット</string>
+    <string name="sftp_compression_resolution">解像度</string>
+    <string name="sftp_compression_quality">画質 (CRF %1$d)</string>
+    <string name="sftp_compression_speed">エンコード速度</string>
+    <string name="sftp_compression_audio_bitrate">音声ビットレート</string>
+    <string name="sftp_filter_title">フィルター</string>
+    <string name="sftp_filter_rotation">回転</string>
+
+    <!-- i18n sweep #210 -->
+    <string name="sftp_open_with">他のアプリで開く…</string>
+    <string name="sftp_saved_sync_label">保存済み設定</string>
+    <string name="sftp_saved_sync_pick">保存済み設定を選択</string>
+    <string name="sftp_saved_sync_save">保存</string>
+    <string name="sftp_saved_sync_save_as">名前を付けて保存…</string>
+    <string name="sftp_saved_sync_save_as_title">同期設定を保存</string>
+    <string name="sftp_saved_sync_name">名前</string>
+    <string name="sftp_attach_choose_folder">%1$s のフォルダを選択</string>
+    <string name="sftp_attach_pick_profile">使用する接続プロファイルを選択</string>
+    <string name="sftp_attach_local_no_upload">リモートプロファイルを選択してください — ローカルはアップロードを受け付けません</string>
+    <string name="sftp_attach_will_upload_into">アップロード先: %1$s</string>
+    <string name="sftp_chat_attach_pick_file">チャットにファイルを添付</string>
+    <string name="sftp_chat_attach_will_pick_from">選択元: %1$s</string>
+    <string name="sftp_attach_sending">%1$s を送信中…</string>
+    <string name="sftp_storage_permission_title">ストレージアクセスが必要です</string>
+    <string name="sftp_storage_permission_body">ローカルファイルへのアクセスを許可するにはタップしてください — メディア機能、ブラウズ、転送にこの権限が必要です。</string>
+    <string name="sftp_paste_unfinished">未完了の貼り付け</string>
+    <string name="sftp_agent_chip">エージェント</string>
+    <string name="sftp_convert_dest_downloads">ダウンロード（このデバイス）</string>
+    <string name="sftp_convert_dest_same_folder_local">ソースと同じフォルダ</string>
+    <string name="sftp_convert_dest_same_folder_cloud">クラウドに戻す（同じフォルダ）</string>
+    <string name="sftp_convert_dest_same_folder_server">サーバーに戻す（同じフォルダ）</string>
+    <string name="sftp_convert_download_first">先にダウンロード</string>
+    <string name="sftp_convert_download_first_on">トランスコード前にファイル全体をダウンロードします</string>
+    <string name="sftp_convert_download_first_off">クラウドからストリーミング（大きなファイルは高速）</string>
+    <string name="sftp_preview_preparing_long">プレビューを準備中…</string>
+    <string name="sftp_preview_fetching_cloud">☁ クラウドから取得中…</string>
+    <string name="sftp_preview_tap_to_refresh">プレビューをタップして更新</string>
+    <string name="sftp_filter_mode_glob">グロブ</string>
+    <string name="sftp_filter_mode_regex">正規表現</string>
+    <string name="sftp_saved_file">%1$s を保存しました</string>
+    <string name="sftp_saved_file_to">%1$s を %2$s に保存しました</string>
+    <string name="sftp_downloaded_file">%1$s をダウンロードしました</string>
+    <string name="sftp_location_downloads">ダウンロード</string>
+    <string name="sftp_file_too_large_for_editor">ファイルが大きすぎてエディターで開けません (%1$s)。上限は 20 MB です。</string>
+    <string name="sftp_processing_perspective">パースペクティブを適用中…</string>
+    <string name="sftp_processing_crop">切り抜き中…</string>
+    <string name="sftp_processing_rotate">回転中…</string>
+    <string name="sftp_conflict_size_summary">既存: %1$s  ·  新規: %2$s</string>
+    <string name="sftp_conflict_resume_hint">既存ファイルがソースより小さい — 再開すると現在のオフセットから続きます。</string>
+    <string name="sftp_conflict_apply_to_all">残りのすべてのファイルに適用</string>
+
+    <!-- Backfill 2026-07: strings added since the last i18n pass -->
+    <string name="sftp_new_sync">新しい rclone 同期</string>
+    <string name="sftp_encrypt">暗号化 (age)</string>
+    <string name="sftp_encrypt_sub">age 鍵に対して暗号化 — age ツールがあればどこでも読めます</string>
+    <string name="sftp_decrypt">復号 (age)</string>
+    <string name="sftp_decrypt_sub">保存済みの age アイデンティティで復号</string>
+    <string name="sftp_encrypt_title">age で暗号化</string>
+    <string name="sftp_encrypt_recipient_hint">または受信者を貼り付け (age1…)</string>
+    <string name="sftp_encrypt_action">暗号化</string>
+    <string name="sftp_age_no_identity">age アイデンティティがありません。「鍵」タブで作成するか、受信者を貼り付けてください。</string>
+    <string name="sftp_age_failed">age の操作に失敗しました — 鍵が違うかファイルが破損しています</string>
+    <string name="sftp_open_usb_drive">USB ドライブを開く…</string>
+    <string name="sftp_add_folder_location">フォルダーの場所を追加</string>
+    <string name="sftp_saf_grant_failed">そのフォルダーへのアクセスを保持できませんでした</string>
+    <string name="sftp_remove_folder_location">フォルダーの場所を削除</string>
+    <string name="sftp_remove_folder_title">フォルダーの場所を削除しますか？</string>
+    <string name="sftp_remove_folder_message">%1$s は「ファイル」から削除されます。ファイル自体は削除されず、このフォルダーへの Haven のアクセスのみが解除されます。</string>
+    <string name="sftp_remove_folder_confirm">削除</string>
+    <string name="sftp_rename_not_supported">この場所は名前の変更に対応していません</string>
+</resources>

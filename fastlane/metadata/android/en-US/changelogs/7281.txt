@@ -1,0 +1,1 @@
+🪟 Fixed Windows RDP sessions dying mid-logon when H.264/AVC420 decoding was enabled — Haven was advertising a codec it cannot decode on that path. (#461)

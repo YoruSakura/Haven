@@ -1,0 +1,1 @@
+- Proxy passwords (SOCKS5 / HTTP) are now encrypted at rest via the Android Keystore, matching how SSH/VNC/RDP/SMB passwords are stored. Reticulum gateway passphrases are encrypted too; any existing saved values are upgraded automatically on launch.
